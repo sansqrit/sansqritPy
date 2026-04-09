@@ -71,8 +71,8 @@ sansqrit-python/
 
 ```bash
 # 1. Clone
-git clone https://github.com/YOUR-ORG/sansqrit-python.git
-cd sansqrit-python
+git clone https://github.com/sansqrit/sansqritPy.git
+cd sansqritPy
 
 # 2. Install Node.js dependencies
 npm install
