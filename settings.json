@@ -1,0 +1,25 @@
+{
+  "theme": "theme-light",
+  "fontSize": 13,
+  "gridSize": 24,
+  "snapToGrid": true,
+  "showPortLabels": true,
+  "autoSave": true,
+  "autoSaveInterval": 30,
+  "showMinimap": false,
+  "animateWires": true,
+  "language": "en",
+  "maxUndoHistory": 50,
+  "outputTimestamps": true,
+  "showBlockDesc": true,
+  "defaultShots": 1000,
+  "chartTheme": "dark",
+  "tablePageSize": 50,
+  "shortcuts": {
+    "run": "Ctrl+Enter",
+    "compile": "Ctrl+Shift+B",
+    "save": "Ctrl+S",
+    "new": "Ctrl+N",
+    "fitView": "Ctrl+Shift+F"
+  }
+}

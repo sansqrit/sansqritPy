@@ -1031,24 +1031,151 @@ const server=http.createServer(async(req,res)=>{
 
 // ── BOOT ──────────────────────────────────────────────────────────────────────
 await boot();
-server.listen(PORT,'localhost',()=>{
-  const url='http://localhost:'+PORT;
+// ── Smart server start with EADDRINUSE handling ─────────────────────────────
+function startServer(port, attempt) {
+  server.listen(port, 'localhost', () => {
+    const url = 'http://localhost:' + port;
+    console.log('');
+    console.log(W+C+'  ╔══════════════════════════════════╗'+Z);
+    console.log(W+C+'  ║  Sanskrit Visual Builder v3.2.1  ║'+Z);
+    console.log(W+C+'  ║  ETL + Data Science + Quantum    ║'+Z);
+    console.log(W+C+'  ╚══════════════════════════════════╝'+Z);
+    console.log('');
+    ok('Server  '+W+B+url+Z);
+    ok('Blocks  '+BLOCKS.length+' / '+Object.keys(CATS).length+' categories');
+    ok('ETL     '+Object.keys(ETL).length+' operations');
+    ok('DS      '+Object.keys(DS).length+' operations');
+    if (port !== PORT) console.log(Y+'[WR]'+Z+' Using port '+port+' instead of '+PORT);
+    console.log('');
+    console.log(W+'  Press Ctrl+C to stop the server'+Z);
+    console.log('');
+    try {
+      const cmd = process.platform==='win32' ? 'start "" "'+url+'"'
+                : process.platform==='darwin' ? 'open "'+url+'"'
+                : 'xdg-open "'+url+'"';
+      execSync(cmd);
+    } catch(e) {}
+  });
+
+  server.on('error', async e => {
+    if (e.code === 'EADDRINUSE') {
+      console.log('');
+      console.log(R+'  ╔══════════════════════════════════════════════════════╗'+Z);
+      console.log(R+'  ║  PORT '+String(port).padEnd(5)+' IS ALREADY IN USE                     ║'+Z);
+      console.log(R+'  ╚══════════════════════════════════════════════════════╝'+Z);
+      console.log('');
+      console.log(Y+'  Another Sanskrit server (or another app) is running on port '+port+'.'+Z);
+      console.log('');
+
+      // Try to find and kill the process using the port
+      let existingPID = null;
+      try {
+        if (process.platform === 'win32') {
+          const out = execSync('netstat -ano | findstr :'+port+' | findstr LISTENING', {encoding:'utf8'}).trim();
+          const m = out.match(/(\d+)\s*$/m);
+          if (m) existingPID = m[1];
+        } else {
+          existingPID = execSync('lsof -ti tcp:'+port, {encoding:'utf8'}).trim().split('\n')[0];
+        }
+      } catch(ex) {}
+
+      if (existingPID) {
+        console.log(C+'  Found existing process: PID '+existingPID+Z);
+      }
+
+      // Read user input
+      const answer = await promptUser([
+        '  What would you like to do?',
+        '',
+        '  [1] Kill the existing session and start fresh  (recommended)',
+        '  [2] Use a different port ('+( port+1)+')',
+        '  [3] Exit — I will close the old session manually',
+        '',
+        '  Your choice [1/2/3]: ',
+      ].join('\n'));
+
+      const choice = answer.trim();
+
+      if (choice === '1' || choice === '') {
+        // Kill existing process
+        if (existingPID) {
+          console.log('');
+          log('Killing PID '+existingPID+'...');
+          try {
+            if (process.platform === 'win32') execSync('taskkill /PID '+existingPID+' /F', {stdio:'ignore'});
+            else execSync('kill -9 '+existingPID, {stdio:'ignore'});
+            ok('Killed PID '+existingPID);
+          } catch(ex) {
+            er('Could not kill PID '+existingPID+': '+ex.message);
+          }
+          await new Promise(r => setTimeout(r, 1500));
+        } else {
+          er('Could not find PID. Please close the old Command Prompt window manually.');
+          await new Promise(r => setTimeout(r, 2000));
+        }
+        // Recreate server (http.createServer does not auto-retry)
+        server.removeAllListeners('error');
+        server.removeAllListeners('request');
+        // Re-attach request handler
+        server.on('request', _serverRequestHandler);
+        startServer(port, (attempt||0)+1);
+
+      } else if (choice === '2') {
+        server.removeAllListeners('error');
+        server.removeAllListeners('request');
+        server.on('request', _serverRequestHandler);
+        console.log('');
+        log('Trying port '+(port+1)+'...');
+        startServer(port+1, 0);
+
+      } else {
+        console.log('');
+        console.log(Y+'  To manually stop the old session:'+Z);
+        if (process.platform === 'win32') {
+          console.log('  1. Open Task Manager → Details → find node.exe → End Task');
+          console.log('  OR in another Command Prompt: taskkill /IM node.exe /F');
+        } else {
+          console.log('  Run: kill $(lsof -ti tcp:'+port+')');
+        }
+        console.log('');
+        process.exit(1);
+      }
+    } else {
+      er('Server error: '+e.message);
+      process.exit(1);
+    }
+  });
+}
+
+// Prompt helper (reads one line from stdin)
+function promptUser(question) {
+  return new Promise(resolve => {
+    process.stdout.write(question);
+    process.stdin.setEncoding('utf8');
+    process.stdin.resume();
+    process.stdin.once('data', d => {
+      process.stdin.pause();
+      resolve(String(d).trim());
+    });
+  });
+}
+
+// Store the request handler reference so we can re-attach after port retry
+let _serverRequestHandler = null;
+// (Will be set after the monkey-patch below, then startServer is called)
+
+process.on('SIGINT', () => {
   console.log('');
-  console.log(W+C+'  ╔══════════════════════════════════╗'+Z);
-  console.log(W+C+'  ║  Sanskrit Visual Builder v3.2    ║'+Z);
-  console.log(W+C+'  ║  ETL + Data Science + Quantum    ║'+Z);
-  console.log(W+C+'  ╚══════════════════════════════════╝'+Z);
-  console.log('');
-  ok('Server  '+W+B+url+Z);
-  ok('Blocks  '+BLOCKS.length+' / '+Object.keys(CATS).length+' categories');
-  ok('ETL     '+Object.keys(ETL).length+' operations');
-  ok('DS      '+Object.keys(DS).length+' operations');
-  console.log('');
-  try{const cmd=process.platform==='win32'?'start "" "'+url+'"':process.platform==='darwin'?'open "'+url+'"':'xdg-open "'+url+'"';execSync(cmd);}catch(e){}
+  log('Shutting down...');
+  _sse.forEach(r => { try { r.end(); } catch(e) {} });
+  if (_currentLogStream) {
+    _currentLogStream.write('\n[SHUTDOWN] Server stopped by user\n');
+    _currentLogStream.end();
+  }
+  server.close(() => { ok('Server stopped. Goodbye!'); process.exit(0); });
+  setTimeout(() => process.exit(0), 3000);
 });
-process.on('SIGINT',()=>{_sse.forEach(r=>{try{r.end();}catch(e){}});server.close(()=>process.exit(0));setTimeout(()=>process.exit(0),2000);});
-process.on('uncaughtException',e=>er('Uncaught: '+e.message));
-process.on('unhandledRejection',e=>er('Unhandled: '+e));
+process.on('unhandledRejection', e => er('Unhandled: '+e));
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // CANVAS EXAMPLES
@@ -1063,3 +1190,185 @@ const CANVAS_EXAMPLES=[
 {id:'pivot_analysis',title:'Pivot Table Analysis',cat:'ETL',diff:'Advanced',desc:'Pivot sales data: regions as rows, products as columns.',blocks:[{id:'r',type:'csv_reader',x:80,y:200,params:{filename:'sales.csv'}},{id:'p',type:'pivot',x:340,y:200,params:{index:'region',columns:'product',values:'revenue',aggfn:'sum'}},{id:'tbl',type:'table_display',x:600,y:200,params:{title:'Revenue Pivot: Region x Product'}},{id:'ch',type:'bar_chart',x:600,y:440,params:{title:'Revenue by Region'}}],wires:[{fromId:'r',fromPort:'dataset',toId:'p',toPort:'dataset'},{fromId:'p',fromPort:'dataset',toId:'tbl',toPort:'dataset'},{fromId:'p',fromPort:'dataset',toId:'ch',toPort:'data'}]},
 {id:'regression',title:'Linear Regression',cat:'Data Science',diff:'Advanced',desc:'Predict revenue from units sold.',blocks:[{id:'r',type:'csv_reader',x:80,y:200,params:{filename:'sales.csv'}},{id:'ct',type:'cast_types',x:340,y:200,params:{mapping:'{"units":"float","revenue":"float"}'}},{id:'lr',type:'linear_regression',x:600,y:200,params:{x_col:'units',y_col:'revenue'}},{id:'lg',type:'log_block',x:860,y:140,params:{label:'Regression Results'}},{id:'tbl',type:'table_display',x:860,y:300,params:{title:'Predictions'}},{id:'sc',type:'scatter_chart',x:1120,y:200,params:{title:'Units vs Revenue',x_col:'units',y_col:'revenue'}}],wires:[{fromId:'r',fromPort:'dataset',toId:'ct',toPort:'dataset'},{fromId:'ct',fromPort:'dataset',toId:'lr',toPort:'dataset'},{fromId:'lr',fromPort:'dataset',toId:'tbl',toPort:'dataset'},{fromId:'lr',fromPort:'dataset',toId:'sc',toPort:'data'}]},
 ];
+
+// ═══════════════════════════════════════════════════════════════════
+// LOGGING TO FILES — Server-side log writing with timestamps
+// ═══════════════════════════════════════════════════════════════════
+import { createWriteStream } from 'fs';
+
+const LOGS_ROOT = path.join(ROOT, 'logs');
+let _currentRunDir = null;
+let _currentLogStream = null;
+let _runCounter = 0;
+
+function ensureLogsDir() {
+  if (!fs.existsSync(LOGS_ROOT)) fs.mkdirSync(LOGS_ROOT, { recursive: true });
+}
+
+function startNewRunLog(meta = {}) {
+  ensureLogsDir();
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0, 10);          // YYYY-MM-DD
+  const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, '-'); // HH-MM-SS
+  const runId = ++_runCounter;
+
+  const runDir = path.join(LOGS_ROOT, `${dateStr}_${timeStr}_run${runId}`);
+  fs.mkdirSync(runDir, { recursive: true });
+  _currentRunDir = runDir;
+
+  // Close previous stream
+  if (_currentLogStream) { try { _currentLogStream.end(); } catch(e) {} }
+
+  const logFile = path.join(runDir, 'execution.log');
+  _currentLogStream = fs.createWriteStream(logFile, { flags: 'a' });
+
+  const header = [
+    '═'.repeat(72),
+    `  Sanskrit Visual Builder v3.2 — Execution Log`,
+    `  Run ID   : ${runId}`,
+    `  Started  : ${now.toISOString()}`,
+    `  Blocks   : ${meta.blocks || 0}`,
+    `  Wires    : ${meta.wires || 0}`,
+    `  Platform : ${os.platform()} ${os.arch()}`,
+    `  Node.js  : ${process.version}`,
+    '═'.repeat(72),
+    '',
+  ].join('\n');
+
+  _currentLogStream.write(header);
+  ok(`Log started: ${runDir}/execution.log`);
+  return runDir;
+}
+
+function writeLog(entry) {
+  if (!_currentLogStream || _currentLogStream.destroyed) return;
+  const ts = new Date().toISOString();
+  const type = (entry.type || 'info').toUpperCase().padEnd(10);
+  const text = String(entry.text || '').replace(/\x1b\[[0-9;]*m/g, ''); // strip ANSI
+  _currentLogStream.write(`[${ts}] [${type}] ${text}\n`);
+}
+
+// Override the ETL run to log everything
+const _origRunCode = runQuantum;
+async function runQuantumLogged(code, onLine) {
+  return _origRunCode(code, item => {
+    writeLog(item);
+    onLine(item);
+  });
+}
+
+// ── API: /api/log/start ──────────────────────────────────────────
+// Called by client when Run is clicked
+const _origHandler = server.listeners('request')[0];
+
+// Inject new routes into existing server handler by patching the request handler
+// We append to the existing API router by patching the handler
+const _patchedRoutes = {
+  'POST:/api/log/start': async (req, res) => {
+    const body = await readBody(req);
+    const dir = startNewRunLog(body);
+    jsonRes(res, { ok: true, dir });
+  },
+  'POST:/api/log': async (req, res) => {
+    const body = await readBody(req);
+    (body.entries || []).forEach(e => writeLog(e));
+    jsonRes(res, { ok: true });
+  },
+  'GET:/api/logs': (req, res) => {
+    ensureLogsDir();
+    try {
+      const dirs = fs.readdirSync(LOGS_ROOT)
+        .filter(d => fs.statSync(path.join(LOGS_ROOT, d)).isDirectory())
+        .reverse()
+        .slice(0, 50)
+        .map(d => ({
+          name: d,
+          size: (() => {
+            try {
+              const lf = path.join(LOGS_ROOT, d, 'execution.log');
+              return fs.existsSync(lf) ? fs.statSync(lf).size : 0;
+            } catch(e) { return 0; }
+          })(),
+        }));
+      jsonRes(res, { logs: dirs });
+    } catch(e) { jsonRes(res, { logs: [] }); }
+  },
+  'GET:/api/logs/': async (req, res) => {
+    // Serve log file content for a specific run
+    const runName = decodeURIComponent(req.url.split('/api/logs/')[1]);
+    const logFile = path.join(LOGS_ROOT, path.basename(runName), 'execution.log');
+    if (!fs.existsSync(logFile)) return jsonRes(res, { error: 'Not found' }, 404);
+    const content = fs.readFileSync(logFile, 'utf8');
+    res.setHeader('Content-Type', 'text/plain');
+    res.writeHead(200);
+    res.end(content);
+  },
+};
+
+// Monkey-patch the existing server to handle new routes
+const _originalEmit = server.emit.bind(server);
+server.removeAllListeners('request');
+server.on('request', async (req, res) => {
+  const key = req.method + ':' + req.url.split('?')[0];
+  const logRoute = Object.keys(_patchedRoutes).find(k =>
+    k === key || (k.endsWith('/') && req.url.includes(k.split(':')[1]))
+  );
+  if (logRoute) {
+    try { await _patchedRoutes[logRoute](req, res); } catch(e) { jsonRes(res, { error: e.message }, 500); }
+  } else {
+    // Re-invoke original server logic by re-emitting on original handler
+    _origHandler(req, res);
+  }
+});
+
+// Also write ETL operation logs
+const _origETL = Object.fromEntries(
+  Object.entries(ETL).map(([k,v]) => [k, v])
+);
+
+// Wrap each ETL operation to log calls
+Object.keys(ETL).forEach(op => {
+  const orig = ETL[op];
+  ETL[op] = function(params, inputs, uploadedData) {
+    const t0 = Date.now();
+    const result = orig(params, inputs, uploadedData);
+    const ms = Date.now() - t0;
+    writeLog({ type: 'etl', text: `${op}(${JSON.stringify(params).slice(0,100)}) → ${result.log||''} [${ms}ms]` });
+    return result;
+  };
+});
+
+// Write summary when run ends (called from /api/run)
+const _origRunPost = async (req, res) => {
+  const body = await readBody(req);
+  if (!body.code) return jsonRes(res, { error: 'Missing code' }, 400);
+  startNewRunLog({ code_lines: body.code.split('\n').length });
+  writeLog({ type: 'info', text: '--- Quantum Execution Start ---' });
+  writeLog({ type: 'code', text: body.code });
+  const outputs = [], logs = [];
+  const result = await runQuantum(body.code, item => {
+    logs.push(item);
+    if (item.type === 'print') outputs.push(item.text);
+    writeLog(item);
+    sseBcast('run_line', item);
+  });
+  sseBcast('run_done', { elapsed_ms: result.elapsed_ms });
+  writeLog({ type: 'info', text: `--- Execution Complete: ${result.elapsed_ms}ms ---` });
+  if (_currentLogStream) {
+    _currentLogStream.write('\n--- Summary ---\n');
+    _currentLogStream.write(`Outputs: ${outputs.length}\n`);
+    _currentLogStream.write(`Success: ${result.success}\n`);
+    if (result.error) _currentLogStream.write(`Error: ${result.error}\n`);
+    _currentLogStream.write('--- End ---\n\n');
+  }
+  jsonRes(res, { ...result, outputs, logs });
+};
+
+ok('Logging  logs/ folder (timestamped per run)');
+
+// Set request handler reference AFTER all monkey-patching is done, then start
+// We need to find the actual listener that was set during monkey-patching
+setTimeout(() => {
+  _serverRequestHandler = server.listeners('request')[0] || ((req,res)=>res.end());
+  startServer(PORT, 0);
+}, 0);
