@@ -1,0 +1,11 @@
+date,region,product,units,price,revenue,cost
+2024-01-15,North,Widget A,120,25.50,3060,1800
+2024-01-16,South,Widget B,85,42.00,3570,2100
+2024-01-17,East,Widget A,200,25.50,5100,3000
+2024-01-18,West,Widget C,60,78.00,4680,2800
+2024-01-19,North,Widget B,145,42.00,6090,3600
+2024-01-20,South,Widget C,30,78.00,2340,1400
+2024-01-21,East,Widget B,95,42.00,3990,2350
+2024-01-22,West,Widget A,180,25.50,4590,2700
+2024-01-23,North,Widget C,70,78.00,5460,3270
+2024-01-24,South,Widget A,210,25.50,5355,3150

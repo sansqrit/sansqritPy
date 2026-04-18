@@ -1,0 +1,32 @@
+SANSQRIT v3.1 — COMPLETE UI BUNDLE (Fixed)
+===========================================
+Bug fixed: Invalid regular expression /[)\]}/g in server.js
+
+COPY THESE FILES to C:\Users\Mohith\Desktop\sanskrit\sansqritPy\
+
+  src/server/server.js           (replaces old server.js)
+  public/index.html              (replaces old index.html)
+  public/js/app.js               (replaces old app.js)
+  public/js/canvas.js            (replaces old canvas.js)
+  public/js/palette.js           (replaces old palette.js)
+  public/js/properties.js       (replaces old properties.js)
+  public/examples50.html         (NEW - 50 example problems)
+
+RUN:
+  npm install
+  npm start
+
+OPEN: http://localhost:3000
+EXAMPLES: http://localhost:3000/examples50.html
+
+FEATURES:
+  1. Magnetic wire snap (glow ring appears near ports)
+  2. DEL key removes selected block or wire
+  3. Code examples all work (Bell, Grover, VQE, etc.)
+  4. Output console: timestamps + CPU/memory metrics bar
+  5. COMPILE button: syntax check without running
+  6. Recommendations: suggests next block
+  7. EXAMPLES button: 15 pre-built canvas programs
+  8. .sans export/import: save/load canvas diagrams
+  9. examples50.html: 50 complete worked examples
+  10. All parameters editable in Properties panel

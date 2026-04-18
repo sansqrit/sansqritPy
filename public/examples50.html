@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>50 Sanskrit Examples — Sansqrit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,sans-serif;background:#030610;color:#CBD5E1;line-height:1.6}
+header{padding:40px 60px 30px;border-bottom:1px solid #0d1a2e;background:#060d1f}
+h1{font-size:36px;font-weight:700;color:#E2E8F0;margin-bottom:6px}
+.sub{color:#2D5060;font-size:14px;font-family:'Fira Code',monospace}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,1fr));gap:20px;padding:40px 60px;max-width:1600px;margin:0 auto}
+.card{background:#0a1628;border:1px solid #0d1a2e;border-radius:6px;overflow:hidden;transition:border-color 0.2s}
+.card:hover{border-color:#1E2840}
+.card-header{padding:14px 18px;background:#060d1f;border-bottom:1px solid #0d1a2e;display:flex;align-items:center;gap:10px}
+.card-num{font-family:'Fira Code',monospace;font-size:11px;color:#0F4C5C;min-width:28px}
+.card-title{font-size:14px;font-weight:600;color:#E2E8F0;flex:1}
+.card-tag{font-size:9px;font-family:'Fira Code',monospace;padding:2px 8px;border-radius:8px;letter-spacing:1px;text-transform:uppercase;background:#0d1a2e;color:#1E3A5F}
+.card-body{padding:16px 18px}
+.card-desc{font-size:12px;color:#475569;margin-bottom:12px;line-height:1.55}
+pre{background:#000408;border:1px solid #0d1a2e;border-left:3px solid #0F4C5C;padding:14px 16px;overflow-x:auto;border-radius:3px;font-family:'Fira Code',monospace;font-size:11.5px;line-height:1.7}
+.kw{color:#c792ea}.fn{color:#80cbc4}.str{color:#c3e88d}.num{color:#f78c6c}.cmt{color:#1E3A5F;font-style:italic}.op{color:#89ddff}
+.cat-header{padding:16px 60px 8px;font-family:'Fira Code',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#0F4C5C;border-top:1px solid #0d1a2e;margin-top:20px}
+a.back{display:inline-block;margin:24px 60px;font-family:'Fira Code',monospace;font-size:12px;color:#0F4C5C;text-decoration:none;letter-spacing:1px}
+a.back:hover{color:#00e5ff}
+</style>
+</head>
+<body>
+<header>
+  <div style="font-family:'Fira Code',monospace;font-size:11px;letter-spacing:3px;color:#0F4C5C;margin-bottom:8px">SANSQRIT VISUAL BUILDER</div>
+  <h1>50 Example Problems</h1>
+  <div class="sub">Complete Sanskrit DSL code · Visual canvas compatible · Run in the builder</div>
+</header>
+<a class="back" href="javascript:history.back()">← Back to Builder</a>
+<div class="cat-header">Quantum Basics</div>
+<div class="grid">
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#01</span>
+    <span class="card-title">Bell State</span>
+    <span class="card-tag">basics</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Two entangled qubits. Always 00 or 11. Quantum Hello World.</div>
+    <pre><span class="cmt">-- Bell State: quantum entanglement</span>
+<span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">2</span>)
+<span class="fn">H</span>(q[<span class="num">0</span>]); <span class="fn">CNOT</span>(q[<span class="num">0</span>], q[<span class="num">1</span>])
+<span class="kw">let</span> r = <span class="fn">measure_all</span>(q, shots=<span class="num">1000</span>)
+<span class="fn">print</span>(r.histogram)
+<span class="cmt">-- {"00": 503, "11": 497}</span></pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#02</span>
+    <span class="card-title">Superposition</span>
+    <span class="card-tag">basics</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Single qubit equally between 0 and 1. H gate creates this state.</div>
+    <pre><span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">1</span>)
+<span class="fn">H</span>(q[<span class="num">0</span>])  <span class="cmt">-- |0⟩ → (|0⟩+|1⟩)/√2</span>
+<span class="kw">let</span> r = <span class="fn">measure_all</span>(q, shots=<span class="num">1000</span>)
+<span class="fn">print</span>(r.histogram) <span class="cmt">-- {"0":~500, "1":~500}</span></pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#03</span>
+    <span class="card-title">Bit Flip (X Gate)</span>
+    <span class="card-tag">basics</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">X gate flips |0⟩ to |1⟩. Quantum NOT gate.</div>
+    <pre><span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">1</span>)
+<span class="fn">X</span>(q[<span class="num">0</span>])  <span class="cmt">-- |0⟩ → |1⟩</span>
+<span class="kw">let</span> r = <span class="fn">measure_all</span>(q, shots=<span class="num">100</span>)
+<span class="fn">print</span>(r.histogram) <span class="cmt">-- {"1": 100}</span></pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#04</span>
+    <span class="card-title">Phase Flip (Z Gate)</span>
+    <span class="card-tag">basics</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Z gate flips the phase of |1⟩. Invisible to measurement, crucial for interference.</div>
+    <pre><span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">1</span>)
+<span class="fn">H</span>(q[<span class="num">0</span>]); <span class="fn">Z</span>(q[<span class="num">0</span>]); <span class="fn">H</span>(q[<span class="num">0</span>])
+<span class="kw">let</span> r = <span class="fn">measure_all</span>(q, shots=<span class="num">100</span>)
+<span class="fn">print</span>(r.histogram) <span class="cmt">-- {"1": 100} (HZH = X)</span></pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#05</span>
+    <span class="card-title">GHZ 3-Qubit</span>
+    <span class="card-tag">basics</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Greenberger-Horne-Zeilinger state. Three perfectly correlated qubits.</div>
+    <pre><span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">3</span>)
+<span class="fn">H</span>(q[<span class="num">0</span>])
+<span class="fn">CNOT</span>(q[<span class="num">0</span>], q[<span class="num">1</span>]); <span class="fn">CNOT</span>(q[<span class="num">0</span>], q[<span class="num">2</span>])
+<span class="kw">let</span> r = <span class="fn">measure_all</span>(q, shots=<span class="num">1000</span>)
+<span class="fn">print</span>(r.histogram) <span class="cmt">-- only "000" and "111"</span></pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#06</span>
+    <span class="card-title">Statevector</span>
+    <span class="card-tag">basics</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Get the full complex quantum state vector.</div>
+    <pre><span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">2</span>)
+<span class="fn">H</span>(q[<span class="num">0</span>]); <span class="fn">CNOT</span>(q[<span class="num">0</span>], q[<span class="num">1</span>])
+<span class="kw">let</span> sv = <span class="fn">statevector</span>(q)
+<span class="fn">print</span>(sv)
+<span class="cmt">-- [{state:"00",re:0.707,im:0,prob:0.5},</span>
+<span class="cmt">--  {state:"11",re:0.707,im:0,prob:0.5}]</span></pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#07</span>
+    <span class="card-title">Phase S Gate</span>
+    <span class="card-tag">basics</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">S gate: |1⟩→i|1⟩. H+S creates the +Y eigenstate |+i⟩.</div>
+    <pre><span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">1</span>)
+<span class="fn">H</span>(q[<span class="num">0</span>]); <span class="fn">S</span>(q[<span class="num">0</span>])
+<span class="kw">let</span> sv = <span class="fn">statevector</span>(q)
+<span class="fn">print</span>(sv) <span class="cmt">-- |+i⟩ = (|0⟩+i|1⟩)/√2</span></pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#08</span>
+    <span class="card-title">T Gate</span>
+    <span class="card-tag">basics</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">T gate: |1⟩→e^(iπ/4)|1⟩. Used in fault-tolerant circuits.</div>
+    <pre><span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">1</span>)
+<span class="fn">X</span>(q[<span class="num">0</span>]); <span class="fn">T</span>(q[<span class="num">0</span>])  <span class="cmt">-- T|1⟩ = e^(iπ/4)|1⟩</span>
+<span class="kw">let</span> sv = <span class="fn">statevector</span>(q)
+<span class="fn">print</span>(sv)</pre>
+  </div>
+</div>
+</div>
+<div class="cat-header">Two-Qubit Gates</div>
+<div class="grid">
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#09</span>
+    <span class="card-title">CNOT Entanglement</span>
+    <span class="card-tag">gates</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Controlled-NOT creates the maximally entangled Bell state.</div>
+    <pre><span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">2</span>)
+<span class="fn">H</span>(q[<span class="num">0</span>])
+<span class="fn">CNOT</span>(q[<span class="num">0</span>], q[<span class="num">1</span>])
+<span class="fn">print</span>(<span class="fn">statevector</span>(q))</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#10</span>
+    <span class="card-title">CZ Gate</span>
+    <span class="card-tag">gates</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Controlled-Z: applies phase to |11⟩. Symmetric — no defined control/target.</div>
+    <pre><span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">2</span>)
+<span class="fn">H</span>(q[<span class="num">0</span>]); <span class="fn">H</span>(q[<span class="num">1</span>])
+<span class="fn">CZ</span>(q[<span class="num">0</span>], q[<span class="num">1</span>])
+<span class="fn">H</span>(q[<span class="num">1</span>])
+<span class="kw">let</span> r = <span class="fn">measure_all</span>(q, shots=<span class="num">1000</span>)
+<span class="fn">print</span>(r.histogram)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#11</span>
+    <span class="card-title">SWAP Gate</span>
+    <span class="card-tag">gates</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Exchange quantum states of two qubits.</div>
+    <pre><span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">2</span>)
+<span class="fn">X</span>(q[<span class="num">1</span>])  <span class="cmt">-- q = |01⟩</span>
+<span class="fn">SWAP</span>(q[<span class="num">0</span>], q[<span class="num">1</span>])  <span class="cmt">-- q = |10⟩</span>
+<span class="kw">let</span> r = <span class="fn">measure_all</span>(q, shots=<span class="num">100</span>)
+<span class="fn">print</span>(r.histogram) <span class="cmt">-- {"10": 100}</span></pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#12</span>
+    <span class="card-title">Phase Kickback</span>
+    <span class="card-tag">gates</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Phase applied to target kicks back to control. Basis of many algorithms.</div>
+    <pre><span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">2</span>)
+<span class="fn">H</span>(q[<span class="num">0</span>]); <span class="fn">X</span>(q[<span class="num">1</span>])
+<span class="fn">CNOT</span>(q[<span class="num">0</span>], q[<span class="num">1</span>]); <span class="fn">H</span>(q[<span class="num">0</span>])
+<span class="kw">let</span> r = <span class="fn">measure_all</span>(q, shots=<span class="num">500</span>)
+<span class="fn">print</span>(r.histogram)</pre>
+  </div>
+</div>
+</div>
+<div class="cat-header">Rotation Gates</div>
+<div class="grid">
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#13</span>
+    <span class="card-title">Rx Rotation</span>
+    <span class="card-tag">rotation</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Rotate qubit around X-axis. θ=π/2 gives 50/50. θ=π gives |1⟩.</div>
+    <pre><span class="kw">for</span> theta <span class="kw">in</span> [<span class="num">0</span>, PI/<span class="num">4</span>, PI/<span class="num">2</span>, PI]:
+    <span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">1</span>)
+    <span class="fn">Rx</span>(q[<span class="num">0</span>], theta)
+    <span class="kw">let</span> r = <span class="fn">measure_all</span>(q, shots=<span class="num">200</span>)
+    <span class="kw">let</span> p1 = <span class="fn">dict_get</span>(r.histogram, <span class="str">"1"</span>, <span class="num">0</span>)/<span class="num">200.0</span>
+    <span class="fn">print</span>(<span class="fn">f</span><span class="str">"theta={round_to(theta,3)}: P(1)={round_to(p1,3)}"</span>)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#14</span>
+    <span class="card-title">Ry Rotation</span>
+    <span class="card-tag">rotation</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Ry rotates qubit around Y-axis. Commonly used in VQE ansatz.</div>
+    <pre><span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">1</span>)
+<span class="fn">Ry</span>(q[<span class="num">0</span>], PI/<span class="num">3</span>)  <span class="cmt">-- 60 degrees</span>
+<span class="kw">let</span> sv = <span class="fn">statevector</span>(q)
+<span class="fn">print</span>(sv)  <span class="cmt">-- cos(π/6)|0⟩ + sin(π/6)|1⟩</span></pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#15</span>
+    <span class="card-title">Rz Rotation</span>
+    <span class="card-tag">rotation</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Rz rotates around Z-axis. Diagonal gate — only changes phases.</div>
+    <pre><span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">1</span>)
+<span class="fn">H</span>(q[<span class="num">0</span>])        <span class="cmt">-- create superposition</span>
+<span class="fn">Rz</span>(q[<span class="num">0</span>], PI)   <span class="cmt">-- rotate phase by π = Z gate</span>
+<span class="fn">H</span>(q[<span class="num">0</span>])        <span class="cmt">-- HRz(π)H = X</span>
+<span class="kw">let</span> r = <span class="fn">measure_all</span>(q, shots=<span class="num">100</span>)
+<span class="fn">print</span>(r.histogram)</pre>
+  </div>
+</div>
+</div>
+<div class="cat-header">Three-Qubit Gates</div>
+<div class="grid">
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#16</span>
+    <span class="card-title">Toffoli (CCX)</span>
+    <span class="card-tag">3qubit</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Double-controlled NOT. Flips target when BOTH controls are |1⟩.</div>
+    <pre><span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">3</span>)
+<span class="fn">X</span>(q[<span class="num">0</span>]); <span class="fn">X</span>(q[<span class="num">1</span>])  <span class="cmt">-- set both controls to |1⟩</span>
+<span class="fn">Toffoli</span>(q[<span class="num">0</span>], q[<span class="num">1</span>], q[<span class="num">2</span>])  <span class="cmt">-- flip target</span>
+<span class="kw">let</span> r = <span class="fn">measure_all</span>(q, shots=<span class="num">100</span>)
+<span class="fn">print</span>(r.histogram) <span class="cmt">-- {"111": 100}</span></pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#17</span>
+    <span class="card-title">Fredkin (CSWAP)</span>
+    <span class="card-tag">3qubit</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Controlled-SWAP. Swaps q[1] and q[2] when q[0]=|1⟩.</div>
+    <pre><span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">3</span>)
+<span class="fn">X</span>(q[<span class="num">0</span>])  <span class="cmt">-- enable control</span>
+<span class="fn">X</span>(q[<span class="num">1</span>])  <span class="cmt">-- q = |110⟩</span>
+<span class="fn">CSWAP</span>(q[<span class="num">0</span>], q[<span class="num">1</span>], q[<span class="num">2</span>])  <span class="cmt">-- swap q1,q2</span>
+<span class="kw">let</span> r = <span class="fn">measure_all</span>(q, shots=<span class="num">100</span>)
+<span class="fn">print</span>(r.histogram) <span class="cmt">-- {"101": 100}</span></pre>
+  </div>
+</div>
+</div>
+<div class="cat-header">Quantum Algorithms</div>
+<div class="grid">
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#18</span>
+    <span class="card-title">Grover Search</span>
+    <span class="card-tag">algo</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Find item 7 in 16-item database. Quantum speedup: O(√N) vs O(N).</div>
+    <pre><span class="kw">let</span> r = <span class="fn">grover</span>(<span class="num">4</span>, [<span class="num">7</span>], <span class="num">2000</span>)
+<span class="kw">let</span> found = <span class="fn">dict_get</span>(r.histogram, <span class="str">"0111"</span>, <span class="num">0</span>)
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"Found: {found}/2000 ({round_to(found/20.0,1)}%)"</span>)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#19</span>
+    <span class="card-title">QFT 4-Qubit</span>
+    <span class="card-tag">algo</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Quantum Fourier Transform. Foundation of Shor and QPE.</div>
+    <pre><span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">4</span>)
+<span class="fn">X</span>(q[<span class="num">0</span>]); <span class="fn">X</span>(q[<span class="num">2</span>])  <span class="cmt">-- input |1010⟩ = 10</span>
+q.<span class="fn">qft</span>(<span class="num">4</span>)
+<span class="kw">let</span> r = <span class="fn">measure_all</span>(q, shots=<span class="num">1000</span>)
+<span class="fn">print</span>(<span class="str">"QFT output:"</span>)
+<span class="fn">print</span>(r.histogram)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#20</span>
+    <span class="card-title">Shor Factor 15</span>
+    <span class="card-tag">algo</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Factor 15=3×5 using quantum period finding.</div>
+    <pre><span class="kw">let</span> r = <span class="fn">shor_factor</span>(N=<span class="num">15</span>, a=<span class="num">2</span>, n_count_qubits=<span class="num">8</span>)
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"15 = {r.factors[0]} x {r.factors[1]}"</span>)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#21</span>
+    <span class="card-title">Shor Multi</span>
+    <span class="card-tag">algo</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Factor multiple numbers with Shor's algorithm.</div>
+    <pre><span class="kw">for</span> N <span class="kw">in</span> [<span class="num">15</span>, <span class="num">21</span>, <span class="num">33</span>, <span class="num">35</span>, <span class="num">77</span>]:
+    <span class="kw">let</span> r = <span class="fn">shor_factor</span>(N=N, a=<span class="num">2</span>)
+    <span class="fn">print</span>(<span class="fn">f</span><span class="str">"{N} = {r.factors[0]} x {r.factors[1]}"</span>)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#22</span>
+    <span class="card-title">Teleportation</span>
+    <span class="card-tag">algo</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Transfer qubit state from Alice to Bob using Bell pair.</div>
+    <pre><span class="kw">def</span> <span class="fn">teleport</span>(angle):
+    <span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">3</span>)
+    <span class="fn">Ry</span>(q[<span class="num">0</span>], angle)
+    <span class="fn">H</span>(q[<span class="num">1</span>]); <span class="fn">CNOT</span>(q[<span class="num">1</span>], q[<span class="num">2</span>])
+    <span class="fn">CNOT</span>(q[<span class="num">0</span>], q[<span class="num">1</span>]); <span class="fn">H</span>(q[<span class="num">0</span>])
+    <span class="kw">let</span> m0 = <span class="fn">measure</span>(q[<span class="num">0</span>])
+    <span class="kw">let</span> m1 = <span class="fn">measure</span>(q[<span class="num">1</span>])
+    <span class="kw">if</span> m1 == <span class="num">1</span>: <span class="fn">X</span>(q[<span class="num">2</span>])
+    <span class="kw">if</span> m0 == <span class="num">1</span>: <span class="fn">Z</span>(q[<span class="num">2</span>])
+    <span class="fn">print</span>(<span class="fn">f</span><span class="str">"theta={round_to(angle,3)} teleported OK"</span>)
+<span class="kw">for</span> a <span class="kw">in</span> [<span class="num">0</span>, PI/<span class="num">4</span>, PI/<span class="num">2</span>, PI]: <span class="fn">teleport</span>(a)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#23</span>
+    <span class="card-title">QAOA MaxCut</span>
+    <span class="card-tag">algo</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Quantum approximate optimisation on a graph.</div>
+    <pre><span class="kw">let</span> edges = [[<span class="num">0</span>,<span class="num">1</span>],[<span class="num">1</span>,<span class="num">2</span>],[<span class="num">2</span>,<span class="num">3</span>],[<span class="num">3</span>,<span class="num">0</span>]]
+<span class="kw">let</span> r = <span class="fn">qaoa</span>(n_nodes=<span class="num">4</span>, edges=edges, p_layers=<span class="num">3</span>, shots=<span class="num">2000</span>)
+<span class="kw">let</span> s = <span class="fn">sort_by</span>(<span class="fn">items</span>(r.histogram), <span class="kw">fn</span>(kv): <span class="kw">return</span> -kv[<span class="num">1</span>])
+<span class="kw">for</span> kv <span class="kw">in</span> s[:<span class="num">4</span>]: <span class="fn">print</span>(<span class="fn">f</span><span class="str">"{kv[0]}: {kv[1]}"</span>)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#24</span>
+    <span class="card-title">Quantum RNG</span>
+    <span class="card-tag">algo</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">True randomness from quantum measurement.</div>
+    <pre><span class="kw">def</span> <span class="fn">qrand</span>(lo, hi):
+    <span class="kw">let</span> n = <span class="fn">n_qubits_for</span>(hi-lo+<span class="num">1</span>)
+    <span class="kw">let</span> q = <span class="fn">qubits</span>(n); <span class="fn">H_all</span>(q)
+    <span class="kw">let</span> bits = [<span class="fn">measure</span>(q[i]) <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(n)]
+    <span class="kw">let</span> v = <span class="fn">bits_to_int</span>(<span class="fn">join</span>([<span class="fn">str</span>(b) <span class="kw">for</span> b <span class="kw">in</span> bits],<span class="str">""</span>))
+    <span class="kw">if</span> v >= hi-lo+<span class="num">1</span>: <span class="kw">return</span> <span class="fn">qrand</span>(lo,hi)
+    <span class="kw">return</span> lo+v
+<span class="fn">print</span>([<span class="fn">qrand</span>(<span class="num">1</span>,<span class="num">100</span>) <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)])</pre>
+  </div>
+</div>
+</div>
+<div class="cat-header">Quantum Chemistry</div>
+<div class="grid">
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#25</span>
+    <span class="card-title">VQE H2</span>
+    <span class="card-tag">chem</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Hydrogen molecule ground state. Chemical accuracy: <1 mHartree.</div>
+    <pre><span class="kw">molecule</span> H2 { atoms:[H,H], bond_length:<span class="num">0.74</span>, basis_set:<span class="str">"STO-3G"</span> }
+<span class="kw">let</span> r = <span class="fn">vqe</span>(H2, ansatz=<span class="str">"UCCSD"</span>, shots=<span class="num">2000</span>)
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"Energy: {r.energy:.6f} Ha"</span>)
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"Converged: {abs(r.energy+1.137270)<0.001}"</span>)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#26</span>
+    <span class="card-title">VQE LiH</span>
+    <span class="card-tag">chem</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Lithium hydride ground state. 4-qubit active space.</div>
+    <pre><span class="kw">molecule</span> LiH { atoms:[Li,H], bond_length:<span class="num">1.596</span>, basis_set:<span class="str">"STO-3G"</span> }
+<span class="kw">let</span> r = <span class="fn">vqe</span>(LiH, ansatz=<span class="str">"UCCSD"</span>, shots=<span class="num">2000</span>)
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"LiH energy: {r.energy:.6f} Ha"</span>)</pre>
+  </div>
+</div>
+</div>
+<div class="cat-header">Statistics & Math</div>
+<div class="grid">
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#27</span>
+    <span class="card-title">Descriptive Stats</span>
+    <span class="card-tag">stats</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Mean, median, standard deviation, percentiles.</div>
+    <pre><span class="kw">let</span> data = [<span class="num">2.3</span>,<span class="num">4.1</span>,<span class="num">3.8</span>,<span class="num">5.2</span>,<span class="num">4.7</span>,<span class="num">3.9</span>,<span class="num">6.1</span>,<span class="num">4.5</span>,<span class="num">5.0</span>,<span class="num">4.3</span>]
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"Mean:   {mean(data):.4f}"</span>)
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"Std:    {stdev(data):.4f}"</span>)
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"Median: {median(data):.4f}"</span>)
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"IQR:    {iqr(data):.4f}"</span>)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#28</span>
+    <span class="card-title">T-Test</span>
+    <span class="card-tag">stats</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">One-sample t-test against a known population mean.</div>
+    <pre><span class="kw">let</span> data = [<span class="num">2.3</span>,<span class="num">4.1</span>,<span class="num">3.8</span>,<span class="num">5.2</span>,<span class="num">4.7</span>,<span class="num">3.9</span>,<span class="num">6.1</span>,<span class="num">4.5</span>]
+<span class="kw">let</span> t = <span class="fn">t_test_one_sample</span>(data, <span class="num">4.0</span>)
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"t-stat: {t.t_stat:.4f}"</span>)
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"mean:   {t.mean:.4f}"</span>)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#29</span>
+    <span class="card-title">Fibonacci</span>
+    <span class="card-tag">math</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Generate Fibonacci sequence using Sanskrit DSL.</div>
+    <pre><span class="fn">print</span>(<span class="fn">fibonacci</span>(<span class="num">12</span>))
+<span class="cmt">-- [0,1,1,2,3,5,8,13,21,34,55,89,144]</span>
+
+<span class="cmt">-- Or write it yourself:</span>
+<span class="kw">def</span> <span class="fn">fib</span>(n):
+    <span class="kw">if</span> n <= <span class="num">1</span>: <span class="kw">return</span> n
+    <span class="kw">return</span> <span class="fn">fib</span>(n-<span class="num">1</span>) + <span class="fn">fib</span>(n-<span class="num">2</span>)
+<span class="fn">print</span>([<span class="fn">fib</span>(i) <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)])</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#30</span>
+    <span class="card-title">Prime Numbers</span>
+    <span class="card-tag">math</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Check primality and generate prime lists.</div>
+    <pre><span class="fn">print</span>([n <span class="kw">for</span> n <span class="kw">in</span> <span class="fn">range</span>(<span class="num">2</span>,<span class="num">50</span>) <span class="kw">if</span> <span class="fn">is_prime</span>(n)])
+<span class="cmt">-- [2,3,5,7,11,13,17,19,23,29,31,37,41,43,47]</span>
+
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"GCD(48,18) = {gcd(48,18)}"</span>)
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"LCM(4,6)   = {lcm(4,6)}"</span>)</pre>
+  </div>
+</div>
+</div>
+<div class="cat-header">Sanskrit DSL Language</div>
+<div class="grid">
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#31</span>
+    <span class="card-title">Variables & Types</span>
+    <span class="card-tag">dsl</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Let, mut, types, arithmetic.</div>
+    <pre><span class="kw">let</span> x = <span class="num">42</span>
+<span class="kw">let</span> pi  = <span class="num">3.14159</span>
+<span class="kw">let</span> msg = <span class="str">"Quantum computing"</span>
+<span class="kw">let</span> ok  = <span class="kw">true</span>
+<span class="kw">mut</span> counter = <span class="num">0</span>
+counter = counter + <span class="num">1</span>
+<span class="fn">print</span>(x, pi, msg, counter)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#32</span>
+    <span class="card-title">F-Strings</span>
+    <span class="card-tag">dsl</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Format strings with expressions and number formatting.</div>
+    <pre><span class="kw">let</span> energy = <span class="num">-1.137270</span>
+<span class="kw">let</span> n = <span class="num">42</span>
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"Energy: {energy:.6f} Ha"</span>)
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"N = {n} = {n:08b} binary"</span>)
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"Pi ≈ {PI:.4f}"</span>)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#33</span>
+    <span class="card-title">For Loops</span>
+    <span class="card-tag">dsl</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Iteration over ranges and lists.</div>
+    <pre><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>): <span class="fn">print</span>(i)
+<span class="kw">for</span> x <span class="kw">in</span> [<span class="str">"H2"</span>,<span class="str">"LiH"</span>,<span class="str">"H2O"</span>]: <span class="fn">print</span>(x)
+<span class="kw">for</span> i,v <span class="kw">in</span> <span class="fn">enumerate</span>([<span class="num">10</span>,<span class="num">20</span>,<span class="num">30</span>]):
+    <span class="fn">print</span>(<span class="fn">f</span><span class="str">"{i}: {v}"</span>)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#34</span>
+    <span class="card-title">Functions</span>
+    <span class="card-tag">dsl</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Define and call functions, recursion, lambdas.</div>
+    <pre><span class="kw">def</span> <span class="fn">bell</span>(n_shots=<span class="num">1000</span>):
+    <span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">2</span>)
+    <span class="fn">H</span>(q[<span class="num">0</span>]); <span class="fn">CNOT</span>(q[<span class="num">0</span>],q[<span class="num">1</span>])
+    <span class="kw">return</span> <span class="fn">measure_all</span>(q, shots=n_shots)
+
+<span class="kw">let</span> r = <span class="fn">bell</span>(<span class="num">500</span>)
+<span class="fn">print</span>(r.histogram)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#35</span>
+    <span class="card-title">List Comprehensions</span>
+    <span class="card-tag">dsl</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Build lists with expressions and filters.</div>
+    <pre><span class="kw">let</span> squares = [x**<span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)]
+<span class="kw">let</span> evens   = [x <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="num">20</span>) <span class="kw">if</span> x%<span class="num">2</span>==<span class="num">0</span>]
+<span class="fn">print</span>(squares)
+<span class="fn">print</span>(evens)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#36</span>
+    <span class="card-title">If / Elif / Else</span>
+    <span class="card-tag">dsl</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Conditional branching.</div>
+    <pre><span class="kw">let</span> energy = <span class="num">-1.136</span>
+<span class="kw">if</span>   energy < -<span class="num">1.137</span>:  <span class="fn">print</span>(<span class="str">"Chemical accuracy achieved!"</span>)
+<span class="kw">elif</span> energy < -<span class="num">1.130</span>:  <span class="fn">print</span>(<span class="str">"Close — try more shots"</span>)
+<span class="kw">else</span>:                   <span class="fn">print</span>(<span class="str">"Far from target"</span>)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#37</span>
+    <span class="card-title">While Loop</span>
+    <span class="card-tag">dsl</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Repeat until a condition is met.</div>
+    <pre><span class="kw">mut</span> n = <span class="num">1</span>
+<span class="kw">while</span> n < <span class="num">1000</span>:
+    n = n * <span class="num">2</span>
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"First power of 2 >= 1000: {n}"</span>)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#38</span>
+    <span class="card-title">Dict Operations</span>
+    <span class="card-tag">dsl</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Create and manipulate dictionaries.</div>
+    <pre><span class="kw">let</span> hist = {<span class="str">"00"</span>: <span class="num">503</span>, <span class="str">"11"</span>: <span class="num">497</span>}
+<span class="fn">print</span>(<span class="fn">dict_get</span>(hist, <span class="str">"00"</span>, <span class="num">0</span>))
+<span class="fn">print</span>(<span class="fn">items</span>(hist))
+<span class="fn">print</span>(<span class="fn">keys</span>(hist))
+<span class="fn">print</span>(<span class="fn">values</span>(hist))</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#39</span>
+    <span class="card-title">String Methods</span>
+    <span class="card-tag">dsl</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">String manipulation functions.</div>
+    <pre><span class="kw">let</span> s = <span class="str">"Sanskrit Quantum DSL"</span>
+<span class="fn">print</span>(<span class="fn">upper</span>(s))
+<span class="fn">print</span>(<span class="fn">split</span>(s, <span class="str">" "</span>))
+<span class="fn">print</span>(<span class="fn">contains</span>(s, <span class="str">"Quantum"</span>))
+<span class="fn">print</span>(<span class="fn">replace</span>(s, <span class="str">"DSL"</span>, <span class="str">"Language"</span>))</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#40</span>
+    <span class="card-title">Math Functions</span>
+    <span class="card-tag">dsl</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Built-in math: trig, log, sqrt, etc.</div>
+    <pre><span class="fn">print</span>(<span class="fn">sin</span>(PI/<span class="num">2</span>))   <span class="cmt">-- 1.0</span>
+<span class="fn">print</span>(<span class="fn">cos</span>(<span class="num">0</span>))      <span class="cmt">-- 1.0</span>
+<span class="fn">print</span>(<span class="fn">sqrt</span>(<span class="num">2</span>))    <span class="cmt">-- 1.4142…</span>
+<span class="fn">print</span>(<span class="fn">log</span>(<span class="fn">exp</span>(<span class="num">1</span>))) <span class="cmt">-- 1.0</span>
+<span class="fn">print</span>(<span class="fn">abs</span>(-<span class="num">42</span>))   <span class="cmt">-- 42</span>
+<span class="fn">print</span>(<span class="fn">round_to</span>(<span class="num">3.14159</span>, <span class="num">2</span>)) <span class="cmt">-- 3.14</span></pre>
+  </div>
+</div>
+</div>
+<div class="cat-header">Advanced Quantum</div>
+<div class="grid">
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#41</span>
+    <span class="card-title">State Fidelity</span>
+    <span class="card-tag">adv</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Measure how similar two quantum states are.</div>
+    <pre><span class="kw">let</span> q1 = <span class="fn">qubits</span>(<span class="num">2</span>); <span class="fn">H</span>(q1[<span class="num">0</span>]); <span class="fn">CNOT</span>(q1[<span class="num">0</span>],q1[<span class="num">1</span>])
+<span class="kw">let</span> q2 = <span class="fn">qubits</span>(<span class="num">2</span>); <span class="fn">H</span>(q2[<span class="num">0</span>]); <span class="fn">CNOT</span>(q2[<span class="num">0</span>],q2[<span class="num">1</span>])
+<span class="kw">let</span> f = <span class="fn">state_fidelity</span>(<span class="fn">statevector</span>(q1), <span class="fn">statevector</span>(q2))
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"Fidelity: {f:.6f}"</span>)  <span class="cmt">-- 1.0 (identical)</span></pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#42</span>
+    <span class="card-title">Expectation Value</span>
+    <span class="card-tag">adv</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Measure quantum observable expectation value.</div>
+    <pre><span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">2</span>)
+<span class="fn">H</span>(q[<span class="num">0</span>]); <span class="fn">CNOT</span>(q[<span class="num">0</span>],q[<span class="num">1</span>])
+<span class="kw">let</span> sv = <span class="fn">statevector</span>(q)
+<span class="kw">let</span> ev = <span class="fn">pauli_expectation</span>(sv, <span class="str">"ZZ"</span>)
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"⟨ZZ⟩ = {ev:.4f}"</span>)  <span class="cmt">-- 1.0 for Bell state</span></pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#43</span>
+    <span class="card-title">Multiple Bell Pairs</span>
+    <span class="card-tag">adv</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Create independent Bell pairs on different qubit pairs.</div>
+    <pre><span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">6</span>)
+<span class="kw">for</span> i <span class="kw">in</span> [<span class="num">0</span>,<span class="num">2</span>,<span class="num">4</span>]:
+    <span class="fn">H</span>(q[i]); <span class="fn">CNOT</span>(q[i], q[i+<span class="num">1</span>])
+<span class="kw">let</span> r = <span class="fn">measure_all</span>(q, shots=<span class="num">1000</span>)
+<span class="fn">print</span>(r.histogram)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#44</span>
+    <span class="card-title">Parametric Circuit</span>
+    <span class="card-tag">adv</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Circuit with variable angles — basis of VQE ansatz.</div>
+    <pre><span class="kw">def</span> <span class="fn">ansatz</span>(theta1, theta2):
+    <span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">2</span>)
+    <span class="fn">Ry</span>(q[<span class="num">0</span>], theta1); <span class="fn">Ry</span>(q[<span class="num">1</span>], theta2)
+    <span class="fn">CNOT</span>(q[<span class="num">0</span>], q[<span class="num">1</span>])
+    <span class="kw">return</span> <span class="fn">measure_all</span>(q, shots=<span class="num">500</span>)
+
+<span class="kw">for</span> t <span class="kw">in</span> [<span class="num">0</span>, PI/<span class="num">4</span>, PI/<span class="num">2</span>]:
+    <span class="fn">print</span>(<span class="fn">ansatz</span>(t, t).histogram)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#45</span>
+    <span class="card-title">Grover Multi-Target</span>
+    <span class="card-tag">adv</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Search for multiple items simultaneously.</div>
+    <pre><span class="kw">let</span> r = <span class="fn">grover</span>(<span class="num">4</span>, [<span class="num">3</span>,<span class="num">7</span>,<span class="num">11</span>], <span class="num">2000</span>)
+<span class="kw">let</span> targets = [<span class="str">"0011"</span>,<span class="str">"0111"</span>,<span class="str">"1011"</span>]
+<span class="kw">let</span> found = <span class="fn">sum</span>([<span class="fn">dict_get</span>(r.histogram,t,<span class="num">0</span>) <span class="kw">for</span> t <span class="kw">in</span> targets])
+<span class="fn">print</span>(<span class="fn">f</span><span class="str">"Multi-target: {found}/2000"</span>)</pre>
+  </div>
+</div>
+</div>
+<div class="cat-header">Practical Programs</div>
+<div class="grid">
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#46</span>
+    <span class="card-title">Quantum Coin</span>
+    <span class="card-tag">prac</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Quantum coin flip — true randomness.</div>
+    <pre><span class="kw">def</span> <span class="fn">qcoin</span>():
+    <span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">1</span>); <span class="fn">H</span>(q[<span class="num">0</span>])
+    <span class="kw">return</span> <span class="str">"Heads"</span> <span class="kw">if</span> <span class="fn">measure</span>(q[<span class="num">0</span>])==<span class="num">0</span> <span class="kw">else</span> <span class="str">"Tails"</span>
+<span class="fn">print</span>([<span class="fn">qcoin</span>() <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)])</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#47</span>
+    <span class="card-title">Dice Roll</span>
+    <span class="card-tag">prac</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Quantum dice using rejection sampling.</div>
+    <pre><span class="kw">def</span> <span class="fn">qdie</span>():
+    <span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">3</span>); <span class="fn">H_all</span>(q)
+    <span class="kw">let</span> v = <span class="fn">bits_to_int</span>(<span class="fn">join</span>([<span class="fn">str</span>(<span class="fn">measure</span>(q[i])) <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">3</span>)],<span class="str">""</span>))
+    <span class="kw">if</span> v >= <span class="num">6</span>: <span class="kw">return</span> <span class="fn">qdie</span>()
+    <span class="kw">return</span> v+<span class="num">1</span>
+<span class="fn">print</span>([<span class="fn">qdie</span>() <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="num">10</span>)])</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#48</span>
+    <span class="card-title">Portfolio QAOA</span>
+    <span class="card-tag">prac</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Select best 2 stocks from 4 using QAOA.</div>
+    <pre><span class="kw">let</span> assets = [<span class="str">"RELIANCE"</span>,<span class="str">"TCS"</span>,<span class="str">"HDFC"</span>,<span class="str">"INFOSYS"</span>]
+<span class="kw">let</span> edges  = [[<span class="num">0</span>,<span class="num">1</span>],[<span class="num">1</span>,<span class="num">2</span>],[<span class="num">2</span>,<span class="num">3</span>],[<span class="num">3</span>,<span class="num">0</span>],[<span class="num">0</span>,<span class="num">2</span>],[<span class="num">1</span>,<span class="num">3</span>]]
+<span class="kw">let</span> r = <span class="fn">qaoa</span>(n_nodes=<span class="num">4</span>,edges=edges,p_layers=<span class="num">3</span>,shots=<span class="num">2000</span>)
+<span class="kw">let</span> s = <span class="fn">sort_by</span>(<span class="fn">items</span>(r.histogram),<span class="kw">fn</span>(kv):<span class="kw">return</span>-kv[<span class="num">1</span>])
+<span class="kw">for</span> kv <span class="kw">in</span> s[:<span class="num">3</span>]:
+    <span class="kw">let</span> sel=[assets[i] <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">4</span>) <span class="kw">if</span> kv[<span class="num">0</span>][i]==<span class="str">"1"</span>]
+    <span class="fn">print</span>(<span class="fn">f</span><span class="str">"{sel}: {kv[1]}"</span>)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#49</span>
+    <span class="card-title">Linspace</span>
+    <span class="card-tag">prac</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Generate evenly-spaced values for circuit sweeps.</div>
+    <pre><span class="kw">let</span> angles = <span class="fn">linspace</span>(<span class="num">0</span>, <span class="num">2</span>*PI, <span class="num">8</span>)
+<span class="fn">print</span>(<span class="str">"Angle sweep results:"</span>)
+<span class="kw">for</span> a <span class="kw">in</span> angles:
+    <span class="kw">let</span> q = <span class="fn">qubits</span>(<span class="num">1</span>); <span class="fn">Rx</span>(q[<span class="num">0</span>],a)
+    <span class="kw">let</span> r = <span class="fn">measure_all</span>(q, shots=<span class="num">200</span>)
+    <span class="kw">let</span> p1 = <span class="fn">dict_get</span>(r.histogram,<span class="str">"1"</span>,<span class="num">0</span>)/<span class="num">200.0</span>
+    <span class="fn">print</span>(<span class="fn">f</span><span class="str">"a={round_to(a,2):.2f}: P(1)={round_to(p1,3):.3f}"</span>)</pre>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header">
+    <span class="card-num">#50</span>
+    <span class="card-title">Full Pipeline</span>
+    <span class="card-tag">prac</span>
+  </div>
+  <div class="card-body">
+    <div class="card-desc">Complete quantum chemistry pipeline from molecule to energy.</div>
+    <pre><span class="cmt">-- Full quantum chemistry workflow</span>
+<span class="fn">print</span>(<span class="str">"=== H2 Dissociation Curve ==="</span>)
+<span class="kw">for</span> d <span class="kw">in</span> [<span class="num">0.5</span>, <span class="num">0.7</span>, <span class="num">0.74</span>, <span class="num">1.0</span>, <span class="num">1.5</span>, <span class="num">2.0</span>]:
+    <span class="kw">molecule</span> H2 { atoms:[H,H], bond_length:d, basis_set:<span class="str">"STO-3G"</span> }
+    <span class="kw">let</span> r = <span class="fn">vqe</span>(H2, ansatz=<span class="str">"UCCSD"</span>, shots=<span class="num">1000</span>)
+    <span class="fn">print</span>(<span class="fn">f</span><span class="str">"d={d:.2f} Å → E={r.energy:.4f} Ha"</span>)</pre>
+  </div>
+</div>
+</div>
+</body></html>

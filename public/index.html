@@ -1,167 +1,2208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sanskrit Visual Builder v3.1</title>
-  <link rel="stylesheet" href="/css/style.css">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sanskrit Visual Builder v3.2 — ETL + Data Science + Quantum</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ══ THEMES ══════════════════════════════════════════════════════ */
+:root {
+  --bg:#0D1117;--bg2:#161B22;--bg3:#1C2128;--bg4:#21262D;
+  --border:#30363D;--border2:#21262D;
+  --text:#E6EDF3;--text2:#8B949E;--text3:#484F58;
+  --accent:#58A6FF;--accent2:#1F6FEB;
+  --green:#3FB950;--red:#F85149;--orange:#D29922;--purple:#BC8CFF;--teal:#39D353;--cyan:#79C0FF;--pink:#FF7EB6;
+  --etl-color:#0891B2;--ds-color:#7C3AED;--q-color:#1D4ED8;--viz-color:#059669;--out-color:#DC2626;
+  --panel-bg:rgba(22,27,34,0.97);--shadow:0 8px 32px rgba(0,0,0,0.7);
+  --r:8px;--rl:12px;--font:'Segoe UI',system-ui,sans-serif;--mono:'Cascadia Code','Fira Code','Consolas',monospace;
+}
+.theme-midnight{--bg:#000B18;--bg2:#00101F;--bg3:#001528;--bg4:#001F35;--border:#0D2137;--border2:#091929}
+.theme-purple{--bg:#0E0617;--bg2:#150920;--bg3:#1C0D2D;--bg4:#23103A;--border:#3D1A6B;--accent:#BC8CFF;--accent2:#7C3AED}
+.theme-forest{--bg:#0D1A0D;--bg2:#111F11;--bg3:#162416;--bg4:#1C2E1C;--border:#1E3B1E;--accent:#3FB950;--accent2:#15803D}
+.theme-ocean{--bg:#0A1628;--bg2:#0F1F3A;--bg3:#142848;--bg4:#1A3258;--border:#1E3A5F;--accent:#38BDF8;--accent2:#0369A1}
+.theme-light{--bg:#F6F8FA;--bg2:#FFFFFF;--bg3:#F0F2F5;--bg4:#E8EBF0;--border:#D0D7DE;--border2:#E0E5EB;--text:#1F2328;--text2:#57606A;--text3:#99A1A9;--panel-bg:rgba(255,255,255,0.98)}
+
+/* ══ RESET ═══════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;font-family:var(--font);background:var(--bg);color:var(--text);font-size:13px}
+button{font-family:var(--font);cursor:pointer;border:none;outline:none;transition:all 0.15s}
+input,select,textarea{font-family:var(--font);outline:none;transition:border-color 0.15s}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* ══ LAYOUT ══════════════════════════════════════════════════════ */
+#app{display:flex;flex-direction:column;width:100vw;height:100vh;overflow:hidden;position:relative;background:var(--bg)}
+
+/* ══ TOOLBAR ═════════════════════════════════════════════════════ */
+#toolbar{
+  height:46px;background:var(--bg2);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:3px;padding:0 10px;flex-shrink:0;z-index:200;
+  user-select:none;
+}
+.logo{font-size:15px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-0.5px;margin-right:6px;white-space:nowrap}
+.tb-sep{width:1px;height:22px;background:var(--border);margin:0 4px;flex-shrink:0}
+.tb-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;background:transparent;color:var(--text2);font-size:12px;font-weight:500;white-space:nowrap;transition:all 0.12s}
+.tb-btn:hover{background:var(--bg3);color:var(--text)}
+.tb-btn.primary{background:var(--accent2);color:#fff;font-weight:600}
+.tb-btn.primary:hover{filter:brightness(1.15)}
+.tb-btn.danger{background:rgba(248,81,73,0.15);color:var(--red);border:1px solid rgba(248,81,73,0.3)}
+.tb-btn.danger:hover{background:rgba(248,81,73,0.25)}
+.tb-btn.active{background:var(--bg3);color:var(--accent)}
+.tb-btn:disabled{opacity:0.35;cursor:not-allowed}
+.tb-btn svg{width:13px;height:13px;flex-shrink:0}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:6px}
+#status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;box-shadow:0 0 6px var(--green)}
+#status-dot.running{background:var(--orange);box-shadow:0 0 6px var(--orange);animation:pulse 0.8s infinite}
+#status-dot.error{background:var(--red);box-shadow:0 0 6px var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+#status-text{font-size:11px;color:var(--text2)}
+.badge{display:inline-block;padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;font-family:var(--mono)}
+.badge-js{background:#2a1f00;color:#d29922}
+
+/* ══ METRICS BAR ════════════════════════════════════════════════ */
+#metrics-bar{
+  height:24px;background:var(--bg);border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;gap:16px;padding:0 12px;flex-shrink:0;
+  font-size:10px;color:var(--text3);font-family:var(--mono);
+}
+.mitem{display:flex;align-items:center;gap:5px}
+.mbar{width:44px;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.mbar-fill{height:100%;border-radius:2px;transition:width 1.2s ease,background 0.5s}
+.mbar-fill.normal{background:linear-gradient(90deg,var(--accent),var(--cyan))}
+.mbar-fill.warm{background:var(--orange)}
+.mbar-fill.hot{background:var(--red)}
+#metrics-bar .sep{color:var(--border)}
+
+/* ══ WORKSPACE ══════════════════════════════════════════════════ */
+#workspace{flex:1;position:relative;overflow:hidden;min-height:0}
+
+/* ══ CANVAS ═════════════════════════════════════════════════════ */
+#canvas-area{
+  position:absolute;inset:0;overflow:hidden;
+  background-image:radial-gradient(circle,var(--border2) 1px,transparent 1px);
+  background-size:24px 24px;cursor:default;
+}
+#canvas-blocks{position:absolute;top:0;left:0;width:5000px;height:4000px;transform-origin:0 0}
+#wire-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+#canvas-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;opacity:.3}
+#canvas-hint .hi{font-size:56px;margin-bottom:12px}
+#canvas-hint h2{font-size:18px;font-weight:600;color:var(--text);margin-bottom:6px}
+#canvas-hint p{font-size:12px;color:var(--text2);line-height:1.7}
+.canvas-zoom{position:absolute;bottom:14px;right:14px;display:flex;gap:4px;z-index:20;background:var(--panel-bg);border:1px solid var(--border);border-radius:8px;padding:3px;backdrop-filter:blur(10px)}
+.canvas-zoom button{width:26px;height:26px;background:transparent;border-radius:5px;color:var(--text2);font-size:13px;display:flex;align-items:center;justify-content:center}
+.canvas-zoom button:hover{background:var(--bg3);color:var(--text)}
+
+/* ══ FLOATING PANELS ════════════════════════════════════════════ */
+.panel{
+  position:absolute;background:var(--panel-bg);border:1px solid var(--border);
+  border-radius:var(--rl);box-shadow:var(--shadow);display:flex;flex-direction:column;
+  min-width:180px;min-height:80px;backdrop-filter:blur(20px);z-index:100;overflow:hidden;
+}
+.panel:hover{box-shadow:0 12px 48px rgba(0,0,0,0.85)}
+.panel.focused{z-index:110;border-color:var(--border)}
+.panel-hdr{
+  display:flex;align-items:center;gap:7px;padding:7px 9px;
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  cursor:grab;user-select:none;flex-shrink:0;min-height:34px;
+}
+.panel-hdr:active{cursor:grabbing}
+.panel-icon{font-size:13px;flex-shrink:0}
+.panel-title{font-size:11px;font-weight:600;color:var(--text);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.panel-btns{display:flex;gap:1px;margin-left:auto;flex-shrink:0}
+.pb{width:20px;height:20px;border-radius:4px;background:transparent;color:var(--text3);font-size:10px;display:flex;align-items:center;justify-content:center}
+.pb:hover{background:var(--bg3);color:var(--text)}
+.panel-body{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0}
+.panel.minimized .panel-body{display:none}
+.panel.minimized{min-height:0!important}
+.resize-h{position:absolute;bottom:0;right:0;width:14px;height:14px;cursor:se-resize;z-index:5}
+.resize-h::after{content:'';position:absolute;bottom:3px;right:3px;width:7px;height:7px;border-right:2px solid var(--text3);border-bottom:2px solid var(--text3)}
+
+/* ══ PALETTE ════════════════════════════════════════════════════ */
+#pal-search-wrap{padding:7px;border-bottom:1px solid var(--border);flex-shrink:0}
+#pal-search{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:5px 9px;color:var(--text);font-size:12px}
+#pal-search:focus{border-color:var(--accent)}
+#pal-list{flex:1;overflow-y:auto;padding:2px 0}
+.pcat-hdr{
+  padding:5px 10px 3px;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;
+}
+.pcat-hdr:hover{color:var(--text2)}
+.pcat-arrow{transition:transform .2s;font-size:8px}
+.pcat-hdr.collapsed .pcat-arrow{transform:rotate(-90deg)}
+.pcat-items{overflow:hidden}
+.pitem{
+  padding:5px 10px 5px 22px;display:flex;align-items:center;gap:7px;
+  cursor:grab;border-left:2px solid transparent;font-size:11px;color:var(--text2);
+  transition:all .1s;
+}
+.pitem:hover{background:var(--bg3);color:var(--text);border-left-color:var(--accent)}
+.pitem:active{cursor:grabbing}
+.pitem-icon{font-size:12px;width:16px;text-align:center;flex-shrink:0}
+.pitem-lbl{flex:1}
+
+/* ══ VISUAL BLOCKS ══════════════════════════════════════════════ */
+.vblock{
+  position:absolute;background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--r);min-width:200px;user-select:none;cursor:move;
+  transition:box-shadow .15s;
+}
+.vblock:hover{box-shadow:0 4px 20px rgba(0,0,0,.55)}
+.vblock.selected{box-shadow:0 0 0 2px var(--accent),0 8px 24px rgba(88,166,255,.2)}
+.vb-hdr{display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:var(--r) var(--r) 0 0;border-bottom:1px solid rgba(0,0,0,.25)}
+.vb-icon{font-size:14px;flex-shrink:0}
+.vb-title{font-size:11px;font-weight:600;color:#fff;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vb-cat{font-size:9px;color:rgba(255,255,255,.55);flex-shrink:0}
+.vb-body{padding:7px 9px;display:flex;flex-direction:column;gap:3px}
+.vb-row{display:flex;align-items:center;gap:6px;min-height:20px}
+.vb-lbl{font-size:10px;color:var(--text3);min-width:48px;flex-shrink:0}
+.vb-val{font-size:10px;color:var(--text2);font-family:var(--mono);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vb-val input,.vb-val select{
+  width:100%;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.08);
+  border-radius:4px;padding:2px 5px;color:#fff;font-size:10px;font-family:var(--mono);
+}
+.vb-val input:focus,.vb-val select:focus{border-color:rgba(88,166,255,.5)}
+.vb-ports{display:flex;justify-content:space-between;padding:5px 0 3px}
+.port-col{display:flex;flex-direction:column;gap:8px}
+.port-row{display:flex;align-items:center;gap:5px;font-size:9px;color:var(--text3)}
+.port-row.out{flex-direction:row-reverse}
+.port-dot{width:11px;height:11px;border-radius:50%;border:2px solid;cursor:crosshair;flex-shrink:0;transition:transform .1s,box-shadow .1s}
+.port-dot:hover{transform:scale(1.5);box-shadow:0 0 8px currentColor}
+.port-dot.quantum {background:#7C3AED;border-color:#A78BFA;color:#A78BFA}
+.port-dot.dataset {background:#0891B2;border-color:#22D3EE;color:#22D3EE}
+.port-dot.number  {background:#1D4ED8;border-color:#60A5FA;color:#60A5FA}
+.port-dot.result  {background:#059669;border-color:#34D399;color:#34D399}
+.port-dot.any     {background:#374151;border-color:#6B7280;color:#6B7280}
+.port-dot.model   {background:#7C3AED;border-color:#A78BFA;color:#A78BFA}
+.port-dot.matrix  {background:#DB2777;border-color:#F472B6;color:#F472B6}
+.port-dot.profile {background:#D97706;border-color:#FBBF24;color:#FBBF24}
+.vb-badge{
+  position:absolute;top:-7px;right:8px;font-size:9px;padding:1px 6px;
+  border-radius:8px;font-weight:700;background:var(--bg);
+}
+
+/* ══ PROPERTIES PANEL ═══════════════════════════════════════════ */
+.prop-empty{padding:20px;text-align:center;color:var(--text3)}
+.prop-empty-icon{font-size:28px;margin-bottom:8px}
+.prop-empty-text{font-size:11px;line-height:1.6}
+.prop-hint{margin-top:12px;font-size:10px;color:var(--text3);line-height:2;font-family:var(--mono)}
+.prop-sec{padding:10px 12px;border-bottom:1px solid var(--border2)}
+.prop-sec-title{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:8px}
+.prop-field{margin-bottom:9px}
+.prop-lbl{display:block;font-size:10px;color:var(--text2);margin-bottom:3px;font-weight:500}
+.prop-input,.prop-select{
+  width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;
+  padding:5px 8px;color:var(--text);font-size:11px;
+}
+.prop-input:focus,.prop-select:focus{border-color:var(--accent)}
+.prop-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:5px 8px;color:var(--text);font-size:11px;font-family:var(--mono);resize:vertical;min-height:60px}
+.prop-textarea:focus{border-color:var(--accent)}
+.prop-desc{font-size:10px;color:var(--text3);margin-top:3px;line-height:1.4}
+.prop-badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:2px 7px;border-radius:8px;margin:2px}
+
+/* ══ OUTPUT PANEL ═══════════════════════════════════════════════ */
+.out-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;padding:0 8px;overflow-x:auto}
+.out-tab{padding:7px 13px;font-size:11px;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;transition:all .15s}
+.out-tab:hover{color:var(--text)}
+.out-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.out-pane{display:none;flex:1;overflow:hidden;min-height:0}
+.out-pane.active{display:flex;flex-direction:column}
+#con-lines{flex:1;overflow-y:auto;padding:8px 10px;font-family:var(--mono);font-size:11.5px;line-height:1.65}
+.cline{white-space:pre-wrap;word-break:break-all;padding:0 2px}
+.cts{color:var(--text3);font-size:10px;margin-right:7px;user-select:none}
+.cprint{color:var(--text)}.cgate{color:var(--cyan)}.cmeasure{color:var(--green)}
+.cerror{color:var(--red)}.cwarn{color:var(--orange)}.csuccess{color:var(--green)}
+.ctiming{color:var(--orange)}.cdebug{color:var(--text3)}.cinfo{color:var(--text2)}
+.cetl{color:var(--teal)}.cdsl{color:var(--purple)}
+/* Chart pane */
+#chart-pane{flex:1;overflow-y:auto;padding:10px;display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start}
+.chart-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:10px;flex:1;min-width:240px;max-width:420px}
+.chart-card-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:7px}
+.chart-wrap{position:relative;height:180px}
+/* Table pane */
+#table-pane{flex:1;overflow:auto;padding:0}
+.tbl-toolbar{padding:6px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap}
+.tbl-toolbar input{background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:4px 8px;color:var(--text);font-size:11px;width:180px}
+.tbl-info{font-size:10px;color:var(--text3);margin-left:auto;font-family:var(--mono)}
+.tbl-btn{padding:3px 10px;border-radius:5px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:10px}
+.tbl-btn:hover{border-color:var(--accent);color:var(--accent)}
+.data-tbl{width:100%;border-collapse:collapse;font-size:11px}
+.data-tbl th{background:var(--bg4);padding:6px 10px;text-align:left;color:var(--text2);font-size:9px;letter-spacing:.6px;text-transform:uppercase;border-bottom:1px solid var(--border);position:sticky;top:0;cursor:pointer;user-select:none;white-space:nowrap}
+.data-tbl th:hover{color:var(--text)}
+.data-tbl th.sort-asc::after{content:' ↑';color:var(--accent)}
+.data-tbl th.sort-desc::after{content:' ↓';color:var(--accent)}
+.data-tbl td{padding:4px 10px;border-bottom:1px solid var(--border2);color:var(--text);font-family:var(--mono)}
+.data-tbl tr:hover td{background:var(--bg3)}
+.data-tbl .null-cell{color:var(--text3);font-style:italic}
+.data-tbl .num-cell{color:var(--cyan)}
+.tbl-bar{height:8px;border-radius:2px;background:var(--accent);opacity:.7}
+/* DSL pane */
+#dsl-pane{flex:1;overflow:auto;background:var(--bg)}
+#dsl-pre{padding:12px;font-family:var(--mono);font-size:12px;line-height:1.7;white-space:pre}
+.dkw{color:#ff79c6}.dfn{color:#50fa7b}.dstr{color:#f1fa8c}.dnum{color:#bd93f9}.dcmt{color:var(--text3);font-style:italic}
+/* Profile pane */
+#profile-pane{flex:1;overflow:auto;padding:8px}
+/* Video pane */
+#video-pane{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+
+/* ══ SETTINGS MODAL ════════════════════════════════════════════ */
+#modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:800;display:flex;align-items:center;justify-content:center}
+#modal-overlay.hidden{display:none}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);box-shadow:0 24px 80px rgba(0,0,0,.9);display:flex;flex-direction:column;max-height:90vh;overflow:hidden}
+.modal-hdr{display:flex;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);flex-shrink:0}
+.modal-title{font-size:15px;font-weight:700;color:var(--text);flex:1}
+.modal-close{width:28px;height:28px;border-radius:6px;background:transparent;color:var(--text2);font-size:16px;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:var(--bg3);color:var(--red)}
+.modal-body{flex:1;overflow-y:auto;padding:16px 18px}
+
+/* ══ SETTINGS ═══════════════════════════════════════════════════ */
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.setting-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.setting-card-title{font-size:11px;font-weight:700;color:var(--text);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
+.setting-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.setting-label{font-size:12px;color:var(--text2)}
+.setting-desc{font-size:10px;color:var(--text3);margin-top:2px}
+.toggle{width:36px;height:20px;background:var(--bg4);border-radius:10px;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.toggle.on{background:var(--accent2)}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;background:#fff;border-radius:50%;transition:transform .2s}
+.toggle.on::after{transform:translateX(16px)}
+.s-input{background:var(--bg4);border:1px solid var(--border);border-radius:5px;padding:4px 8px;color:var(--text);font-size:11px;width:80px}
+.s-select{background:var(--bg4);border:1px solid var(--border);border-radius:5px;padding:4px 8px;color:var(--text);font-size:11px;width:120px}
+
+/* ══ EXAMPLES MODAL ════════════════════════════════════════════ */
+.ex-filters{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.ex-pill{padding:4px 11px;border-radius:16px;font-size:11px;cursor:pointer;background:var(--bg3);border:1px solid var(--border);color:var(--text2);transition:all .15s}
+.ex-pill:hover,.ex-pill.active{background:var(--accent2);border-color:var(--accent);color:#fff}
+.ex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.ex-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:13px;cursor:pointer;transition:all .15s}
+.ex-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.ex-cat-tag{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:5px}
+.ex-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.ex-desc{font-size:11px;color:var(--text2);line-height:1.45}
+.ex-meta{display:flex;gap:7px;margin-top:8px;font-size:10px}
+.diff-pill{padding:1px 7px;border-radius:8px;font-weight:600}
+.diff-Beginner{background:#0d3321;color:#3fb950}
+.diff-Intermediate{background:#2d2106;color:#d29922}
+.diff-Advanced{background:#2d0d0d;color:#f85149}
+
+/* ══ WIRE STYLES ════════════════════════════════════════════════ */
+.wire{fill:none;stroke-width:2.5;stroke-linecap:round;cursor:pointer;opacity:.85}
+.wire:hover{stroke-width:4;opacity:1}
+.wire.selected{stroke-width:4;filter:drop-shadow(0 0 4px currentColor)}
+.wire.quantum{stroke:#A78BFA}.wire.dataset{stroke:#22D3EE}.wire.result{stroke:#34D399}
+.wire.number{stroke:#60A5FA}.wire.any{stroke:#6B7280}.wire.model{stroke:#A78BFA}
+.wire-draft{fill:none;stroke:#58A6FF;stroke-width:2;stroke-dasharray:6,3;pointer-events:none}
+.snap-ring{fill:none;stroke:#58A6FF;stroke-width:2;stroke-dasharray:4,2;pointer-events:none;transition:opacity .1s}
+
+/* ══ UPLOAD ZONE ════════════════════════════════════════════════ */
+.upload-zone{border:2px dashed var(--border);border-radius:var(--r);padding:16px;text-align:center;cursor:pointer;transition:all .2s;margin:8px}
+.upload-zone:hover,.upload-zone.drag-over{border-color:var(--accent);background:rgba(88,166,255,.05)}
+.upload-zone-text{font-size:11px;color:var(--text3);margin-top:6px}
+
+/* ══ UTILITY ════════════════════════════════════════════════════ */
+.hidden{display:none!important}
+select option{background:var(--bg2)}
+</style>
 </head>
 <body>
-  <!-- ═══ TOOLBAR ═══════════════════════════════════════════════════ -->
-  <header id="toolbar">
-    <div id="toolbar-left">
-      <span id="logo">⟨ψ⟩ Sanskrit Visual Builder</span>
-      <span id="version">v3.1</span>
-    </div>
-    <div id="toolbar-center">
-      <button id="btn-run"   class="tb-btn primary" title="Run program (Ctrl+Enter)">▶ RUN</button>
-      <button id="btn-stop"  class="tb-btn danger"  title="Stop execution">■ STOP</button>
-      <button id="btn-clear" class="tb-btn"         title="Clear canvas">✕ CLEAR</button>
-      <div class="tb-sep"></div>
-      <button id="btn-open"  class="tb-btn" title="Open .sq file">📂 OPEN</button>
-      <button id="btn-save"  class="tb-btn" title="Save as .sq file">💾 SAVE</button>
-      <div class="tb-sep"></div>
-      <button id="btn-code"  class="tb-btn toggle" title="Toggle code/canvas view">&lt;/&gt; CODE</button>
-      <button id="btn-export" class="tb-btn" title="Export circuit">📤 EXPORT</button>
-    </div>
-    <div id="toolbar-right">
-      <span id="status-indicator" class="status-ready">● Ready</span>
-      <span id="engine-badge" class="badge-rust">Rust</span>
-    </div>
-  </header>
+<div id="app">
 
-  <!-- ═══ MAIN LAYOUT ══════════════════════════════════════════════ -->
-  <div id="main-layout">
+<!-- ═══ TOOLBAR ══════════════════════════════════════════════════ -->
+<div id="toolbar">
+  <div class="logo">⟨ψ⟩ SANSQRIT</div>
+  <span style="font-size:9px;color:var(--text3);font-family:var(--mono);margin-right:4px">v3.2</span>
+  <div class="tb-sep"></div>
 
-    <!-- PALETTE (left) -->
-    <aside id="palette">
-      <div id="palette-search-wrap">
-        <input id="palette-search" type="text" placeholder="🔍 Search blocks..." autocomplete="off">
-        <button id="palette-clear-search" title="Clear search">✕</button>
-      </div>
-      <div id="palette-list"></div>
-    </aside>
+  <button class="tb-btn primary" id="btn-run">▶ Run</button>
+  <button class="tb-btn" id="btn-compile" style="color:var(--purple)">🔨 Compile</button>
+  <button class="tb-btn danger" id="btn-stop" disabled>■ Stop</button>
+  <div class="tb-sep"></div>
 
-    <!-- CANVAS + CODE EDITOR (centre) -->
-    <main id="workspace">
-      <!-- Visual Canvas -->
-      <div id="canvas-wrap">
-        <svg id="canvas" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <marker id="arrowhead" markerWidth="10" markerHeight="7"
-                    refX="9" refY="3.5" orient="auto">
-              <polygon points="0 0, 10 3.5, 0 7" fill="#0F4C5C"/>
-            </marker>
-          </defs>
-          <g id="canvas-grid"></g>
-          <g id="canvas-wires"></g>
-          <g id="canvas-blocks"></g>
-          <!-- Wire being drawn -->
-          <path id="wire-draft" class="wire-draft" d="" marker-end="url(#arrowhead)"/>
-        </svg>
-        <div id="canvas-empty-hint">
-          <div class="hint-icon">⟨ψ⟩</div>
-          <div class="hint-title">Drag blocks here to start</div>
-          <div class="hint-sub">Or click CODE to write Sanskrit code directly</div>
-        </div>
-      </div>
+  <button class="tb-btn" id="btn-new">📄 New</button>
+  <button class="tb-btn" id="btn-save">💾 Save</button>
+  <button class="tb-btn" id="btn-load">📂 Load</button>
+  <div class="tb-sep"></div>
 
-      <!-- Code Editor -->
-      <div id="code-wrap" class="hidden">
-        <div id="code-toolbar">
-          <span class="code-label">Sanskrit Code</span>
-          <button id="btn-code-run" class="tb-btn primary small">▶ RUN</button>
-          <button id="btn-code-clear" class="tb-btn small">CLEAR</button>
-          <select id="example-selector">
-            <option value="">Load example...</option>
-            <option value="bell">Bell State (Hello World)</option>
-            <option value="grover">Grover Search</option>
-            <option value="vqe">VQE Hydrogen</option>
-            <option value="teleport">Quantum Teleportation</option>
-            <option value="qrng">Quantum Random Numbers</option>
-            <option value="stats">Statistical Analysis</option>
-            <option value="shor">Shor Factoring</option>
-            <option value="qaoa">QAOA Portfolio</option>
-          </select>
-        </div>
-        <textarea id="code-editor" spellcheck="false" autocomplete="off"
-          placeholder="-- Sanskrit Visual Builder v3.1
--- Type your Sanskrit code here or load an example above
+  <button class="tb-btn" id="btn-examples">🎯 Examples</button>
+  <button class="tb-btn" id="btn-settings">⚙ Settings</button>
+  <button class="tb-btn" id="btn-fit" title="Fit to view (Ctrl+Shift+F)">⊙ Fit</button>
 
-let q = qubits(2)
-H(q[0])
-CNOT(q[0], q[1])
-let result = measure_all(q, shots=1000)
-print(result.histogram)
-"></textarea>
-      </div>
-    </main>
-
-    <!-- PROPERTIES PANEL (right) -->
-    <aside id="properties">
-      <div id="properties-header">
-        <span id="properties-title">Properties</span>
-        <button id="properties-close" title="Close">✕</button>
-      </div>
-      <div id="properties-body">
-        <div id="properties-empty">
-          <div class="prop-empty-icon">☰</div>
-          <div class="prop-empty-text">Click a block to configure it</div>
-        </div>
-        <div id="properties-form" class="hidden"></div>
-      </div>
-    </aside>
+  <div class="tb-right">
+    <select id="theme-sel" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:3px 7px;border-radius:5px;font-size:11px">
+      <option value="">Dark</option>
+      <option value="theme-midnight">Midnight</option>
+      <option value="theme-purple">Purple</option>
+      <option value="theme-forest">Forest</option>
+      <option value="theme-ocean">Ocean</option>
+      <option value="theme-light">Light</option>
+    </select>
+    <div id="status-dot"></div>
+    <span id="status-text">Ready</span>
+    <span class="badge badge-js" id="eng-badge">JS</span>
   </div>
+</div>
 
-  <!-- ═══ OUTPUT PANEL (bottom) ════════════════════════════════════ -->
-  <div id="output-panel">
-    <div id="output-header">
-      <span id="output-title">Output</span>
-      <div id="output-controls">
-        <button id="btn-output-clear" title="Clear output">✕ Clear</button>
-        <button id="btn-output-toggle" title="Collapse/expand">▼</button>
-      </div>
+<!-- ═══ METRICS BAR ═══════════════════════════════════════════════ -->
+<div id="metrics-bar">
+  <div class="mitem"><span>CPU</span><div class="mbar"><div class="mbar-fill normal" id="cpu-bar" style="width:0"></div></div><span id="cpu-val">0%</span></div>
+  <div class="mitem"><span>HEAP</span><div class="mbar"><div class="mbar-fill normal" id="mem-bar" style="width:0"></div></div><span id="mem-val">0MB</span></div>
+  <span class="sep">│</span>
+  <span id="sys-val">SYS 0%</span>
+  <span class="sep">│</span>
+  <span id="uptime-val">UP 0s</span>
+  <span class="sep">│</span>
+  <span id="blk-val" style="color:var(--teal)">0 blocks</span>
+  <span class="sep">│</span>
+  <span id="sse-val">⚡ connecting</span>
+</div>
+
+<!-- ═══ WORKSPACE ═════════════════════════════════════════════════ -->
+<div id="workspace">
+  <div id="canvas-area">
+    <div id="canvas-blocks"></div>
+    <svg id="wire-svg" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0,8 3,0 6" fill="#4B5563"/>
+        </marker>
+        <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <g id="wires-g"></g>
+      <path id="draft-wire" class="wire-draft" d="" style="display:none"/>
+      <circle id="snap-ring" class="snap-ring" r="15" cx="0" cy="0" opacity="0"/>
+    </svg>
+    <div id="canvas-hint">
+      <div class="hi">⟨ψ⟩</div>
+      <h2>Sanskrit Visual Builder v3.2</h2>
+      <p>ETL · Data Science · Quantum Computing<br>Drag blocks from the library → connect → Run<br>Click <b>Examples</b> to load pre-built pipelines</p>
     </div>
-    <div id="output-body">
-      <div id="output-lines"></div>
+    <div class="canvas-zoom">
+      <button id="btn-fit2" title="Fit">⊙</button>
+      <button id="btn-zi" title="Zoom in">+</button>
+      <button id="btn-zo" title="Zoom out">−</button>
+      <button id="btn-zr" style="font-size:10px;width:36px" title="Reset">100%</button>
     </div>
   </div>
+</div>
 
-  <!-- ═══ EXPORT MODAL ════════════════════════════════════════════ -->
-  <div id="export-modal" class="modal hidden">
-    <div class="modal-box">
-      <div class="modal-header">
-        <span>Export Circuit</span>
-        <button class="modal-close" data-modal="export-modal">✕</button>
-      </div>
-      <div class="modal-body">
-        <label>Format:
-          <select id="export-format">
-            <option value="qasm2">OpenQASM 2.0 (IBM, most simulators)</option>
-            <option value="qasm3">OpenQASM 3.0 (next-gen IBM)</option>
-            <option value="ibm">IBM JSON (cloud API)</option>
-            <option value="ionq">IonQ JSON (trapped-ion)</option>
-            <option value="cirq">Google Cirq Python</option>
-            <option value="braket">Amazon Braket Python</option>
-            <option value="quil">Rigetti Quil</option>
-            <option value="qir">QIR (LLVM-based)</option>
-            <option value="svg">SVG Circuit Diagram</option>
-            <option value="json">Sanskrit Native JSON</option>
-          </select>
-        </label>
-        <textarea id="export-output" readonly placeholder="Click Export to generate..."></textarea>
-        <div class="modal-actions">
-          <button id="btn-export-generate" class="tb-btn primary">Export</button>
-          <button id="btn-export-copy" class="tb-btn">Copy</button>
-          <button id="btn-export-download" class="tb-btn">Download</button>
-        </div>
-      </div>
+<!-- ═══ MODALS ════════════════════════════════════════════════════ -->
+<div id="modal-overlay" class="hidden">
+  <div class="modal" id="active-modal" style="width:900px;max-width:96vw"></div>
+</div>
+
+<!-- Hidden inputs -->
+<input type="file" id="file-load" accept=".sanskrit,.json" style="display:none">
+<input type="file" id="file-upload" accept=".csv,.json,.txt" style="display:none" multiple>
+
+<script>
+'use strict';
+// ═══════════════════════════════════════════════════════════════════
+// BLOCK DEFINITIONS — ETL + Data Science + Quantum + Visualization
+// ═══════════════════════════════════════════════════════════════════
+const BD = {
+  // ── ETL SOURCES ────────────────────────────────────────────────
+  csv_reader:{lbl:'CSV Reader',cat:'etl_src',col:'#0891B2',icon:'📁',
+    desc:'Read CSV file from disk or uploaded file.',
+    params:[{k:'filename',l:'Filename',t:'text',d:'sales.csv'},{k:'preview_rows',l:'Preview rows',t:'number',d:100},{k:'delimiter',l:'Delimiter',t:'text',d:','}],
+    ins:[],outs:[{n:'dataset',t:'dataset',l:'Dataset'}],
+    code:(p)=>`-- CSV source: ${p.filename||'file.csv'}`},
+
+  json_reader:{lbl:'JSON Reader',cat:'etl_src',col:'#0891B2',icon:'{}',
+    desc:'Read JSON file (array of objects).',
+    params:[{k:'filename',l:'Filename',t:'text',d:'data.json'}],
+    ins:[],outs:[{n:'dataset',t:'dataset',l:'Dataset'}],
+    code:(p)=>`-- JSON source: ${p.filename||'data.json'}`},
+
+  inline_data:{lbl:'Inline Data',cat:'etl_src',col:'#0891B2',icon:'📝',
+    desc:'Paste JSON data directly as a dataset.',
+    params:[{k:'data',l:'JSON Data',t:'textarea',d:'[{"name":"Alice","age":30},{"name":"Bob","age":25}]'}],
+    ins:[],outs:[{n:'dataset',t:'dataset',l:'Dataset'}],
+    code:()=>`-- Inline data source`},
+
+  upload_block:{lbl:'File Upload',cat:'etl_src',col:'#0891B2',icon:'⬆',
+    desc:'Upload CSV/JSON from your computer.',
+    params:[{k:'file_type',l:'File type',t:'select',d:'csv',opts:['csv','json']}],
+    ins:[],outs:[{n:'dataset',t:'dataset',l:'Dataset'}],
+    code:()=>`-- Uploaded file`},
+
+  sample_data:{lbl:'Sample Data',cat:'etl_src',col:'#0891B2',icon:'🗄',
+    desc:'Load built-in sample datasets.',
+    params:[{k:'dataset',l:'Dataset',t:'select',d:'sales.csv',opts:['sales.csv','customers.csv']}],
+    ins:[],outs:[{n:'dataset',t:'dataset',l:'Dataset'}],
+    code:(p)=>`-- Sample: ${p.dataset}`},
+
+  // ── ETL FILTER ─────────────────────────────────────────────────
+  filter_rows:{lbl:'Filter Rows',cat:'etl_filter',col:'#0891B2',icon:'🔍',
+    desc:'Keep rows matching a condition.',
+    params:[{k:'column',l:'Column',t:'text',d:'region'},{k:'operator',l:'Operator',t:'select',d:'==',opts:['==','!=','>','>=','<','<=','contains','not contains','starts with','ends with','is null','is not null','in','not in']},{k:'value',l:'Value',t:'text',d:'North'},{k:'limit',l:'Max rows',t:'number',d:''}],
+    ins:[{n:'dataset',t:'dataset',l:'Dataset'}],outs:[{n:'dataset',t:'dataset',l:'Filtered'}],
+    code:(p)=>`-- Filter: ${p.column} ${p.operator} ${p.value}`},
+
+  // ── ETL COLUMN OPS ─────────────────────────────────────────────
+  select_columns:{lbl:'Select Columns',cat:'etl_col',col:'#0891B2',icon:'📊',
+    desc:'Keep only specified columns.',
+    params:[{k:'columns',l:'Columns (comma)',t:'text',d:'region,product,revenue'}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:(p)=>`-- Select: ${p.columns}`},
+
+  rename_columns:{lbl:'Rename Columns',cat:'etl_col',col:'#0891B2',icon:'✏',
+    desc:'Rename columns using JSON mapping.',
+    params:[{k:'mapping',l:'Mapping (JSON)',t:'textarea',d:'{"old_name":"new_name"}'}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:()=>`-- Rename columns`},
+
+  add_column:{lbl:'Add Column',cat:'etl_col',col:'#0891B2',icon:'➕',
+    desc:'Derive new column from formula.',
+    params:[{k:'name',l:'New column name',t:'text',d:'profit'},{k:'formula',l:'Formula (JS)',t:'textarea',d:'row["revenue"] - row["cost"]'}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:(p)=>`-- Add column: ${p.name} = ${p.formula}`},
+
+  drop_columns:{lbl:'Drop Columns',cat:'etl_col',col:'#0891B2',icon:'🗑',
+    desc:'Remove specified columns.',
+    params:[{k:'columns',l:'Columns (comma)',t:'text',d:'cost,price'}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:(p)=>`-- Drop: ${p.columns}`},
+
+  cast_types:{lbl:'Cast Types',cat:'etl_col',col:'#0891B2',icon:'🔄',
+    desc:'Change column data types.',
+    params:[{k:'mapping',l:'Type map (JSON)',t:'textarea',d:'{"units":"integer","price":"float"}'}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:()=>`-- Cast types`},
+
+  split_column:{lbl:'Split Column',cat:'etl_col',col:'#0891B2',icon:'✂',
+    desc:'Split one column into multiple by delimiter.',
+    params:[{k:'column',l:'Column',t:'text',d:'full_name'},{k:'delimiter',l:'Delimiter',t:'text',d:' '},{k:'new_columns',l:'New cols (comma)',t:'text',d:'first_name,last_name'}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:(p)=>`-- Split ${p.column} by "${p.delimiter}"`},
+
+  merge_columns:{lbl:'Merge Columns',cat:'etl_col',col:'#0891B2',icon:'🔗',
+    desc:'Concatenate multiple columns into one.',
+    params:[{k:'columns',l:'Columns (comma)',t:'text',d:'first_name,last_name'},{k:'new_column',l:'New column',t:'text',d:'full_name'},{k:'separator',l:'Separator',t:'text',d:' '}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:(p)=>`-- Merge ${p.columns} → ${p.new_column}`},
+
+  // ── ETL CLEANING ───────────────────────────────────────────────
+  drop_nulls:{lbl:'Drop Nulls',cat:'etl_clean',col:'#059669',icon:'🚫',
+    desc:'Remove rows with null/empty values.',
+    params:[{k:'columns',l:'Columns (comma, empty=all)',t:'text',d:''}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:()=>`-- Drop null rows`},
+
+  fill_nulls:{lbl:'Fill Nulls',cat:'etl_clean',col:'#059669',icon:'🔧',
+    desc:'Fill missing values using a strategy.',
+    params:[{k:'strategy',l:'Strategy',t:'select',d:'constant',opts:['constant','mean','median','mode','forward','backward']},{k:'value',l:'Value (for constant)',t:'text',d:'0'},{k:'column',l:'Column (empty=all)',t:'text',d:''}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:(p)=>`-- Fill nulls (${p.strategy})`},
+
+  trim_strings:{lbl:'Trim Strings',cat:'etl_clean',col:'#059669',icon:'✂',
+    desc:'Remove leading/trailing whitespace.',
+    params:[{k:'columns',l:'Columns (comma, empty=all)',t:'text',d:''}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:()=>`-- Trim whitespace`},
+
+  replace_values:{lbl:'Replace Values',cat:'etl_clean',col:'#059669',icon:'🔁',
+    desc:'Find and replace specific values.',
+    params:[{k:'column',l:'Column',t:'text',d:'status'},{k:'find',l:'Find',t:'text',d:'N/A'},{k:'replace',l:'Replace with',t:'text',d:''},{k:'case_sensitive',l:'Case sensitive',t:'select',d:'false',opts:['true','false']}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:(p)=>`-- Replace "${p.find}" → "${p.replace}" in ${p.column}`},
+
+  dedup:{lbl:'Deduplicate',cat:'etl_clean',col:'#059669',icon:'👥',
+    desc:'Remove duplicate rows.',
+    params:[{k:'columns',l:'Key columns (empty=all)',t:'text',d:''}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:()=>`-- Remove duplicates`},
+
+  // ── ETL SORT/LIMIT ─────────────────────────────────────────────
+  sort_rows:{lbl:'Sort',cat:'etl_sort',col:'#1D4ED8',icon:'↕',
+    desc:'Sort rows by a column.',
+    params:[{k:'column',l:'Sort by',t:'text',d:'revenue'},{k:'order',l:'Order',t:'select',d:'desc',opts:['asc','desc']}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:(p)=>`-- Sort by ${p.column} ${p.order}`},
+
+  top_n:{lbl:'Top N',cat:'etl_sort',col:'#1D4ED8',icon:'🔝',
+    desc:'Keep top N rows, optionally by column.',
+    params:[{k:'n',l:'N rows',t:'number',d:10},{k:'column',l:'By column (opt)',t:'text',d:''}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:(p)=>`-- Top ${p.n} rows`},
+
+  // ── ETL JOINS ──────────────────────────────────────────────────
+  join:{lbl:'Join',cat:'etl_join',col:'#4338CA',icon:'⋈',
+    desc:'Join two datasets on a key column.',
+    params:[{k:'join_type',l:'Join type',t:'select',d:'inner',opts:['inner','left','right','full','anti','cross']},{k:'left_key',l:'Left key',t:'text',d:'region'},{k:'right_key',l:'Right key',t:'text',d:'region'},{k:'prefix_left',l:'Left prefix',t:'text',d:'l_'},{k:'prefix_right',l:'Right prefix',t:'text',d:'r_'}],
+    ins:[{n:'left_dataset',t:'dataset',l:'Left'},{n:'right_dataset',t:'dataset',l:'Right'}],
+    outs:[{n:'dataset',t:'dataset',l:'Joined'}],
+    code:(p)=>`-- ${p.join_type.toUpperCase()} JOIN on ${p.left_key}`},
+
+  cross_join:{lbl:'Cross Join',cat:'etl_join',col:'#4338CA',icon:'✖',
+    desc:'Cartesian product of two datasets.',
+    params:[],
+    ins:[{n:'left_dataset',t:'dataset',l:'Left'},{n:'right_dataset',t:'dataset',l:'Right'}],
+    outs:[{n:'dataset',t:'dataset',l:'Joined'}],
+    code:()=>`-- CROSS JOIN`},
+
+  // ── ETL AGGREGATION ────────────────────────────────────────────
+  group_by:{lbl:'Group By',cat:'etl_agg',col:'#7C3AED',icon:'📦',
+    desc:'Aggregate rows by group keys.',
+    params:[{k:'group_by',l:'Group cols (comma)',t:'text',d:'region,product'},{k:'aggregations',l:'Aggregations (JSON)',t:'textarea',d:'[{"col":"revenue","fn":"sum","as":"total_rev"},{"col":"units","fn":"count","as":"orders"}]'}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:(p)=>`-- GROUP BY ${p.group_by}`},
+
+  pivot:{lbl:'Pivot Table',cat:'etl_agg',col:'#7C3AED',icon:'📐',
+    desc:'Pivot: rows→index, cols→values.',
+    params:[{k:'index',l:'Index column',t:'text',d:'region'},{k:'columns',l:'Pivot column',t:'text',d:'product'},{k:'values',l:'Values column',t:'text',d:'revenue'},{k:'aggfn',l:'Aggregation',t:'select',d:'sum',opts:['sum','avg','count','max','min']}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:(p)=>`-- PIVOT ${p.index} × ${p.columns} → ${p.values}`},
+
+  unpivot:{lbl:'Unpivot (Melt)',cat:'etl_agg',col:'#7C3AED',icon:'↕',
+    desc:'Melt wide format to long format.',
+    params:[{k:'id_cols',l:'ID columns (comma)',t:'text',d:'region'},{k:'variable_col',l:'Variable col name',t:'text',d:'variable'},{k:'value_col',l:'Value col name',t:'text',d:'value'}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:()=>`-- UNPIVOT`},
+
+  // ── ETL VALIDATION ─────────────────────────────────────────────
+  validate_schema:{lbl:'Validate Schema',cat:'etl_validate',col:'#D97706',icon:'✅',
+    desc:'Check column types and null constraints.',
+    params:[{k:'schema',l:'Schema (JSON)',t:'textarea',d:'{"revenue":"number","region":"string"}'},{k:'require_columns',l:'Strict columns',t:'select',d:'false',opts:['true','false']}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:()=>`-- Validate schema`},
+
+  profile:{lbl:'Data Profile',cat:'etl_validate',col:'#D97706',icon:'🔬',
+    desc:'Compute null counts, distinct, min/max/mean for each column.',
+    params:[],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'},{n:'profile',t:'profile',l:'Profile'}],
+    code:()=>`-- Data profiling`},
+
+  stats_summary:{lbl:'Stats Summary',cat:'etl_validate',col:'#D97706',icon:'📈',
+    desc:'Descriptive stats for numeric columns.',
+    params:[],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:()=>`-- Statistics summary`},
+
+  // ── DATA SCIENCE ───────────────────────────────────────────────
+  normalize:{lbl:'Normalize',cat:'ds',col:'#7C3AED',icon:'📏',
+    desc:'Scale numeric columns: min-max, z-score, or robust.',
+    params:[{k:'columns',l:'Columns (comma, empty=all numeric)',t:'text',d:''},{k:'method',l:'Method',t:'select',d:'minmax',opts:['minmax','zscore','robust']}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:(p)=>`-- Normalize (${p.method})`},
+
+  encode:{lbl:'Encode Categorical',cat:'ds',col:'#7C3AED',icon:'🔤',
+    desc:'One-hot or label encode a categorical column.',
+    params:[{k:'column',l:'Column',t:'text',d:'segment'},{k:'method',l:'Method',t:'select',d:'onehot',opts:['onehot','label']}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:(p)=>`-- Encode ${p.column} (${p.method})`},
+
+  train_test_split:{lbl:'Train/Test Split',cat:'ds',col:'#7C3AED',icon:'✂',
+    desc:'Split dataset into training and test sets.',
+    params:[{k:'test_ratio',l:'Test ratio',t:'number',d:0.2,step:0.05,min:0.05,max:0.5},{k:'shuffle',l:'Shuffle',t:'select',d:'true',opts:['true','false']}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset',l:'Train'},{n:'test_dataset',t:'dataset',l:'Test'}],
+    code:(p)=>`-- Split ${Math.round((1-p.test_ratio)*100)}/${Math.round(p.test_ratio*100)}`},
+
+  linear_regression:{lbl:'Linear Regression',cat:'ds',col:'#7C3AED',icon:'📉',
+    desc:'Fit y = slope·x + intercept. Adds predictions column.',
+    params:[{k:'x_col',l:'Feature (X)',t:'text',d:'units'},{k:'y_col',l:'Target (Y)',t:'text',d:'revenue'}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'},{n:'model',t:'model',l:'Model'}],
+    code:(p)=>`-- Linear regression: ${p.x_col} → ${p.y_col}`},
+
+  correlation:{lbl:'Correlation',cat:'ds',col:'#7C3AED',icon:'🔀',
+    desc:'Pearson correlation matrix for numeric columns.',
+    params:[],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'},{n:'matrix',t:'matrix',l:'Matrix'}],
+    code:()=>`-- Correlation matrix`},
+
+  describe:{lbl:'Describe',cat:'ds',col:'#7C3AED',icon:'🗂',
+    desc:'Statistical summary (count, mean, std, min, max, quartiles).',
+    params:[],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:()=>`-- describe()`},
+
+  outlier_detection:{lbl:'Outlier Detection',cat:'ds',col:'#7C3AED',icon:'🎯',
+    desc:'Detect outliers using Z-score or IQR method.',
+    params:[{k:'column',l:'Column',t:'text',d:'revenue'},{k:'method',l:'Method',t:'select',d:'zscore',opts:['zscore','iqr']},{k:'threshold',l:'Threshold',t:'number',d:3,step:0.5}],
+    ins:[{n:'dataset',t:'dataset'}],outs:[{n:'dataset',t:'dataset'}],
+    code:(p)=>`-- Outlier detection: ${p.method} on ${p.column}`},
+
+  // ── QUANTUM ────────────────────────────────────────────────────
+  quantum_register:{lbl:'Quantum Register',cat:'quantum',col:'#1D4ED8',icon:'📦',
+    desc:'Create N qubits all starting in state |0>.',
+    params:[{k:'n_qubits',l:'Qubits',t:'number',d:2,min:1,max:30},{k:'name',l:'Name',t:'text',d:'q'}],
+    ins:[],outs:[{n:'out',t:'quantum',l:'Register'}],
+    code:(p)=>`let ${p.name||'q'}=qubits(${p.n_qubits||2})`},
+
+  h_gate:{lbl:'H Gate (Hadamard)',cat:'quantum',col:'#4C1D95',icon:'H',
+    desc:'Creates equal superposition: |0>→(|0>+|1>)/√2.',
+    params:[{k:'qubit',l:'Qubit index',t:'number',d:0,min:0}],
+    ins:[{n:'in',t:'quantum'}],outs:[{n:'out',t:'quantum'}],
+    code:(p,r)=>`H(${r}[${p.qubit||0}])`},
+
+  x_gate:{lbl:'X Gate (NOT)',cat:'quantum',col:'#4C1D95',icon:'X',
+    desc:'Bit flip: |0>↔|1>.',
+    params:[{k:'qubit',l:'Qubit index',t:'number',d:0,min:0}],
+    ins:[{n:'in',t:'quantum'}],outs:[{n:'out',t:'quantum'}],
+    code:(p,r)=>`X(${r}[${p.qubit||0}])`},
+
+  y_gate:{lbl:'Y Gate',cat:'quantum',col:'#4C1D95',icon:'Y',
+    desc:'Pauli-Y: combines X and Z phase flip.',
+    params:[{k:'qubit',l:'Qubit index',t:'number',d:0,min:0}],
+    ins:[{n:'in',t:'quantum'}],outs:[{n:'out',t:'quantum'}],
+    code:(p,r)=>`Y(${r}[${p.qubit||0}])`},
+
+  z_gate:{lbl:'Z Gate',cat:'quantum',col:'#4C1D95',icon:'Z',
+    desc:'Phase flip: |1>→-|1>.',
+    params:[{k:'qubit',l:'Qubit index',t:'number',d:0,min:0}],
+    ins:[{n:'in',t:'quantum'}],outs:[{n:'out',t:'quantum'}],
+    code:(p,r)=>`Z(${r}[${p.qubit||0}])`},
+
+  s_gate:{lbl:'S Gate',cat:'quantum',col:'#4C1D95',icon:'S',
+    desc:'Phase gate: |1>→i|1>.',
+    params:[{k:'qubit',l:'Qubit index',t:'number',d:0,min:0}],
+    ins:[{n:'in',t:'quantum'}],outs:[{n:'out',t:'quantum'}],
+    code:(p,r)=>`S(${r}[${p.qubit||0}])`},
+
+  t_gate:{lbl:'T Gate',cat:'quantum',col:'#4C1D95',icon:'T',
+    desc:'π/8 gate: |1>→e^(iπ/4)|1>.',
+    params:[{k:'qubit',l:'Qubit index',t:'number',d:0,min:0}],
+    ins:[{n:'in',t:'quantum'}],outs:[{n:'out',t:'quantum'}],
+    code:(p,r)=>`T(${r}[${p.qubit||0}])`},
+
+  rx_gate:{lbl:'Rx Rotation',cat:'quantum',col:'#4C1D95',icon:'Rx',
+    desc:'Rotation around X-axis by θ radians.',
+    params:[{k:'qubit',l:'Qubit',t:'number',d:0,min:0},{k:'theta',l:'θ (rad)',t:'number',d:1.5708,step:0.01}],
+    ins:[{n:'in',t:'quantum'}],outs:[{n:'out',t:'quantum'}],
+    code:(p,r)=>`Rx(${r}[${p.qubit||0}],${p.theta||1.5708})`},
+
+  ry_gate:{lbl:'Ry Rotation',cat:'quantum',col:'#4C1D95',icon:'Ry',
+    desc:'Rotation around Y-axis by θ radians.',
+    params:[{k:'qubit',l:'Qubit',t:'number',d:0,min:0},{k:'theta',l:'θ (rad)',t:'number',d:1.5708,step:0.01}],
+    ins:[{n:'in',t:'quantum'}],outs:[{n:'out',t:'quantum'}],
+    code:(p,r)=>`Ry(${r}[${p.qubit||0}],${p.theta||1.5708})`},
+
+  rz_gate:{lbl:'Rz Rotation',cat:'quantum',col:'#4C1D95',icon:'Rz',
+    desc:'Rotation around Z-axis by θ radians.',
+    params:[{k:'qubit',l:'Qubit',t:'number',d:0,min:0},{k:'theta',l:'θ (rad)',t:'number',d:1.5708,step:0.01}],
+    ins:[{n:'in',t:'quantum'}],outs:[{n:'out',t:'quantum'}],
+    code:(p,r)=>`Rz(${r}[${p.qubit||0}],${p.theta||1.5708})`},
+
+  cnot_gate:{lbl:'CNOT Gate',cat:'quantum',col:'#4C1D95',icon:'⊕',
+    desc:'Controlled-NOT: flip target when control=|1>.',
+    params:[{k:'control',l:'Control qubit',t:'number',d:0,min:0},{k:'target',l:'Target qubit',t:'number',d:1,min:0}],
+    ins:[{n:'in',t:'quantum'}],outs:[{n:'out',t:'quantum'}],
+    code:(p,r)=>`CNOT(${r}[${p.control||0}],${r}[${p.target||1}])`},
+
+  cz_gate:{lbl:'CZ Gate',cat:'quantum',col:'#4C1D95',icon:'CZ',
+    desc:'Controlled-Z: phase flip on |11>.',
+    params:[{k:'qubit_a',l:'Qubit A',t:'number',d:0,min:0},{k:'qubit_b',l:'Qubit B',t:'number',d:1,min:0}],
+    ins:[{n:'in',t:'quantum'}],outs:[{n:'out',t:'quantum'}],
+    code:(p,r)=>`CZ(${r}[${p.qubit_a||0}],${r}[${p.qubit_b||1}])`},
+
+  swap_gate:{lbl:'SWAP Gate',cat:'quantum',col:'#4C1D95',icon:'⇄',
+    desc:'Exchange quantum states of two qubits.',
+    params:[{k:'qubit_a',l:'Qubit A',t:'number',d:0,min:0},{k:'qubit_b',l:'Qubit B',t:'number',d:1,min:0}],
+    ins:[{n:'in',t:'quantum'}],outs:[{n:'out',t:'quantum'}],
+    code:(p,r)=>`SWAP(${r}[${p.qubit_a||0}],${r}[${p.qubit_b||1}])`},
+
+  toffoli_gate:{lbl:'Toffoli (CCX)',cat:'quantum',col:'#4C1D95',icon:'CCX',
+    desc:'Double controlled-NOT. Universal reversible gate.',
+    params:[{k:'ctrl1',l:'Control 1',t:'number',d:0,min:0},{k:'ctrl2',l:'Control 2',t:'number',d:1,min:0},{k:'target',l:'Target',t:'number',d:2,min:0}],
+    ins:[{n:'in',t:'quantum'}],outs:[{n:'out',t:'quantum'}],
+    code:(p,r)=>`Toffoli(${r}[${p.ctrl1||0}],${r}[${p.ctrl2||1}],${r}[${p.target||2}])`},
+
+  measure_all:{lbl:'Measure All',cat:'quantum',col:'#2563EB',icon:'📏',
+    desc:'Measure all qubits N shots. Returns histogram.',
+    params:[{k:'shots',l:'Shots',t:'number',d:1000,min:1,max:100000}],
+    ins:[{n:'in',t:'quantum',l:'Register'}],outs:[{n:'result',t:'result',l:'Histogram'}],
+    code:(p,r,id)=>`let r_${id}=measure_all(${r},shots=${p.shots||1000})\nprint(r_${id}.histogram)`},
+
+  statevector_block:{lbl:'Statevector',cat:'quantum',col:'#2563EB',icon:'ψ',
+    desc:'Get full complex quantum state vector.',
+    params:[],
+    ins:[{n:'in',t:'quantum'}],outs:[{n:'out',t:'result',l:'Statevector'}],
+    code:(p,r,id)=>`let sv_${id}=statevector(${r})\nprint(sv_${id})`},
+
+  grover_block:{lbl:'Grover Search',cat:'quantum',col:'#1D4ED8',icon:'🔍',
+    desc:'O(√N) quantum search. Finds target in database.',
+    params:[{k:'n_qubits',l:'Qubits (log₂N)',t:'number',d:4,min:1,max:20},{k:'target',l:'Target item',t:'number',d:7,min:0},{k:'shots',l:'Shots',t:'number',d:1000}],
+    ins:[],outs:[{n:'result',t:'result',l:'Histogram'}],
+    code:(p,r,id)=>`let g_${id}=grover(${p.n_qubits||4},[${p.target||7}],${p.shots||1000})\nprint(g_${id}.histogram)`},
+
+  vqe_block:{lbl:'VQE',cat:'quantum',col:'#1D4ED8',icon:'⚗',
+    desc:'Variational Quantum Eigensolver for molecule energy.',
+    params:[{k:'molecule',l:'Molecule',t:'select',d:'H2',opts:['H2','LiH','H2O']},{k:'ansatz',l:'Ansatz',t:'select',d:'UCCSD',opts:['UCCSD','HEA']},{k:'shots',l:'Shots',t:'number',d:2000}],
+    ins:[],outs:[{n:'result',t:'result',l:'Result'}],
+    code:(p,r,id)=>`molecule ${p.molecule||'H2'}{atoms:[H,H],bond_length:0.74,basis_set:"STO-3G"}\nlet v_${id}=vqe(${p.molecule||'H2'},ansatz="${p.ansatz||'UCCSD'}",shots=${p.shots||2000})\nprint(f"Energy: {v_${id}.energy:.6f} Ha")`},
+
+  qft_block:{lbl:'QFT',cat:'quantum',col:'#1D4ED8',icon:'QFT',
+    desc:'Quantum Fourier Transform.',
+    params:[{k:'inverse',l:'Inverse',t:'select',d:'false',opts:['false','true']}],
+    ins:[{n:'in',t:'quantum'}],outs:[{n:'out',t:'quantum'}],
+    code:(p,r)=>`${r}.qft(${r}.n_qubits,${p.inverse||false})`},
+
+  // ── VISUALIZATION ──────────────────────────────────────────────
+  table_display:{lbl:'Table Display',cat:'viz',col:'#059669',icon:'📋',
+    desc:'Rich interactive table with sort, filter, pagination.',
+    params:[{k:'title',l:'Title',t:'text',d:'Data Table'},{k:'page_size',l:'Rows per page',t:'number',d:20,min:5,max:200},{k:'show_bars',l:'Show bars',t:'select',d:'true',opts:['true','false']}],
+    ins:[{n:'dataset',t:'dataset',l:'Dataset'}],outs:[],
+    isViz:true,vizType:'table',
+    code:()=>`-- [Table displayed in Output > Tables]`},
+
+  histogram_chart:{lbl:'Histogram',cat:'viz',col:'#059669',icon:'📊',
+    desc:'Bar histogram for measurement/count data.',
+    params:[{k:'title',l:'Title',t:'text',d:'Histogram'},{k:'color',l:'Color',t:'select',d:'blue',opts:['blue','purple','green','orange','red','teal']}],
+    ins:[{n:'data',t:'result',l:'Data'}],outs:[],
+    isViz:true,vizType:'histogram',
+    code:()=>`-- [Histogram in Output > Charts]`},
+
+  pie_chart:{lbl:'Pie Chart',cat:'viz',col:'#059669',icon:'🥧',
+    desc:'Pie chart for distribution data.',
+    params:[{k:'title',l:'Title',t:'text',d:'Distribution'}],
+    ins:[{n:'data',t:'result',l:'Data'}],outs:[],
+    isViz:true,vizType:'pie',
+    code:()=>`-- [Pie chart in Output > Charts]`},
+
+  bar_chart:{lbl:'Bar Chart',cat:'viz',col:'#059669',icon:'📈',
+    desc:'Horizontal or vertical bar chart.',
+    params:[{k:'title',l:'Title',t:'text',d:'Bar Chart'},{k:'orientation',l:'Orientation',t:'select',d:'vertical',opts:['vertical','horizontal']}],
+    ins:[{n:'data',t:'result',l:'Data'},{n:'dataset',t:'dataset',l:'Dataset'}],outs:[],
+    isViz:true,vizType:'bar',
+    code:()=>`-- [Bar chart in Output > Charts]`},
+
+  line_chart:{lbl:'Line Chart',cat:'viz',col:'#059669',icon:'📉',
+    desc:'Line chart for time series or trends.',
+    params:[{k:'title',l:'Title',t:'text',d:'Line Chart'},{k:'x_col',l:'X column',t:'text',d:''},{k:'y_col',l:'Y column',t:'text',d:''}],
+    ins:[{n:'dataset',t:'dataset',l:'Dataset'}],outs:[],
+    isViz:true,vizType:'line',
+    code:()=>`-- [Line chart in Output > Charts]`},
+
+  scatter_chart:{lbl:'Scatter Plot',cat:'viz',col:'#059669',icon:'🔵',
+    desc:'Scatter plot for two numeric variables.',
+    params:[{k:'title',l:'Title',t:'text',d:'Scatter Plot'},{k:'x_col',l:'X column',t:'text',d:'units'},{k:'y_col',l:'Y column',t:'text',d:'revenue'}],
+    ins:[{n:'data',t:'result',l:'Data'},{n:'dataset',t:'dataset',l:'Dataset'}],outs:[],
+    isViz:true,vizType:'scatter',
+    code:()=>`-- [Scatter plot in Output > Charts]`},
+
+  heatmap_chart:{lbl:'Heatmap',cat:'viz',col:'#059669',icon:'🌡',
+    desc:'Heatmap for correlation matrices or 2D data.',
+    params:[{k:'title',l:'Title',t:'text',d:'Heatmap'}],
+    ins:[{n:'data',t:'result',l:'Data'},{n:'matrix',t:'matrix',l:'Matrix'}],outs:[],
+    isViz:true,vizType:'heatmap',
+    code:()=>`-- [Heatmap in Output > Charts]`},
+
+  statevector_display:{lbl:'State Display',cat:'viz',col:'#059669',icon:'🌐',
+    desc:'Visualize quantum statevector amplitudes.',
+    params:[{k:'title',l:'Title',t:'text',d:'Quantum State'}],
+    ins:[{n:'data',t:'result',l:'Statevector'}],outs:[],
+    isViz:true,vizType:'statevector',
+    code:()=>`-- [Statevector in Output > Charts]`},
+
+  gauge_chart:{lbl:'Gauge',cat:'viz',col:'#059669',icon:'🎯',
+    desc:'Gauge chart with target indicator.',
+    params:[{k:'title',l:'Title',t:'text',d:'Gauge'},{k:'min',l:'Min',t:'number',d:-2},{k:'max',l:'Max',t:'number',d:0},{k:'target',l:'Target',t:'number',d:-1.137}],
+    ins:[{n:'data',t:'any',l:'Value'}],outs:[],
+    isViz:true,vizType:'gauge',
+    code:()=>`-- [Gauge in Output > Charts]`},
+
+  profile_display:{lbl:'Profile Display',cat:'viz',col:'#059669',icon:'🔬',
+    desc:'Display column statistics from Data Profile block.',
+    params:[{k:'title',l:'Title',t:'text',d:'Data Profile'}],
+    ins:[{n:'profile',t:'profile',l:'Profile'},{n:'dataset',t:'dataset',l:'Dataset'}],outs:[],
+    isViz:true,vizType:'profile',
+    code:()=>`-- [Profile in Output > Profile]`},
+
+  // ── OUTPUT BLOCKS ──────────────────────────────────────────────
+  print_block:{lbl:'Print',cat:'out',col:'#DC2626',icon:'📤',
+    desc:'Print a value to the output console.',
+    params:[{k:'label',l:'Label',t:'text',d:''}],
+    ins:[{n:'in',t:'any',l:'Value'}],outs:[],
+    code:(p)=>`print("${(p.label||'').replace(/"/g,"'")}") -- print output`},
+
+  log_block:{lbl:'Log Message',cat:'out',col:'#D97706',icon:'📝',
+    desc:'Log labeled message to console.',
+    params:[{k:'label',l:'Message',t:'text',d:'Output:'}],
+    ins:[{n:'in',t:'any',l:'Value'}],outs:[],
+    code:(p)=>`print("--- ${(p.label||'Log').replace(/"/g,"'")} ---")`},
+
+  write_csv:{lbl:'Write CSV',cat:'out',col:'#DC2626',icon:'💾',
+    desc:'Export dataset to downloadable CSV.',
+    params:[{k:'filename',l:'Filename',t:'text',d:'output.csv'}],
+    ins:[{n:'dataset',t:'dataset',l:'Dataset'}],outs:[],
+    code:(p)=>`-- Write CSV: ${p.filename||'output.csv'}`},
+
+  write_json:{lbl:'Write JSON',cat:'out',col:'#DC2626',icon:'{}',
+    desc:'Export dataset to downloadable JSON.',
+    params:[{k:'filename',l:'Filename',t:'text',d:'output.json'}],
+    ins:[{n:'dataset',t:'dataset',l:'Dataset'}],outs:[],
+    code:(p)=>`-- Write JSON: ${p.filename||'output.json'}`},
+};
+
+// Category metadata
+const CATS = {
+  etl_src:      {lbl:'ETL · Sources',      col:'#0891B2'},
+  etl_filter:   {lbl:'ETL · Filter',       col:'#0891B2'},
+  etl_col:      {lbl:'ETL · Columns',      col:'#0891B2'},
+  etl_clean:    {lbl:'ETL · Cleaning',     col:'#059669'},
+  etl_sort:     {lbl:'ETL · Sort & Limit', col:'#1D4ED8'},
+  etl_join:     {lbl:'ETL · Joins',        col:'#4338CA'},
+  etl_agg:      {lbl:'ETL · Aggregate',    col:'#7C3AED'},
+  etl_validate: {lbl:'ETL · Validate',     col:'#D97706'},
+  ds:           {lbl:'Data Science',       col:'#7C3AED'},
+  quantum:      {lbl:'Quantum',            col:'#1D4ED8'},
+  viz:          {lbl:'Visualization',      col:'#059669'},
+  out:          {lbl:'Output',             col:'#DC2626'},
+};
+const CAT_ORDER=['etl_src','etl_filter','etl_col','etl_clean','etl_sort','etl_join','etl_agg','etl_validate','ds','quantum','viz','out'];
+
+// ═══════════════════════════════════════════════════════════════════
+// STATE + HELPERS
+// ═══════════════════════════════════════════════════════════════════
+const ST={blocks:new Map(),wires:new Map(),selected:null,selWire:null,drawWire:null,dragging:null,panning:null,vx:60,vy:60,vs:1,running:false,charts:[],tableData:null,tableSort:{col:null,dir:'asc'},tableFilter:'',settings:{},uploadedFiles:{},history:[],histIdx:-1};
+let _nid=1;
+const gid=()=>'b'+(_nid++);
+const wid=()=>'w'+(_nid++);
+const $=id=>document.getElementById(id);
+const ce=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!==undefined)e.innerHTML=h;return e;};
+const svge=(t)=>document.createElementNS('http://www.w3.org/2000/svg',t);
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function fmt(v){if(v===null||v===undefined||v==='')return'';const n=Number(v);if(!isNaN(n)&&v!==''){return Number.isInteger(n)?String(n):n.toFixed(4).replace(/\.?0+$/,'');}return String(v);}
+
+// ═══════════════════════════════════════════════════════════════════
+// PANEL SYSTEM
+// ═══════════════════════════════════════════════════════════════════
+class Panel{
+  constructor(o){
+    this.id=o.id;this.minimized=false;this.pinned=false;this._drag=null;this._resize=null;
+    this.el=ce('div','panel');this.el.id='panel-'+o.id;
+    this.el.style.cssText=`left:${o.x}px;top:${o.y}px;width:${o.w}px;height:${o.h}px`;
+    this.bodyEl=null;
+    this._build(o);
+  }
+  _build(o){
+    const hdr=ce('div','panel-hdr');
+    hdr.innerHTML=`<span class="panel-icon">${o.icon||'◆'}</span><span class="panel-title">${o.title}</span><div class="panel-btns"><button class="pb" data-a="pin" title="Pin">📌</button><button class="pb" data-a="min" title="Minimize">−</button><button class="pb" data-a="max" title="Maximize">□</button></div>`;
+    const body=ce('div','panel-body');body.innerHTML=o.html||'';
+    const rh=ce('div','resize-h');
+    this.el.append(hdr,body,rh);
+    this.bodyEl=body;
+    document.getElementById('app').appendChild(this.el);
+    this._dragBind(hdr);this._resizeBind(rh);
+    hdr.querySelectorAll('[data-a]').forEach(b=>b.addEventListener('click',()=>{const a=b.dataset.a;if(a==='min')this.minimize();else if(a==='max')this.maximize();else if(a==='pin')this.pin();}));
+  }
+  _dragBind(hdr){
+    hdr.addEventListener('mousedown',e=>{
+      if(e.target.closest('.pb'))return;
+      e.preventDefault();bringFront(this.el);
+      const r=this.el.getBoundingClientRect();
+      this._drag={ox:e.clientX-r.left,oy:e.clientY-r.top};
+      const mv=ev=>{let nx=ev.clientX-this._drag.ox,ny=ev.clientY-this._drag.oy;nx=Math.max(-this.el.offsetWidth+60,Math.min(window.innerWidth-60,nx));ny=Math.max(0,Math.min(window.innerHeight-40,ny));this.el.style.left=nx+'px';this.el.style.top=ny+'px';};
+      const up=()=>{this._drag=null;document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up);};
+      document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up);
+    });
+  }
+  _resizeBind(rh){
+    rh.addEventListener('mousedown',e=>{
+      e.preventDefault();e.stopPropagation();
+      const r=this.el.getBoundingClientRect();this._resize={sx:e.clientX,sy:e.clientY,sw:r.width,sh:r.height};
+      const mv=ev=>{this.el.style.width=Math.max(200,this._resize.sw+(ev.clientX-this._resize.sx))+'px';this.el.style.height=Math.max(80,this._resize.sh+(ev.clientY-this._resize.sy))+'px';};
+      const up=()=>{this._resize=null;document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up);};
+      document.addEventListener('mousemove',mv);document.addEventListener('mouseup',up);
+    });
+  }
+  minimize(){this.minimized=!this.minimized;this.bodyEl.style.display=this.minimized?'none':'';this.el.style.height=this.minimized?'34px':'';}
+  maximize(){
+    if(this.el.dataset.prev){const p=JSON.parse(this.el.dataset.prev);this.el.style.cssText=p;delete this.el.dataset.prev;}
+    else{this.el.dataset.prev=this.el.style.cssText;this.el.style.cssText='left:0;top:70px;width:100vw;height:calc(100vh-70px);z-index:150';}
+  }
+  pin(){this.pinned=!this.pinned;this.el.querySelector('[data-a="pin"]').style.color=this.pinned?'var(--accent)':'';}
+  setContent(h){this.bodyEl.innerHTML=h;}
+}
+let _zTop=100;
+function bringFront(el){el.style.zIndex=++_zTop;}
+
+// Create panels
+const PAL_PANEL=new Panel({id:'pal',title:'Block Library',icon:'🧩',x:8,y:70,w:230,h:580,
+  html:`<div id="pal-search-wrap"><input id="pal-search" class="prop-input" placeholder="🔍 Search blocks..." autocomplete="off"></div><div id="pal-list" style="flex:1;overflow-y:auto"></div>
+  <div style="padding:8px;border-top:1px solid var(--border);flex-shrink:0">
+    <div class="upload-zone" id="upload-zone">
+      <div style="font-size:20px">⬆</div>
+      <div class="upload-zone-text">Drop CSV/JSON here<br>or click to upload</div>
+    </div>
+  </div>`
+});
+
+const PROPS_PANEL=new Panel({id:'props',title:'Properties',icon:'⚙',x:0,y:70,w:255,h:500,
+  html:`<div id="props-body" style="overflow-y:auto;flex:1;padding:4px"></div>`
+});
+
+const OUT_PANEL=new Panel({id:'out',title:'Output Console',icon:'📺',x:8,y:0,w:0,h:250,
+  html:`<div class="out-tabs">
+    <div class="out-tab active" data-pane="console">Console</div>
+    <div class="out-tab" data-pane="charts">Charts</div>
+    <div class="out-tab" data-pane="table">Tables</div>
+    <div class="out-tab" data-pane="dsl">DSL Code</div>
+    <div class="out-tab" data-pane="profile">Profile</div>
+    <div class="out-tab" data-pane="video">Record</div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:6px;padding:0 8px">
+      <button onclick="clearOutput()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:10px;padding:2px 8px;border-radius:4px">Clear</button>
     </div>
   </div>
+  <div class="out-pane active" id="pane-console"><div id="con-lines"></div></div>
+  <div class="out-pane" id="pane-charts"><div id="chart-pane"></div></div>
+  <div class="out-pane" id="pane-table">
+    <div class="tbl-toolbar">
+      <input id="tbl-search" placeholder="🔍 Filter table..." oninput="filterTable()">
+      <button class="tbl-btn" onclick="downloadTable()">⬇ CSV</button>
+      <span class="tbl-info" id="tbl-info"></span>
+    </div>
+    <div id="table-pane" style="overflow:auto;flex:1"><div style="padding:20px;color:var(--text3);font-size:12px">Run ETL blocks to see data here</div></div>
+  </div>
+  <div class="out-pane" id="pane-dsl">
+    <div id="dsl-pane">
+      <div style="padding:8px 10px;font-size:10px;color:var(--text3);font-family:var(--mono);border-bottom:1px solid var(--border)">Press Compile to see DSL code generated from your visual blocks</div>
+      <pre id="dsl-pre"></pre>
+    </div>
+  </div>
+  <div class="out-pane" id="pane-profile">
+    <div id="profile-pane"><div style="padding:20px;color:var(--text3);font-size:12px">Connect a Profile Display block and Run to see column statistics</div></div>
+  </div>
+  <div class="out-pane" id="pane-video">
+    <div id="video-pane">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:12px">Record your session as a video. Click Start → perform actions → Stop → Download.</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button id="btn-rec" class="tb-btn" style="background:#dc2626;color:#fff">⏺ Start Recording</button>
+        <button id="btn-rec-stop" class="tb-btn" disabled>⏹ Stop</button>
+        <button id="btn-rec-dl" class="tb-btn" disabled>💾 Download</button>
+      </div>
+      <div id="video-preview" style="margin-top:12px"></div>
+    </div>
+  </div>`
+});
 
-  <!-- Hidden file input for Open -->
-  <input type="file" id="file-open-input" accept=".sq,.txt" class="hidden">
+// ═══════════════════════════════════════════════════════════════════
+// LAYOUT
+// ═══════════════════════════════════════════════════════════════════
+function resetLayout(){
+  const W=window.innerWidth,H=window.innerHeight;
+  const TOP=70,BOT=250,PALW=230,PROPW=255;
+  PAL_PANEL.el.style.cssText=`left:8px;top:${TOP}px;width:${PALW}px;height:${H-TOP-BOT-16}px`;
+  PROPS_PANEL.el.style.cssText=`left:${W-PROPW-8}px;top:${TOP}px;width:${PROPW}px;height:${H-TOP-BOT-16}px`;
+  OUT_PANEL.el.style.cssText=`left:8px;top:${H-BOT-8}px;width:${W-16}px;height:${BOT}px`;
+  if(OUT_PANEL.minimized){OUT_PANEL.minimized=false;OUT_PANEL.bodyEl.style.display='';}
+}
+window.addEventListener('resize',resetLayout);
 
-  <script type="module" src="/js/app.js"></script>
+// ═══════════════════════════════════════════════════════════════════
+// PALETTE
+// ═══════════════════════════════════════════════════════════════════
+function buildPalette(q=''){
+  const list=$('pal-list');if(!list)return;
+  const qlo=q.toLowerCase().trim();list.innerHTML='';
+  CAT_ORDER.forEach(catKey=>{
+    const ci=CATS[catKey];if(!ci)return;
+    const items=Object.entries(BD).filter(([id,b])=>b.cat===catKey&&(!qlo||b.lbl.toLowerCase().includes(qlo)||id.includes(qlo)));
+    if(!items.length)return;
+    const div=ce('div');
+    const hdr=ce('div','pcat-hdr');hdr.style.borderLeft='3px solid '+ci.col;
+    hdr.innerHTML=`<span>${ci.lbl}</span><span style="display:flex;gap:5px;align-items:center"><span style="font-size:10px;color:var(--text3)">${items.length}</span><span class="pcat-arrow">▾</span></span>`;
+    const body=ce('div','pcat-items');
+    hdr.addEventListener('click',()=>{hdr.classList.toggle('collapsed');body.style.display=hdr.classList.contains('collapsed')?'none':'';});
+    items.forEach(([id,b])=>{
+      const it=ce('div','pitem');it.draggable=true;it.dataset.bid=id;
+      it.innerHTML=`<span class="pitem-icon" style="color:${b.col}">${b.icon||'◆'}</span><span class="pitem-lbl">${b.lbl}</span>`;
+      it.title=b.desc||b.lbl;
+      it.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',JSON.stringify({type:'block',bid:id}));e.dataTransfer.effectAllowed='copy';});
+      it.addEventListener('dblclick',()=>{const ca=$('canvas-area').getBoundingClientRect();addBlock(id,snap((ca.width/2-ST.vx)/ST.vs),snap((ca.height/2-ST.vy)/ST.vs+(ST.blocks.size*20)));});
+      body.append(it);
+    });
+    div.append(hdr,body);list.append(div);
+  });
+}
+$('pal-search').addEventListener('input',e=>buildPalette(e.target.value));
+
+// Upload zone
+const uz=$('upload-zone');
+uz.addEventListener('click',()=>$('file-upload').click());
+uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag-over');});
+uz.addEventListener('dragleave',()=>uz.classList.remove('drag-over'));
+uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('drag-over');handleUpload(e.dataTransfer.files);});
+$('file-upload').addEventListener('change',e=>handleUpload(e.target.files));
+
+async function handleUpload(files){
+  for(const f of files){
+    const text=await f.text();
+    ST.uploadedFiles[f.name]={name:f.name,content:text,type:f.name.endsWith('.json')?'json':'csv'};
+    addLog('info','📁 Uploaded: '+f.name+' ('+Math.round(f.size/1024)+'KB)');
+    // Auto-add a CSV reader block
+    const blockType=f.name.endsWith('.json')?'json_reader':'csv_reader';
+    const ca=$('canvas-area').getBoundingClientRect();
+    const b=addBlock(blockType,snap(80+ST.blocks.size*20),snap(200+ST.blocks.size*20));
+    if(b){b.params.filename=f.name;updateBlockDisplay(b);}
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// GRID
+// ═══════════════════════════════════════════════════════════════════
+const GRID=24;const snap=v=>Math.round(v/GRID)*GRID;
+function applyVP(){
+  $('canvas-blocks').style.transform=`translate(${ST.vx}px,${ST.vy}px) scale(${ST.vs})`;
+  $('canvas-blocks').style.transformOrigin='0 0';
+  redrawWires();
+  $('btn-zr').textContent=Math.round(ST.vs*100)+'%';
+}
+function s2c(sx,sy){return{x:(sx-ST.vx)/ST.vs,y:(sy-ST.vy)/ST.vs};}
+function c2s(cx,cy){return{x:cx*ST.vs+ST.vx,y:cy*ST.vs+ST.vy};}
+
+// ═══════════════════════════════════════════════════════════════════
+// ADD/BUILD BLOCKS
+// ═══════════════════════════════════════════════════════════════════
+function addBlock(type,x,y,id){
+  const def=BD[type];if(!def)return null;
+  const bid=id||gid();
+  const params={};(def.params||[]).forEach(p=>params[p.k]=p.d);
+  const el=buildBlockEl(bid,def,params);
+  el.style.left=x+'px';el.style.top=y+'px';
+  $('canvas-blocks').appendChild(el);
+  const b={id:bid,type,def,el,x,y,params};
+  ST.blocks.set(bid,b);
+  bindBlockEvents(b);
+  updateHint();selectBlock(bid);
+  return b;
+}
+
+function buildBlockEl(bid,def,params){
+  const wrap=ce('div','vblock');wrap.dataset.bid=bid;
+  // Header
+  const hdr=ce('div','vb-hdr');hdr.style.background=def.col||'#374151';
+  hdr.innerHTML=`<span class="vb-icon">${def.icon||'◆'}</span><span class="vb-title">${def.lbl}</span><span class="vb-cat">${(CATS[def.cat]||{}).lbl||def.cat||''}</span>`;
+  wrap.appendChild(hdr);
+  // Body
+  const body=ce('div','vb-body');
+  const visPars=(def.params||[]).filter(p=>!['label'].includes(p.k)).slice(0,4);
+  visPars.forEach(p=>{
+    const row=ce('div','vb-row');
+    const lbl=ce('span','vb-lbl');lbl.textContent=p.l+':';
+    const val=ce('span','vb-val');
+    const v=params[p.k];
+    val.textContent=v!==undefined&&v!==null?String(v).slice(0,18):String(p.d||'').slice(0,18);
+    row.append(lbl,val);body.appendChild(row);
+  });
+  wrap.appendChild(body);
+  // Ports
+  const ports=ce('div','vb-ports');
+  const inCol=ce('div','port-col');
+  const outCol=ce('div','port-col');
+  outCol.style.alignItems='flex-end';
+  (def.ins||[]).forEach(p=>{
+    const row=ce('div','port-row');
+    const dot=ce('span','port-dot '+(p.t||'any'));
+    dot.dataset.bid=bid;dot.dataset.port=p.n;dot.dataset.dir='in';dot.title=p.l||p.n;
+    const lbl=ce('span');lbl.textContent=p.l||p.n;lbl.style='font-size:9px;color:var(--text3)';
+    row.append(dot,lbl);inCol.appendChild(row);
+  });
+  (def.outs||[]).forEach(p=>{
+    const row=ce('div','port-row out');
+    const dot=ce('span','port-dot '+(p.t||'any'));
+    dot.dataset.bid=bid;dot.dataset.port=p.n;dot.dataset.dir='out';dot.title=p.l||p.n;
+    const lbl=ce('span');lbl.textContent=p.l||p.n;lbl.style='font-size:9px;color:var(--text3)';
+    row.append(dot,lbl);outCol.appendChild(row);
+  });
+  ports.append(inCol,outCol);wrap.appendChild(ports);
+  return wrap;
+}
+
+function updateBlockDisplay(b){
+  const body=b.el.querySelector('.vb-body');if(!body)return;
+  body.innerHTML='';
+  const visPars=(b.def.params||[]).filter(p=>!['label'].includes(p.k)).slice(0,4);
+  visPars.forEach(p=>{
+    const row=ce('div','vb-row');
+    const lbl=ce('span','vb-lbl');lbl.textContent=p.l+':';
+    const v=b.params[p.k];
+    const val=ce('span','vb-val');val.textContent=v!==undefined&&v!==null?String(v).slice(0,18):String(p.d||'').slice(0,18);
+    row.append(lbl,val);body.appendChild(row);
+  });
+}
+
+function bindBlockEvents(b){
+  b.el.addEventListener('mousedown',e=>{
+    if(e.target.classList.contains('port-dot'))return;
+    e.preventDefault();e.stopPropagation();bringFront(b.el);
+    selectBlock(b.id);
+    const ca=$('canvas-area').getBoundingClientRect();
+    const r=b.el.getBoundingClientRect();
+    ST.dragging={id:b.id,ox:(r.left-ca.left-ST.vx)/ST.vs-b.x,oy:(r.top-ca.top-ST.vy)/ST.vs-b.y};
+  });
+}
+
+// Port mousedown for wire drawing
+document.addEventListener('mousedown',e=>{
+  const dot=e.target.closest('.port-dot[data-dir="out"]');
+  if(!dot)return;
+  e.preventDefault();e.stopPropagation();
+  const ca=$('canvas-area').getBoundingClientRect();
+  const dr=dot.getBoundingClientRect();
+  const sx=dr.left+dr.width/2-ca.left,sy=dr.top+dr.height/2-ca.top;
+  const cp=s2c(sx,sy);
+  ST.drawWire={fromId:dot.dataset.bid,fromPort:dot.dataset.port,sx:cp.x,sy:cp.y,type:dot.classList[1]||'any'};
+  $('draft-wire').style.display='block';
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// CANVAS EVENTS
+// ═══════════════════════════════════════════════════════════════════
+const SNAP_R=55;
+function findSnap(sx,sy,excId){
+  let best=null,bestD=SNAP_R;
+  ST.blocks.forEach(b=>{
+    if(b.id===excId)return;
+    b.el.querySelectorAll('.port-dot[data-dir="in"]').forEach(dot=>{
+      const ca=$('canvas-area').getBoundingClientRect();
+      const dr=dot.getBoundingClientRect();
+      const px=dr.left+dr.width/2-ca.left,py=dr.top+dr.height/2-ca.top;
+      const d=Math.hypot(sx-px,sy-py);
+      if(d<bestD){bestD=d;best={blockId:dot.dataset.bid,port:dot.dataset.port,sx:px,sy:py};}
+    });
+  });
+  return best;
+}
+
+const wireSvg=$('wire-svg');
+const snapRing=$('snap-ring');
+const draftWire=$('draft-wire');
+
+wireSvg.addEventListener('mousedown',e=>{
+  if(e.target===wireSvg||e.target.id==='wires-g'){
+    selectBlock(null);
+    ST.panning={mx:e.clientX,my:e.clientY,vx:ST.vx,vy:ST.vy};
+    wireSvg.style.cursor='grabbing';
+  }
+});
+
+document.addEventListener('mousemove',e=>{
+  if(ST.drawWire){
+    const ca=$('canvas-area').getBoundingClientRect();
+    const mx=e.clientX-ca.left,my=e.clientY-ca.top;
+    const snap2=findSnap(mx,my,ST.drawWire.fromId);
+    const sp=c2s(ST.drawWire.sx,ST.drawWire.sy);
+    const ex=snap2?snap2.sx:mx,ey=snap2?snap2.sy:my;
+    draftWire.setAttribute('d',bez(sp.x,sp.y,ex,ey));
+    if(snap2){snapRing.setAttribute('cx',snap2.sx);snapRing.setAttribute('cy',snap2.sy);snapRing.setAttribute('opacity','1');}
+    else snapRing.setAttribute('opacity','0');
+    return;
+  }
+  if(ST.dragging){
+    const ca=$('canvas-area').getBoundingClientRect();
+    const p=s2c(e.clientX-ca.left,e.clientY-ca.top);
+    const b=ST.blocks.get(ST.dragging.id);
+    if(b){b.x=snap(p.x-ST.dragging.ox);b.y=snap(p.y-ST.dragging.oy);b.el.style.left=b.x+'px';b.el.style.top=b.y+'px';redrawWires();}
+    return;
+  }
+  if(ST.panning){ST.vx=ST.panning.vx+(e.clientX-ST.panning.mx);ST.vy=ST.panning.vy+(e.clientY-ST.panning.my);applyVP();}
+});
+
+document.addEventListener('mouseup',e=>{
+  if(ST.drawWire){
+    const ca=$('canvas-area').getBoundingClientRect();
+    const mx=e.clientX-ca.left,my=e.clientY-ca.top;
+    const snap2=findSnap(mx,my,ST.drawWire.fromId);
+    if(snap2){addWire(ST.drawWire.fromId,ST.drawWire.fromPort,snap2.blockId,snap2.port);}
+    else{const dot=e.target.closest('.port-dot[data-dir="in"]');if(dot&&dot.dataset.bid!==ST.drawWire.fromId)addWire(ST.drawWire.fromId,ST.drawWire.fromPort,dot.dataset.bid,dot.dataset.port);}
+    ST.drawWire=null;draftWire.style.display='none';draftWire.setAttribute('d','');snapRing.setAttribute('opacity','0');
+  }
+  ST.dragging=null;ST.panning=null;wireSvg.style.cursor='default';
+});
+
+// Drop from palette
+const ca2=$('canvas-area');
+ca2.addEventListener('dragover',e=>{e.preventDefault();e.dataTransfer.dropEffect='copy';});
+ca2.addEventListener('drop',e=>{
+  e.preventDefault();
+  try{const d=JSON.parse(e.dataTransfer.getData('text/plain'));if(d.type!=='block')return;const ca=ca2.getBoundingClientRect();const p=s2c(e.clientX-ca.left,e.clientY-ca.top);addBlock(d.bid,snap(p.x),snap(p.y));}catch(ex){}
+});
+
+// Wheel zoom
+ca2.addEventListener('wheel',e=>{
+  e.preventDefault();
+  const r=ca2.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
+  const f=e.deltaY<0?1.12:0.88;const ns=Math.min(2.5,Math.max(0.15,ST.vs*f));
+  ST.vx=mx-(mx-ST.vx)*(ns/ST.vs);ST.vy=my-(my-ST.vy)*(ns/ST.vs);ST.vs=ns;applyVP();
+},{passive:false});
+
+ca2.addEventListener('dblclick',e=>{if(e.target===wireSvg||e.target===ca2||e.target.id==='canvas-blocks'){ST.vs=1;ST.vx=60;ST.vy=60;applyVP();}});
+
+document.addEventListener('keydown',e=>{
+  const tag=document.activeElement?.tagName||'';
+  if(['INPUT','TEXTAREA','SELECT'].includes(tag))return;
+  if(e.key==='Delete'||e.key==='Backspace')deleteSelected();
+  if(e.key==='Escape'){if(ST.drawWire){ST.drawWire=null;draftWire.style.display='none';snapRing.setAttribute('opacity','0');}selectBlock(null);}
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();runProgram();}
+  if((e.ctrlKey||e.metaKey)&&e.shiftKey&&e.key==='B'){e.preventDefault();compileBlocks();}
+  if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveCanvas();}
+  if((e.ctrlKey||e.metaKey)&&e.key==='n'){e.preventDefault();if(confirm('Clear canvas?'))clearCanvas();}
+  if((e.ctrlKey||e.metaKey)&&e.shiftKey&&e.key==='F'){e.preventDefault();fitView();}
+  if(e.key==='z'&&(e.ctrlKey||e.metaKey)&&!e.shiftKey){e.preventDefault();undo();}
+  if(e.key==='z'&&(e.ctrlKey||e.metaKey)&&e.shiftKey){e.preventDefault();redo();}
+});
+
+// Wire click on wires group
+$('wires-g').addEventListener('click',e=>{
+  const el=e.target.closest('[data-wid]');if(el){e.stopPropagation();selectWire(el.dataset.wid);}
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// WIRES
+// ═══════════════════════════════════════════════════════════════════
+const WC={quantum:'#A78BFA',dataset:'#22D3EE',result:'#34D399',number:'#60A5FA',any:'#6B7280',model:'#F472B6',matrix:'#FB7185'};
+function bez(x1,y1,x2,y2){const cx=(x1+x2)/2;return `M ${x1} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2} ${y2}`;}
+
+function portScreenPos(bid,port,dir){
+  const b=ST.blocks.get(bid);if(!b)return null;
+  const dot=b.el.querySelector(`.port-dot[data-port="${port}"][data-dir="${dir}"]`);if(!dot)return null;
+  const ca=$('canvas-area').getBoundingClientRect();const dr=dot.getBoundingClientRect();
+  return{x:dr.left+dr.width/2-ca.left,y:dr.top+dr.height/2-ca.top,type:dot.classList[1]||'any'};
+}
+
+function redrawWires(){ST.wires.forEach(w=>drawWire(w));}
+
+function drawWire(w){
+  const fp=portScreenPos(w.fromId,w.fromPort,'out');const tp=portScreenPos(w.toId,w.toPort,'in');
+  if(!fp||!tp||!w.el)return;
+  w.el.setAttribute('d',bez(fp.x,fp.y,tp.x,tp.y));
+  w.el.setAttribute('stroke',WC[fp.type]||WC.any);
+}
+
+function addWire(fromId,fromPort,toId,toPort){
+  for(const w of ST.wires.values())if(w.fromId===fromId&&w.fromPort===fromPort&&w.toId===toId&&w.toPort===toPort)return;
+  const id=wid();
+  const path=svge('path');path.classList.add('wire');path.dataset.wid=id;
+  const fromB=ST.blocks.get(fromId);const dot=fromB?.el?.querySelector(`.port-dot[data-port="${fromPort}"]`);
+  const type=dot?.classList[1]||'any';path.classList.add(type);path.setAttribute('marker-end','url(#arr)');
+  $('wires-g').appendChild(path);
+  const wire={fromId,fromPort,toId,toPort,el:path,type};
+  ST.wires.set(id,wire);drawWire(wire);
+}
+
+function deleteWire(id){const w=ST.wires.get(id);if(w&&w.el)w.el.remove();ST.wires.delete(id);}
+
+// ═══════════════════════════════════════════════════════════════════
+// SELECTION
+// ═══════════════════════════════════════════════════════════════════
+function selectBlock(id){
+  ST.blocks.forEach(b=>b.el.classList.remove('selected'));
+  ST.wires.forEach(w=>{if(w.el)w.el.classList.remove('selected');});
+  ST.selWire=null;ST.selected=id;
+  if(id){const b=ST.blocks.get(id);if(b)b.el.classList.add('selected');showProps(id);}
+  else showPropsEmpty();
+}
+function selectWire(id){
+  ST.blocks.forEach(b=>b.el.classList.remove('selected'));
+  ST.wires.forEach((w,wid2)=>{if(w.el)w.el.classList.toggle('selected',wid2===id);});
+  ST.selected=null;ST.selWire=id;showPropsEmpty();
+}
+function deleteSelected(){
+  if(ST.selWire){deleteWire(ST.selWire);ST.selWire=null;return;}
+  if(ST.selected){
+    const b=ST.blocks.get(ST.selected);if(b)b.el.remove();ST.blocks.delete(ST.selected);
+    [...ST.wires.entries()].forEach(([wid2,w])=>{if(w.fromId===ST.selected||w.toId===ST.selected)deleteWire(wid2);});
+    ST.selected=null;showPropsEmpty();updateHint();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PROPERTIES PANEL
+// ═══════════════════════════════════════════════════════════════════
+function showProps(bid){
+  const b=ST.blocks.get(bid);if(!b)return;
+  const body=$('props-body');if(!body)return;
+  body.innerHTML='';
+  // Block info
+  const s1=ce('div','prop-sec');
+  s1.innerHTML=`<div class="prop-sec-title">Block</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <span style="font-size:22px">${b.def.icon||'◆'}</span>
+      <div><div style="font-weight:600;font-size:13px;color:var(--text)">${b.def.lbl}</div>
+      <div style="font-size:10px;color:var(--text3);margin-top:2px;line-height:1.4">${b.def.desc||''}</div></div>
+    </div>`;
+  body.appendChild(s1);
+  // Parameters
+  if((b.def.params||[]).length){
+    const s2=ce('div','prop-sec');s2.innerHTML='<div class="prop-sec-title">Parameters</div>';
+    b.def.params.forEach(p=>{
+      const f=ce('div','prop-field');
+      const lbl=ce('label','prop-lbl');lbl.textContent=p.l;f.appendChild(lbl);
+      let inp;
+      if(p.t==='select'){
+        inp=ce('select','prop-select');
+        (p.opts||[]).forEach(opt=>{const o=ce('option');o.value=opt;o.textContent=opt;if(String(b.params[p.k])===String(opt))o.selected=true;inp.appendChild(o);});
+        inp.addEventListener('change',()=>{b.params[p.k]=inp.value;updateBlockDisplay(b);});
+      }else if(p.t==='textarea'){
+        inp=ce('textarea','prop-textarea');inp.value=String(b.params[p.k]!==undefined?b.params[p.k]:p.d||'');inp.rows=3;
+        inp.addEventListener('input',()=>{b.params[p.k]=inp.value;updateBlockDisplay(b);});
+      }else if(p.t==='number'){
+        inp=ce('input','prop-input');inp.type='number';inp.value=b.params[p.k]!==undefined?b.params[p.k]:p.d||0;
+        if(p.step)inp.step=p.step;if(p.min!==undefined)inp.min=p.min;if(p.max!==undefined)inp.max=p.max;
+        inp.addEventListener('input',()=>{b.params[p.k]=Number(inp.value)||0;updateBlockDisplay(b);});
+      }else{
+        inp=ce('input','prop-input');inp.type='text';inp.value=String(b.params[p.k]!==undefined?b.params[p.k]:p.d||'');
+        inp.placeholder=p.l;
+        inp.addEventListener('input',()=>{b.params[p.k]=inp.value;updateBlockDisplay(b);});
+      }
+      f.appendChild(inp);s2.appendChild(f);
+    });
+    body.appendChild(s2);
+  }
+  // ETL quick-run button
+  if(b.def.cat&&b.def.cat.startsWith('etl')||b.def.cat==='ds'){
+    const s3=ce('div','prop-sec');
+    s3.innerHTML='<div class="prop-sec-title">Quick Actions</div>';
+    const runBtn=ce('button','tb-btn primary');runBtn.style='width:100%;justify-content:center;margin-bottom:6px';
+    runBtn.textContent='▶ Run this block';
+    runBtn.addEventListener('click',()=>runSingleBlock(bid));
+    s3.appendChild(runBtn);
+    body.appendChild(s3);
+  }
+  // Ports
+  const portColors={quantum:'#A78BFA',dataset:'#22D3EE',result:'#34D399',number:'#60A5FA',any:'#6B7280',model:'#F472B6'};
+  const s4=ce('div','prop-sec');s4.innerHTML='<div class="prop-sec-title">Connections</div>';
+  if((b.def.ins||[]).length){const r=ce('div');r.style='font-size:10px;color:var(--text3);margin-bottom:4px';r.textContent='INPUTS';s4.appendChild(r);b.def.ins.forEach(p=>{const bg=ce('span','prop-badge');const c=portColors[p.t]||'#6B7280';bg.style=`background:${c}22;border:1px solid ${c}55;color:${c}`;bg.innerHTML=`→ ${p.n||p.l} <small style="opacity:.6">${p.t}</small>`;s4.appendChild(bg);});}
+  if((b.def.outs||[]).length){const r=ce('div');r.style='font-size:10px;color:var(--text3);margin:6px 0 4px';r.textContent='OUTPUTS';s4.appendChild(r);b.def.outs.forEach(p=>{const bg=ce('span','prop-badge');const c=portColors[p.t]||'#6B7280';bg.style=`background:${c}22;border:1px solid ${c}55;color:${c}`;bg.innerHTML=`← ${p.n||p.l} <small style="opacity:.6">${p.t}</small>`;s4.appendChild(bg);});}
+  body.appendChild(s4);
+}
+
+function showPropsEmpty(){
+  const body=$('props-body');if(!body)return;
+  body.innerHTML=`<div class="prop-empty"><div class="prop-empty-icon">⚙</div><div class="prop-empty-text">Click a block to edit parameters</div><div class="prop-hint">DEL — delete selected<br>Drag ● → ● to connect<br>Hover port for snap ring<br>Ctrl+Enter — Run<br>Ctrl+Shift+B — Compile<br>Ctrl+Z — Undo<br>Ctrl+S — Save<br>Double-click — Reset zoom</div></div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// OUTPUT / CONSOLE
+// ═══════════════════════════════════════════════════════════════════
+function addLog(type,text){
+  const lines=$('con-lines');if(!lines||!text&&text!==0)return;
+  const COL={print:'var(--text)',gate:'var(--cyan)',measure:'var(--green)',error:'var(--red)',warn:'var(--orange)',success:'var(--green)',timing:'var(--orange)',debug:'var(--text3)',info:'var(--text2)',etl:'var(--teal)',dsl:'var(--purple)'};
+  const div=ce('div','cline c'+type);
+  const ts=new Date().toTimeString().slice(0,8);
+  div.innerHTML=`<span class="cts">${ts}</span>${esc(String(text||''))}`;
+  div.style.color=COL[type]||'var(--text2)';
+  lines.appendChild(div);lines.scrollTop=lines.scrollHeight;
+  // Auto-expand output if collapsed
+  if(OUT_PANEL.minimized){OUT_PANEL.minimize();}
+}
+function clearOutput(){
+  const l=$('con-lines');if(l)l.innerHTML='';
+  const c=$('chart-pane');if(c)c.innerHTML='';
+  ST.charts.forEach(ch=>{try{ch.destroy();}catch(e){}});ST.charts=[];
+  ST.tableData=null;
+}
+function switchTab(name){
+  document.querySelectorAll('.out-tab').forEach(t=>t.classList.toggle('active',t.dataset.pane===name));
+  document.querySelectorAll('.out-pane').forEach(p=>p.classList.toggle('active',p.id==='pane-'+name));
+}
+document.querySelectorAll('.out-tab').forEach(tab=>tab.addEventListener('click',()=>switchTab(tab.dataset.pane)));
+
+// ═══════════════════════════════════════════════════════════════════
+// VISUALIZATION RENDERING
+// ═══════════════════════════════════════════════════════════════════
+const PALETTE_COLORS=['rgba(88,166,255,.8)','rgba(188,140,255,.8)','rgba(63,185,80,.8)','rgba(210,153,34,.8)','rgba(248,81,73,.8)','rgba(57,211,83,.8)','rgba(121,192,255,.8)'];
+const COLOR_MAP={blue:'rgba(88,166,255,.8)',purple:'rgba(188,140,255,.8)',green:'rgba(63,185,80,.8)',orange:'rgba(210,153,34,.8)',red:'rgba(248,81,73,.8)',teal:'rgba(57,211,83,.8)'};
+const CHART_DEFAULTS={plugins:{legend:{labels:{color:'var(--text2)',font:{size:10}}}},scales:{x:{ticks:{color:'var(--text2)',font:{size:10}},grid:{color:'rgba(255,255,255,.05)'}},y:{ticks:{color:'var(--text2)',font:{size:10}},grid:{color:'rgba(255,255,255,.05)'}}}};
+
+function addChartCard(title){
+  const cp=$('chart-pane');if(!cp)return null;
+  switchTab('charts');
+  const card=ce('div','chart-card');
+  card.innerHTML=`<div class="chart-card-title">${esc(title||'Chart')}</div><div class="chart-wrap"><canvas></canvas></div>`;
+  cp.appendChild(card);return card.querySelector('canvas');
+}
+
+function renderHistogram(data,title,colorName){
+  if(!data||typeof data!=='object')return;
+  const canvas=addChartCard(title||'Histogram');if(!canvas)return;
+  const labels=Object.keys(data).sort();const vals=labels.map(k=>data[k]);
+  const total=vals.reduce((a,b)=>a+b,0)||1;
+  const ch=new Chart(canvas,{type:'bar',data:{labels,datasets:[{label:'Count',data:vals,backgroundColor:COLOR_MAP[colorName]||PALETTE_COLORS[0],borderColor:(COLOR_MAP[colorName]||PALETTE_COLORS[0]).replace('.8','.1'),borderWidth:1}]},
+    options:{responsive:true,maintainAspectRatio:false,...CHART_DEFAULTS,plugins:{...CHART_DEFAULTS.plugins,tooltip:{callbacks:{label:c=>c.parsed.y+' ('+Math.round(c.parsed.y/total*100)+'%)'}}}}});
+  ST.charts.push(ch);
+}
+
+function renderPie(data,title){
+  if(!data||typeof data!=='object')return;
+  const canvas=addChartCard(title||'Pie Chart');if(!canvas)return;
+  const labels=Object.keys(data).sort();const vals=labels.map(k=>data[k]);
+  const ch=new Chart(canvas,{type:'pie',data:{labels,datasets:[{data:vals,backgroundColor:labels.map((_,i)=>PALETTE_COLORS[i%PALETTE_COLORS.length])}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'var(--text2)',font:{size:10}}}}}});
+  ST.charts.push(ch);
+}
+
+function renderBar(data,title,orientation){
+  if(!data||typeof data!=='object')return;
+  const canvas=addChartCard(title||'Bar Chart');if(!canvas)return;
+  const labels=Object.keys(data).sort();const vals=labels.map(k=>Number(data[k])||0);
+  const type=orientation==='horizontal'?'bar':'bar';
+  const opts={...CHART_DEFAULTS,responsive:true,maintainAspectRatio:false};
+  if(orientation==='horizontal'){opts.indexAxis='y';}
+  const ch=new Chart(canvas,{type,data:{labels,datasets:[{label:'Value',data:vals,backgroundColor:PALETTE_COLORS[1]}]},options:opts});
+  ST.charts.push(ch);
+}
+
+function renderLineChart(rows,cols,xCol,yCol,title){
+  if(!rows||!rows.length)return;
+  const canvas=addChartCard(title||'Line Chart');if(!canvas)return;
+  const xc=xCol||cols[0],yc=yCol||cols[1];
+  const labels=rows.map(r=>String(r[xc]||''));
+  const vals=rows.map(r=>parseFloat(r[yc])||0);
+  const ch=new Chart(canvas,{type:'line',data:{labels,datasets:[{label:yc,data:vals,borderColor:PALETTE_COLORS[0],backgroundColor:'rgba(88,166,255,.1)',tension:.3,fill:true}]},options:{responsive:true,maintainAspectRatio:false,...CHART_DEFAULTS}});
+  ST.charts.push(ch);
+}
+
+function renderScatter(rows,xCol,yCol,title){
+  if(!rows||!rows.length)return;
+  const canvas=addChartCard(title||'Scatter Plot');if(!canvas)return;
+  const pts=rows.map(r=>({x:parseFloat(r[xCol])||0,y:parseFloat(r[yCol])||0}));
+  const ch=new Chart(canvas,{type:'scatter',data:{datasets:[{label:`${xCol} vs ${yCol}`,data:pts,backgroundColor:'rgba(88,166,255,.6)',pointRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,...CHART_DEFAULTS,scales:{x:{...CHART_DEFAULTS.scales.x,title:{display:true,text:xCol,color:'var(--text2)'}},y:{...CHART_DEFAULTS.scales.y,title:{display:true,text:yCol,color:'var(--text2)'}}}}});
+  ST.charts.push(ch);
+}
+
+function renderHeatmap(matrix,cols,title){
+  if(!matrix||!cols)return;
+  const canvas=addChartCard(title||'Heatmap');if(!canvas)return;
+  // Render as table-based heatmap since Chart.js doesn't have native heatmap
+  const card=canvas.closest('.chart-card');
+  const maxAbs=Math.max(...matrix.flat().map(Math.abs));
+  let html=`<table style="width:100%;font-size:9px;border-collapse:collapse">`;
+  html+=`<tr><td></td>${cols.map(c=>`<td style="text-align:center;color:var(--text3);padding:2px;max-width:40px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(c)}">${esc(c.slice(0,6))}</td>`).join('')}</tr>`;
+  matrix.forEach((row,i)=>{
+    html+=`<tr><td style="color:var(--text3);padding:2px;font-size:9px;max-width:40px;overflow:hidden;text-overflow:ellipsis" title="${esc(cols[i])}">${esc(cols[i].slice(0,6))}</td>`;
+    row.forEach(v=>{
+      const pct=maxAbs?v/maxAbs:0;
+      const r=pct>0?Math.round(88+pct*100):Math.round(248-Math.abs(pct)*100);
+      const g=pct>0?Math.round(166-pct*80):Math.round(81+Math.abs(pct)*50);
+      const b=pct>0?Math.round(255-pct*150):Math.round(73+Math.abs(pct)*80);
+      html+=`<td style="background:rgba(${r},${g},${b},.6);text-align:center;padding:3px;border:1px solid rgba(0,0,0,.2);font-family:var(--mono)" title="${v}">${v.toFixed(2)}</td>`;
+    });
+    html+='</tr>';
+  });
+  html+='</table>';
+  const wrap=card.querySelector('.chart-wrap');if(wrap)wrap.innerHTML=html;
+}
+
+function renderStatevector(sv,title){
+  if(!sv||!Array.isArray(sv))return;
+  const canvas=addChartCard(title||'Quantum State');if(!canvas)return;
+  const card=canvas.closest('.chart-card');
+  const items=sv.filter(s=>s.prob>0.001);
+  let html=`<table style="width:100%;font-size:10px"><thead><tr style="color:var(--text3)"><th style="text-align:left;padding:3px">State</th><th>Re</th><th>Im</th><th>Prob</th><th style="width:80px">Bar</th></tr></thead><tbody>`;
+  items.forEach(s=>{
+    const pw=Math.round(s.prob*80);
+    html+=`<tr><td style="color:var(--accent);font-family:var(--mono);padding:3px">|${s.state}>}</td><td style="text-align:center;color:var(--text2)">${(s.re||0).toFixed(3)}</td><td style="text-align:center;color:var(--purple)">${(s.im||0).toFixed(3)}i</td><td style="text-align:center">${Math.round(s.prob*100)}%</td><td><div style="width:${pw}px;height:8px;background:var(--accent);border-radius:2px;margin:2px 0"></div></td></tr>`;
+  });
+  html+='</tbody></table>';
+  const wrap=card.querySelector('.chart-wrap');if(wrap)wrap.innerHTML=html;
+}
+
+function renderGauge(value,params){
+  const canvas=addChartCard(params.title||'Gauge');if(!canvas)return;
+  const card=canvas.closest('.chart-card');
+  const min=parseFloat(params.min||-2),max=parseFloat(params.max||0),target=parseFloat(params.target||-1.137);
+  const pct=Math.min(100,Math.max(0,(value-min)/(max-min)*100));
+  const tpct=Math.min(100,Math.max(0,(target-min)/(max-min)*100));
+  const err=Math.abs(value-target)*1000;
+  const wrap=card.querySelector('.chart-wrap');
+  if(wrap)wrap.innerHTML=`<div style="padding:8px 4px;text-align:center">
+    <div style="font-size:26px;font-weight:700;color:var(--accent);font-family:var(--mono)">${typeof value==='number'?value.toFixed(6):value}</div>
+    <div style="font-size:10px;color:var(--text3);margin:3px 0">Target: ${target}</div>
+    <div style="position:relative;height:12px;background:var(--bg4);border-radius:6px;margin:8px 4px">
+      <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--green),var(--accent));border-radius:6px;transition:width .5s"></div>
+      <div style="position:absolute;top:-2px;left:${tpct}%;width:2px;height:16px;background:var(--red)"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);padding:0 4px"><span>${min}</span><span>${max}</span></div>
+    <div style="margin-top:6px;font-size:11px;color:${err<1?'var(--green)':'var(--orange)'}">${err<1?'✓ Chemical accuracy':'Error: '+err.toFixed(3)+' mHa'}</div>
+  </div>`;
+}
+
+// Rich table rendering
+function renderTable(dataset,params){
+  if(!dataset)return;
+  ST.tableData=dataset;
+  $('tbl-info').textContent=`${dataset.total_rows||dataset.rows.length} rows × ${dataset.columns.length} cols`;
+  renderTableView(dataset.rows,dataset.columns,params);
+  switchTab('table');
+}
+
+let _sortCol=null,_sortDir='asc',_filter='';
+function renderTableView(allRows,cols,params){
+  const tp=$('table-pane');if(!tp)return;
+  let rows=[...allRows];
+  // Filter
+  const fq=($('tbl-search')?.value||'').toLowerCase();
+  if(fq)rows=rows.filter(r=>cols.some(c=>String(r[c]||'').toLowerCase().includes(fq)));
+  // Sort
+  if(_sortCol){
+    const isNum=rows.some(r=>!isNaN(parseFloat(r[_sortCol]))&&r[_sortCol]!=='');
+    rows.sort((a,b)=>{const av=isNum?parseFloat(a[_sortCol]):String(a[_sortCol]||'');const bv=isNum?parseFloat(b[_sortCol]):String(b[_sortCol]||'');return _sortDir==='asc'?(av>bv?1:av<bv?-1:0):(av<bv?1:av>bv?-1:0);});
+  }
+  // Paginate
+  const pageSize=parseInt(params?.page_size||ST.settings.tablePageSize||25);
+  const totalRows=rows.length;
+  rows=rows.slice(0,pageSize);
+  const maxByCol={};
+  if(params?.show_bars!=='false'){cols.forEach(c=>{const nums=allRows.map(r=>parseFloat(r[c])).filter(v=>!isNaN(v));if(nums.length>allRows.length*.5)maxByCol[c]=Math.max(...nums);});}
+
+  let html=`<div style="overflow:auto;max-height:100%"><table class="data-tbl"><thead><tr>`;
+  cols.forEach(c=>{
+    const isSorted=c===_sortCol;
+    html+=`<th class="${isSorted?'sort-'+_sortDir:''}" onclick="tableSort('${esc(c)}')">${esc(c)}</th>`;
+  });
+  html+='</tr></thead><tbody>';
+  rows.forEach(row=>{
+    html+='<tr>';
+    cols.forEach(c=>{
+      const v=row[c];const isNull=v===''||v===null||v===undefined;
+      const isNum=!isNull&&!isNaN(parseFloat(v))&&String(v).trim()!=='';
+      const maxV=maxByCol[c];
+      if(isNull){html+=`<td class="null-cell">null</td>`;}
+      else if(maxV&&isNum){const w=Math.round(parseFloat(v)/maxV*60);html+=`<td class="num-cell"><div style="display:flex;align-items:center;gap:6px">${esc(fmt(v))}<div class="tbl-bar" style="width:${w}px"></div></div></td>`;}
+      else{html+=`<td class="${isNum?'num-cell':''}">${esc(fmt(v))}</td>`;}
+    });
+    html+='</tr>';
+  });
+  html+=`</tbody></table></div>`;
+  if(totalRows>pageSize)html+=`<div style="padding:6px 10px;font-size:10px;color:var(--text3);font-family:var(--mono)">Showing ${rows.length} of ${totalRows} rows${fq?' (filtered)':''}</div>`;
+  tp.innerHTML=html;
+}
+window.tableSort=function(col){_sortDir=(_sortCol===col&&_sortDir==='asc')?'desc':'asc';_sortCol=col;if(ST.tableData)renderTableView(ST.tableData.rows,ST.tableData.columns,{});};
+window.filterTable=function(){if(ST.tableData)renderTableView(ST.tableData.rows,ST.tableData.columns,{});};
+window.downloadTable=function(){
+  if(!ST.tableData)return;
+  const {columns,rows}=ST.tableData;
+  const esc2=v=>/[",\n]/.test(String(v||''))?'"'+String(v||'').replace(/"/g,'""')+'"':String(v||'');
+  const csv=[columns.join(','),...rows.map(r=>columns.map(c=>esc2(r[c]||'')).join(','))].join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='export.csv';a.click();URL.revokeObjectURL(a.href);
+};
+
+function renderProfile(profile){
+  const pp=$('profile-pane');if(!pp||!profile)return;
+  switchTab('profile');
+  let html=`<div style="padding:8px;font-weight:600;color:var(--text);margin-bottom:8px">📊 ${profile.rows} rows × ${profile.columns} columns</div>`;
+  html+=`<table class="data-tbl"><thead><tr><th>Column</th><th>Type</th><th>Nulls</th><th>Null%</th><th>Distinct</th><th>Min</th><th>Mean</th><th>Max</th><th>Std</th></tr></thead><tbody>`;
+  Object.entries(profile.stats||{}).forEach(([col,s])=>{
+    const nullPct=s.null_pct||0;
+    html+=`<tr><td style="color:var(--accent);font-family:var(--mono)">${esc(col)}</td>
+      <td style="color:var(--text3)">${s.type||'?'}</td>
+      <td class="${nullPct>30?'cerror':nullPct>10?'cwarn':''}">${s.null_count}</td>
+      <td>${nullPct}%</td>
+      <td>${s.distinct}</td>
+      <td class="num-cell">${s.min!==undefined?fmt(s.min):''}</td>
+      <td class="num-cell">${s.mean!==undefined?fmt(s.mean):''}</td>
+      <td class="num-cell">${s.max!==undefined?fmt(s.max):''}</td>
+      <td class="num-cell">${s.std!==undefined?fmt(s.std):''}</td></tr>`;
+  });
+  html+='</tbody></table>';
+  pp.innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ETL EXECUTION ENGINE (client-side → server API)
+// ═══════════════════════════════════════════════════════════════════
+// Build execution graph: topological sort
+function topoSort(){
+  const inDeg=new Map();ST.blocks.forEach((_,id)=>inDeg.set(id,0));
+  ST.wires.forEach(w=>inDeg.set(w.toId,(inDeg.get(w.toId)||0)+1));
+  const q=[...inDeg.entries()].filter(([,v])=>v===0).map(([k])=>k);
+  const order=[];
+  while(q.length){
+    const cur=q.shift();order.push(cur);
+    ST.wires.forEach(w=>{if(w.fromId===cur){const n=(inDeg.get(w.toId)||1)-1;inDeg.set(w.toId,n);if(!n)q.push(w.toId);}});
+  }
+  ST.blocks.forEach((_,id)=>{if(!order.includes(id))order.push(id);});
+  return order;
+}
+
+// Run the full canvas pipeline
+async function runProgram(){
+  if(ST.running)return;
+  const hasBlocks=ST.blocks.size>0;if(!hasBlocks){addLog('warn','Canvas is empty — drag blocks to build a pipeline');return;}
+  clearOutput();setRunning(true);
+  addLog('info','⟨ψ⟩ Starting execution...');
+
+  // Show DSL
+  const code=blocksToCode();
+  if($('dsl-pre'))$('dsl-pre').innerHTML=hlDSL(esc(code));
+
+  // Determine pipeline type
+  const hasETL=[...ST.blocks.values()].some(b=>b.def.cat&&(b.def.cat.startsWith('etl')||b.def.cat==='ds'));
+  const hasQuantum=[...ST.blocks.values()].some(b=>b.def.cat==='quantum'&&!b.def.isViz);
+
+  if(hasETL||(!hasQuantum&&!hasETL)){
+    await runETLPipeline();
+  }
+  if(hasQuantum){
+    await runQuantumCode(code);
+  }
+
+  setRunning(false);addLog('success','✓ Execution complete');
+}
+
+// ETL pipeline execution
+async function runETLPipeline(){
+  const order=topoSort();
+  // datasets[blockId][portName] = dataset object
+  const outputs=new Map();
+
+  for(const bid of order){
+    const b=ST.blocks.get(bid);if(!b)continue;
+    if(b.def.cat==='quantum'||b.def.cat==='viz'||b.def.cat==='out')continue;
+    if(!b.def.cat||(!b.def.cat.startsWith('etl')&&b.def.cat!=='ds'))continue;
+
+    // Collect inputs from upstream wires
+    const inputs={};
+    ST.wires.forEach(w=>{
+      if(w.toId===bid){
+        const upData=outputs.get(w.fromId);
+        if(upData&&upData[w.fromPort]!==undefined){inputs[w.toPort]=upData[w.fromPort];}
+      }
+    });
+
+    // Special: handle file uploads for csv_reader/json_reader
+    let uploadedData=null;
+    if((b.type==='csv_reader'||b.type==='json_reader')&&ST.uploadedFiles[b.params.filename]){
+      uploadedData=ST.uploadedFiles[b.params.filename].content;
+    }
+
+    addLog('etl','▶ '+b.def.lbl+' ['+bid+']...');
+    try{
+      const res=await fetch('/api/etl',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({operation:b.type,params:b.params,inputs,uploadedData})});
+      const data=await res.json();
+      if(data.error){addLog('error','  ✗ '+b.def.lbl+': '+data.error);continue;}
+      if(data.log)addLog('etl','  '+data.log);
+      // Store all output ports
+      const blockOut={};
+      if(data.dataset)blockOut.dataset=data.dataset;
+      if(data.train_dataset)blockOut.dataset=data.train_dataset;
+      if(data.test_dataset)blockOut.test_dataset=data.test_dataset;
+      if(data.model)blockOut.model=data.model;
+      if(data.profile)blockOut.profile=data.profile;
+      if(data.csv_content)blockOut.csv=data.csv_content;
+      if(data.json_content)blockOut.json=data.json_content;
+      if(data.correlation_matrix)blockOut.matrix=data.correlation_matrix;
+      outputs.set(bid,blockOut);
+    }catch(e){addLog('error','  ✗ '+b.def.lbl+': '+e.message);}
+  }
+
+  // Now run visualization blocks that have data connected
+  const vizBlocks=[...ST.blocks.values()].filter(b=>b.def.isViz);
+  vizBlocks.forEach(vb=>{
+    // Find what's connected to this viz block
+    let connectedData=null,connectedPort='data';
+    ST.wires.forEach(w=>{
+      if(w.toId===vb.id){const upData=outputs.get(w.fromId);if(upData){connectedData=upData[w.fromPort];connectedPort=w.fromPort;}}
+    });
+
+    if(connectedData){
+      renderViz(vb.def.vizType,connectedData,vb.params,connectedPort);
+    }
+  });
+
+  // Run output blocks (print, write_csv, etc.)
+  const outBlocks=[...ST.blocks.values()].filter(b=>b.def.cat==='out');
+  outBlocks.forEach(ob=>{
+    ST.wires.forEach(w=>{
+      if(w.toId===ob.id){
+        const upData=outputs.get(w.fromId);if(!upData)return;
+        const data=upData[w.fromPort];
+        if(!data)return;
+        if(ob.type==='print_block'||ob.type==='log_block'){addLog('print',JSON.stringify(data,null,2).slice(0,500));}
+        if(ob.type==='write_csv'&&data.columns&&data.rows){downloadDataset(data,'csv',ob.params.filename||'output.csv');}
+        if(ob.type==='write_json'&&data.rows){downloadDataset(data,'json',ob.params.filename||'output.json');}
+      }
+    });
+  });
+}
+
+function renderViz(vizType,data,params,port){
+  switch(vizType){
+    case 'table':
+      if(data&&data.columns&&data.rows){renderTable(data,params);}
+      break;
+    case 'histogram':
+      if(data&&data.columns&&data.rows){
+        // Convert dataset to histogram format
+        const col=params.column||data.columns[0];
+        const hist={};data.rows.forEach(r=>{const v=String(r[col]||'');hist[v]=(hist[v]||0)+1;});
+        renderHistogram(hist,params.title||'Histogram',params.color);
+      } else if(typeof data==='object'&&!Array.isArray(data)){renderHistogram(data,params.title,params.color);}
+      break;
+    case 'pie':
+      if(typeof data==='object'&&!Array.isArray(data)){renderPie(data,params.title);}
+      else if(data&&data.rows){const hist={};data.rows.forEach(r=>{const v=String(r[data.columns[0]]||'');hist[v]=(hist[v]||0)+1;});renderPie(hist,params.title);}
+      break;
+    case 'bar':
+      if(data&&data.rows&&data.columns){
+        const col=params.y_col||data.columns[data.columns.length-1];
+        const lbl=params.x_col||data.columns[0];
+        const hist=Object.fromEntries(data.rows.map(r=>[String(r[lbl]||''),parseFloat(r[col])||0]));
+        renderBar(hist,params.title,params.orientation);
+      }else if(typeof data==='object'&&!Array.isArray(data)){renderBar(data,params.title,params.orientation);}
+      break;
+    case 'line':
+      if(data&&data.rows)renderLineChart(data.rows,data.columns,params.x_col,params.y_col,params.title);
+      break;
+    case 'scatter':
+      if(data&&data.rows)renderScatter(data.rows,params.x_col||data.columns[0],params.y_col||data.columns[1],params.title);
+      break;
+    case 'heatmap':
+      if(data&&data.matrix&&data.columns)renderHeatmap(data.matrix,data.columns,params.title);
+      break;
+    case 'statevector':
+      if(Array.isArray(data))renderStatevector(data,params.title);
+      break;
+    case 'gauge':
+      if(typeof data==='number')renderGauge(data,params);
+      break;
+    case 'profile':
+      if(data&&data.stats)renderProfile(data);
+      else if(data&&data.columns){}// profile from dataset
+      break;
+  }
+}
+
+async function runSingleBlock(bid){
+  const b=ST.blocks.get(bid);if(!b)return;
+  addLog('etl','▶ Running: '+b.def.lbl);
+  try{
+    const res=await fetch('/api/etl',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({operation:b.type,params:b.params,inputs:{}})});
+    const data=await res.json();
+    if(data.error){addLog('error','✗ '+data.error);return;}
+    if(data.log)addLog('etl',data.log);
+    if(data.dataset){renderTable(data.dataset,{title:b.def.lbl+' Output'});}
+    addLog('success','✓ Done');
+  }catch(e){addLog('error',e.message);}
+}
+
+function downloadDataset(dataset,format,filename){
+  let content,type;
+  if(format==='csv'){
+    const esc2=v=>/[",\n]/.test(String(v||''))?'"'+String(v||'').replace(/"/g,'""')+'"':String(v||'');
+    content=[dataset.columns.join(','),...dataset.rows.map(r=>dataset.columns.map(c=>esc2(r[c]||'')).join(','))].join('\n');
+    type='text/csv';
+  }else{content=JSON.stringify(dataset.rows,null,2);type='application/json';}
+  const blob=new Blob([content],{type});const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=filename;a.click();URL.revokeObjectURL(a.href);
+  addLog('success','💾 Downloaded: '+filename);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// QUANTUM EXECUTION
+// ═══════════════════════════════════════════════════════════════════
+async function runQuantumCode(code){
+  if(!code.trim())return;
+  addLog('info','⚛ Running quantum circuit...');
+  try{
+    const res=await fetch('/api/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});
+    const d=await res.json();
+    (d.outputs||[]).forEach(t=>addLog('print',t));
+    (d.logs||[]).forEach(l=>{if(l.type!=='print')addLog(l.type||'info',l.text||l.m||'');});
+    if(d.error)addLog('error','✗ '+d.error);
+    if(d.elapsed_ms)addLog('timing','⏱ Quantum: '+d.elapsed_ms+'ms');
+    // Render any quantum viz blocks
+    const vizBlocks=[...ST.blocks.values()].filter(b=>b.def.isViz);
+    (d.outputs||[]).forEach(out=>{
+      try{const parsed=JSON.parse(out);
+        if(typeof parsed==='object'&&!Array.isArray(parsed)){
+          vizBlocks.forEach(vb=>{if(vb.def.vizType==='histogram')renderHistogram(parsed,vb.params.title,vb.params.color);else if(vb.def.vizType==='table')renderTable({columns:Object.keys(parsed),rows:[parsed],total_rows:1},{title:vb.params.title});});
+        }
+      }catch(e){}
+    });
+  }catch(e){addLog('error','Cannot reach server: '+e.message);}
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// CODE GENERATION
+// ═══════════════════════════════════════════════════════════════════
+function blocksToCode(){
+  if(!ST.blocks.size)return'';
+  const lines=['-- Generated by Sanskrit Visual Builder v3.2','-- ETL + Data Science + Quantum Pipeline',''];
+  const order=topoSort();
+  function getRegName(id){
+    for(const w of ST.wires.values()){if(w.toId===id&&w.toPort==='in'){const fb=ST.blocks.get(w.fromId);if(fb&&fb.type==='quantum_register')return fb.params.name||'q';const r=getRegName(w.fromId);if(r)return r;}}return null;
+  }
+  order.forEach(bid=>{
+    const b=ST.blocks.get(bid);if(!b)return;
+    const p=b.params,reg=getRegName(bid)||p.name||'q',sid=bid.replace('b','');
+    let line='';
+    try{
+      if(typeof b.def.code==='function')line=b.def.code(p,reg,sid);
+      if(line)lines.push(line);
+    }catch(e){}
+  });
+  return lines.join('\n');
+}
+
+async function compileBlocks(){
+  const code=blocksToCode().trim();
+  if(!code){addLog('warn','Canvas is empty');return;}
+  if($('dsl-pre'))$('dsl-pre').innerHTML=hlDSL(esc(code));
+  switchTab('dsl');
+  addLog('dsl','--- DSL code for '+ST.blocks.size+' blocks, '+ST.wires.size+' connections ---');
+  addLog('dsl',code);
+  // Validate quantum code
+  const hasQuantum=[...ST.blocks.values()].some(b=>b.def.cat==='quantum');
+  if(hasQuantum){
+    try{
+      const res=await fetch('/api/compile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})});
+      const d=await res.json();
+      addLog(d.success?'success':'error','🔨 '+d.summary);
+      (d.errors||[]).forEach(e=>addLog('error','  Line '+(e.line||'?')+': '+e.msg));
+      (d.warnings||[]).forEach(w=>addLog('warn','  Line '+(w.line||'?')+': '+w.msg));
+    }catch(e){addLog('error','Compile: '+e.message);}
+  }else{addLog('success','✓ ETL/DS pipeline compiled — '+ST.blocks.size+' blocks validated');}
+}
+
+// DSL syntax highlight
+function hlDSL(code){
+  const kws=['let','mut','def','return','if','elif','else','for','while','in','and','or','not','true','false','import','molecule'];
+  const fns=['qubits','H','X','Y','Z','S','T','Rx','Ry','Rz','CNOT','CZ','SWAP','Toffoli','measure','measure_all','statevector','grover','vqe','print'];
+  let h=code;
+  h=h.replace(/(--[^\n]*)/g,'<span class="dcmt">$1</span>');
+  h=h.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g,'<span class="dstr">$1</span>');
+  h=h.replace(/\b(\d+\.?\d*)\b/g,'<span class="dnum">$1</span>');
+  fns.forEach(f=>{h=h.replace(new RegExp('\\b('+f+')\\b','g'),'<span class="dfn">$1</span>');});
+  kws.forEach(k=>{h=h.replace(new RegExp('\\b('+k+')\\b','g'),'<span class="dkw">$1</span>');});
+  return h;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════════════════════════════
+async function loadSettings(){
+  try{const r=await fetch('/api/settings');ST.settings=await r.json();}
+  catch(e){ST.settings={theme:'dark',fontSize:13,gridSize:24,snapToGrid:true,showPortLabels:true,autoSave:true,tablePageSize:25};}
+}
+async function saveSettings(s){
+  ST.settings={...ST.settings,...s};
+  try{await fetch('/api/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(ST.settings)});}catch(e){}
+}
+
+function openSettings(){
+  const s=ST.settings;
+  const modal=$('active-modal');
+  modal.innerHTML=`<div class="modal-hdr"><div class="modal-title">⚙ Settings</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+  <div class="modal-body">
+  <div class="settings-grid">
+    <div class="setting-card">
+      <div class="setting-card-title">Appearance</div>
+      <div class="prop-field"><label class="prop-lbl">Theme</label>
+        <select class="s-select" onchange="applyTheme(this.value);saveSettings({theme:this.value})">
+          ${['','theme-midnight','theme-purple','theme-forest','theme-ocean','theme-light'].map(t=>`<option value="${t}" ${s.theme===t||(!s.theme&&!t)?'selected':''}>${t||'Dark'}</option>`).join('')}
+        </select></div>
+      <div class="prop-field"><label class="prop-lbl">Font Size</label>
+        <input type="range" min="11" max="18" value="${s.fontSize||13}" class="s-input" style="width:100px" oninput="this.nextElementSibling.textContent=this.value+'px';document.body.style.fontSize=this.value+'px';saveSettings({fontSize:parseInt(this.value)})">
+        <span style="font-size:11px;color:var(--text2);margin-left:4px">${s.fontSize||13}px</span></div>
+    </div>
+    <div class="setting-card">
+      <div class="setting-card-title">Canvas</div>
+      <div class="setting-row"><div><div class="setting-label">Snap to Grid</div></div>
+        <div class="toggle ${s.snapToGrid!==false?'on':''}" onclick="this.classList.toggle('on');saveSettings({snapToGrid:this.classList.contains('on')})"></div></div>
+      <div class="setting-row"><div><div class="setting-label">Animate Wires</div></div>
+        <div class="toggle ${s.animateWires!==false?'on':''}" onclick="this.classList.toggle('on');saveSettings({animateWires:this.classList.contains('on')})"></div></div>
+      <div class="setting-row"><div><div class="setting-label">Show Minimap</div><div class="setting-desc">Not yet implemented</div></div>
+        <div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+    </div>
+    <div class="setting-card">
+      <div class="setting-card-title">Execution</div>
+      <div class="prop-field"><label class="prop-lbl">Default Shots (Quantum)</label>
+        <input type="number" class="s-input" value="${s.defaultShots||1000}" min="100" max="100000" onchange="saveSettings({defaultShots:parseInt(this.value)})"></div>
+      <div class="prop-field"><label class="prop-lbl">Table Page Size</label>
+        <input type="number" class="s-input" value="${s.tablePageSize||25}" min="5" max="500" onchange="saveSettings({tablePageSize:parseInt(this.value)})"></div>
+      <div class="setting-row"><div><div class="setting-label">Output Timestamps</div></div>
+        <div class="toggle ${s.outputTimestamps!==false?'on':''}" onclick="this.classList.toggle('on');saveSettings({outputTimestamps:this.classList.contains('on')})"></div></div>
+    </div>
+    <div class="setting-card">
+      <div class="setting-card-title">Auto-Save</div>
+      <div class="setting-row"><div><div class="setting-label">Auto-save Canvas</div><div class="setting-desc">Saves every ${s.autoSaveInterval||30}s to browser</div></div>
+        <div class="toggle ${s.autoSave!==false?'on':''}" onclick="this.classList.toggle('on');saveSettings({autoSave:this.classList.contains('on')})"></div></div>
+      <div class="prop-field"><label class="prop-lbl">Interval (seconds)</label>
+        <input type="number" class="s-input" value="${s.autoSaveInterval||30}" min="10" max="300" onchange="saveSettings({autoSaveInterval:parseInt(this.value)})"></div>
+      <div style="margin-top:8px">
+        <button class="tb-btn" onclick="saveCanvas()" style="width:100%;justify-content:center">💾 Save Now</button>
+      </div>
+    </div>
+    <div class="setting-card">
+      <div class="setting-card-title">Keyboard Shortcuts</div>
+      ${[['Run','Ctrl+Enter'],['Compile','Ctrl+Shift+B'],['Save','Ctrl+S'],['New','Ctrl+N'],['Fit View','Ctrl+Shift+F'],['Undo','Ctrl+Z'],['Redo','Ctrl+Shift+Z'],['Delete','DEL'],['Cancel Wire','ESC']].map(([a,k])=>`<div class="setting-row"><div class="setting-label">${a}</div><code style="font-size:10px;background:var(--bg4);padding:2px 6px;border-radius:4px;font-family:var(--mono)">${k}</code></div>`).join('')}
+    </div>
+    <div class="setting-card">
+      <div class="setting-card-title">Data</div>
+      <div style="margin-bottom:8px">
+        <button class="tb-btn" onclick="clearLocalStorage()" style="width:100%;justify-content:center;color:var(--red)">🗑 Clear Saved State</button>
+      </div>
+      <div style="font-size:10px;color:var(--text3)">Version: Sanskrit Visual Builder v3.2<br>Quantum Engine: Sanskrit DSL JS<br>ETL Operations: 28<br>DS Operations: 7</div>
+    </div>
+  </div>
+  </div>`;
+  $('modal-overlay').classList.remove('hidden');
+}
+window.closeModal=()=>$('modal-overlay').classList.add('hidden');
+window.applyTheme=t=>{document.body.className=t;$('theme-sel').value=t;localStorage.setItem('sk-theme',t);};
+window.clearLocalStorage=()=>{localStorage.removeItem('sk-canvas');addLog('info','Cleared saved canvas');closeModal();};
+
+// ═══════════════════════════════════════════════════════════════════
+// EXAMPLES
+// ═══════════════════════════════════════════════════════════════════
+async function openExamples(){
+  const modal=$('active-modal');modal.style.width='960px';
+  modal.innerHTML=`<div class="modal-hdr"><div class="modal-title">🎯 Visual Block Examples</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+  <div class="modal-body">
+    <div class="ex-filters" id="ex-filters"></div>
+    <div class="ex-grid" id="ex-grid"><div style="color:var(--text3);padding:20px">Loading...</div></div>
+  </div>`;
+  $('modal-overlay').classList.remove('hidden');
+
+  let examples=[];
+  try{const r=await fetch('/api/examples');examples=await r.json();}catch(e){}
+  examples=[...examples,...LOCAL_EXAMPLES];
+
+  const cats=[...new Set(examples.map(e=>e.cat||'General'))];
+  const filters=$('ex-filters');
+  filters.innerHTML='<div class="ex-pill active" data-cat="">All ('+examples.length+')</div>'+cats.map(c=>`<div class="ex-pill" data-cat="${esc(c)}">${esc(c)}</div>`).join('');
+  filters.querySelectorAll('.ex-pill').forEach(pill=>{
+    pill.addEventListener('click',()=>{filters.querySelectorAll('.ex-pill').forEach(p=>p.classList.remove('active'));pill.classList.add('active');renderExGrid(examples,pill.dataset.cat);});
+  });
+  renderExGrid(examples,'');
+}
+
+function renderExGrid(examples,catFilter){
+  const grid=$('ex-grid');
+  const filtered=catFilter?examples.filter(e=>(e.cat||'')===catFilter):examples;
+  if(!filtered.length){grid.innerHTML='<div style="color:var(--text3);padding:20px">No examples</div>';return;}
+  grid.innerHTML='';
+  filtered.forEach(ex=>{
+    const card=ce('div','ex-card');
+    const diff=ex.diff||'Beginner';
+    card.innerHTML=`<div class="ex-cat-tag">${esc(ex.cat||'')}</div>
+      <div class="ex-title">${esc(ex.title||'')}</div>
+      <div class="ex-desc">${esc(ex.desc||ex.description||'')}</div>
+      <div class="ex-meta">
+        <span class="diff-pill diff-${diff}">${diff}</span>
+        <span style="color:var(--text3);font-size:10px">⬡ ${(ex.blocks||[]).length} blocks</span>
+      </div>`;
+    card.addEventListener('click',()=>{closeModal();loadFromJSON(ex);});
+    grid.appendChild(card);
+  });
+}
+
+// Local examples (beyond server ones)
+const LOCAL_EXAMPLES=[
+  {id:'null_handling',title:'Null Handling Pipeline',cat:'ETL',diff:'Beginner',desc:'Load data, profile nulls, fill with mean, drop remaining, verify.',
+   blocks:[{id:'r',type:'csv_reader',x:80,y:200,params:{filename:'customers.csv'}},{id:'p',type:'profile',x:340,y:200,params:{}},{id:'f',type:'fill_nulls',x:600,y:200,params:{strategy:'mode'}},{id:'d',type:'drop_nulls',x:860,y:200,params:{}},{id:'pd',type:'profile_display',x:1120,y:200,params:{title:'After Cleaning'}},{id:'t',type:'table_display',x:1120,y:380,params:{title:'Clean Data'}}],
+   wires:[{fromId:'r',fromPort:'dataset',toId:'p',toPort:'dataset'},{fromId:'p',fromPort:'dataset',toId:'f',toPort:'dataset'},{fromId:'f',fromPort:'dataset',toId:'d',toPort:'dataset'},{fromId:'d',fromPort:'dataset',toId:'pd',toPort:'dataset'},{fromId:'d',fromPort:'dataset',toId:'t',toPort:'dataset'}]},
+
+  {id:'sales_kpis',title:'Sales KPI Dashboard',cat:'ETL',diff:'Intermediate',desc:'Aggregate sales, compute profit margin, visualize with bar + table.',
+   blocks:[{id:'r',type:'csv_reader',x:80,y:200,params:{filename:'sales.csv'}},{id:'a',type:'add_column',x:340,y:200,params:{name:'profit',formula:'row["revenue"] - row["cost"]'}},{id:'g',type:'group_by',x:600,y:200,params:{group_by:'region',aggregations:'[{"col":"revenue","fn":"sum","as":"total_rev"},{"col":"profit","fn":"sum","as":"total_profit"},{"col":"units","fn":"sum","as":"total_units"}]'}},{id:'s',type:'sort_rows',x:860,y:200,params:{column:'total_rev',order:'desc'}},{id:'t',type:'table_display',x:1120,y:120,params:{title:'Revenue by Region'}},{id:'b',type:'bar_chart',x:1120,y:360,params:{title:'Revenue Comparison'}}],
+   wires:[{fromId:'r',fromPort:'dataset',toId:'a',toPort:'dataset'},{fromId:'a',fromPort:'dataset',toId:'g',toPort:'dataset'},{fromId:'g',fromPort:'dataset',toId:'s',toPort:'dataset'},{fromId:'s',fromPort:'dataset',toId:'t',toPort:'dataset'},{fromId:'s',fromPort:'dataset',toId:'b',toPort:'dataset'}]},
+
+  {id:'full_etl',title:'Complete ETL: Load→Clean→Join→Aggregate→Export',cat:'ETL',diff:'Advanced',desc:'Full production ETL: load two sources, clean, join, group, pivot, export CSV.',
+   blocks:[{id:'c',type:'csv_reader',x:80,y:100,params:{filename:'customers.csv'}},{id:'s',type:'csv_reader',x:80,y:300,params:{filename:'sales.csv'}},{id:'dc',type:'drop_nulls',x:340,y:100,params:{columns:'name,email'}},{id:'tc',type:'trim_strings',x:580,y:100,params:{}},{id:'f',type:'filter_rows',x:340,y:300,params:{column:'revenue',operator:'>',value:'3000'}},{id:'j',type:'join',x:820,y:200,params:{join_type:'inner',left_key:'region',right_key:'region'}},{id:'g',type:'group_by',x:1080,y:200,params:{group_by:'region',aggregations:'[{"col":"revenue","fn":"sum","as":"total"}]'}},{id:'ex',type:'write_csv',x:1340,y:200,params:{filename:'etl_output.csv'}},{id:'tbl',type:'table_display',x:1340,y:380,params:{title:'ETL Result'}}],
+   wires:[{fromId:'c',fromPort:'dataset',toId:'dc',toPort:'dataset'},{fromId:'dc',fromPort:'dataset',toId:'tc',toPort:'dataset'},{fromId:'tc',fromPort:'dataset',toId:'j',toPort:'left_dataset'},{fromId:'s',fromPort:'dataset',toId:'f',toPort:'dataset'},{fromId:'f',fromPort:'dataset',toId:'j',toPort:'right_dataset'},{fromId:'j',fromPort:'dataset',toId:'g',toPort:'dataset'},{fromId:'g',fromPort:'dataset',toId:'ex',toPort:'dataset'},{fromId:'g',fromPort:'dataset',toId:'tbl',toPort:'dataset'}]},
+
+  {id:'outliers_viz',title:'Outlier Detection & Visualization',cat:'Data Science',diff:'Intermediate',desc:'Detect revenue outliers with IQR, flag them, display with table.',
+   blocks:[{id:'r',type:'csv_reader',x:80,y:200,params:{filename:'sales.csv'}},{id:'ct',type:'cast_types',x:340,y:200,params:{mapping:'{"revenue":"float","cost":"float","units":"integer"}'}},{id:'o',type:'outlier_detection',x:600,y:200,params:{column:'revenue',method:'iqr',threshold:1.5}},{id:'t',type:'table_display',x:860,y:200,params:{title:'Revenue with Outlier Flags'}},{id:'sc',type:'scatter_chart',x:860,y:420,params:{title:'Units vs Revenue',x_col:'units',y_col:'revenue'}}],
+   wires:[{fromId:'r',fromPort:'dataset',toId:'ct',toPort:'dataset'},{fromId:'ct',fromPort:'dataset',toId:'o',toPort:'dataset'},{fromId:'o',fromPort:'dataset',toId:'t',toPort:'dataset'},{fromId:'o',fromPort:'dataset',toId:'sc',toPort:'data'}]},
+
+  {id:'bell_hist',title:'Bell State + Histogram',cat:'Quantum',diff:'Beginner',desc:'Bell state circuit with live histogram visualization.',
+   blocks:[{id:'r',type:'quantum_register',x:80,y:200,params:{n_qubits:2,name:'q'}},{id:'h',type:'h_gate',x:340,y:200,params:{qubit:0}},{id:'c',type:'cnot_gate',x:600,y:200,params:{control:0,target:1}},{id:'m',type:'measure_all',x:860,y:200,params:{shots:1000}},{id:'ch',type:'histogram_chart',x:1120,y:200,params:{title:'Bell State Results',color:'purple'}}],
+   wires:[{fromId:'r',fromPort:'out',toId:'h',toPort:'in'},{fromId:'h',fromPort:'out',toId:'c',toPort:'in'},{fromId:'c',fromPort:'out',toId:'m',toPort:'in'},{fromId:'m',fromPort:'result',toId:'ch',toPort:'data'}]},
+
+  {id:'train_test',title:'ML: Train/Test Split + Describe',cat:'Data Science',diff:'Intermediate',desc:'Load sales, cast types, split 80/20, describe both splits.',
+   blocks:[{id:'r',type:'csv_reader',x:80,y:200,params:{filename:'sales.csv'}},{id:'ct',type:'cast_types',x:340,y:200,params:{mapping:'{"revenue":"float","cost":"float","units":"integer","price":"float"}'}},{id:'n',type:'normalize',x:600,y:200,params:{method:'minmax'}},{id:'sp',type:'train_test_split',x:860,y:200,params:{test_ratio:0.2,shuffle:'true'}},{id:'d1',type:'describe',x:1120,y:120,params:{}},{id:'d2',type:'describe',x:1120,y:320,params:{}},{id:'t1',type:'table_display',x:1380,y:120,params:{title:'Train Set Stats'}},{id:'t2',type:'table_display',x:1380,y:320,params:{title:'Test Set Stats'}}],
+   wires:[{fromId:'r',fromPort:'dataset',toId:'ct',toPort:'dataset'},{fromId:'ct',fromPort:'dataset',toId:'n',toPort:'dataset'},{fromId:'n',fromPort:'dataset',toId:'sp',toPort:'dataset'},{fromId:'sp',fromPort:'dataset',toId:'d1',toPort:'dataset'},{fromId:'sp',fromPort:'test_dataset',toId:'d2',toPort:'dataset'},{fromId:'d1',fromPort:'dataset',toId:'t1',toPort:'dataset'},{fromId:'d2',fromPort:'dataset',toId:'t2',toPort:'dataset'}]},
+];
+
+// ═══════════════════════════════════════════════════════════════════
+// SAVE / LOAD / UNDO
+// ═══════════════════════════════════════════════════════════════════
+function canvasToJSON(){
+  return{version:'3.2',title:'Sanskrit Canvas',created:new Date().toISOString(),
+    blocks:[...ST.blocks.values()].map(b=>({id:b.id,type:b.type,x:b.x,y:b.y,params:{...b.params}})),
+    wires:[...ST.wires.values()].map(w=>({fromId:w.fromId,fromPort:w.fromPort,toId:w.toId,toPort:w.toPort}))};
+}
+
+function loadFromJSON(data){
+  clearCanvas();
+  const idMap={};
+  (data.blocks||[]).forEach(bd=>{
+    const def=BD[bd.type||bd.defId];if(!def)return;
+    const b=addBlock(bd.type||bd.defId,bd.x||100,bd.y||100,bd.id);
+    if(b&&bd.params){Object.assign(b.params,bd.params);updateBlockDisplay(b);}
+    if(b)idMap[bd.id]=b.id;
+  });
+  setTimeout(()=>{
+    (data.wires||[]).forEach(w=>{
+      const fi=idMap[w.fromId]||w.fromId,ti=idMap[w.toId]||w.toId;
+      if(fi&&ti)addWire(fi,w.fromPort||'out',ti,w.toPort||'in');
+    });
+    fitView();
+  },100);
+  addLog('info','Loaded: '+(data.title||'Canvas')+' ('+( (data.blocks||[]).length)+' blocks)');
+}
+
+function clearCanvas(){
+  ST.blocks.forEach(b=>b.el.remove());ST.blocks.clear();
+  ST.wires.forEach(w=>w.el&&w.el.remove());ST.wires.clear();
+  ST.selected=null;ST.selWire=null;showPropsEmpty();updateHint();
+}
+function updateHint(){$('canvas-hint').style.display=ST.blocks.size?'none':'';}
+
+function saveCanvas(){
+  const json=canvasToJSON();
+  const blob=new Blob([JSON.stringify(json,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='canvas.sanskrit';a.click();URL.revokeObjectURL(a.href);
+  localStorage.setItem('sk-canvas',JSON.stringify(json));
+  addLog('info','💾 Saved as canvas.sanskrit');
+}
+
+function undo(){addLog('debug','Undo (Ctrl+Z)');}
+function redo(){addLog('debug','Redo (Ctrl+Shift+Z)');}
+
+// ═══════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════
+function setRunning(v){
+  ST.running=v;
+  const dot=$('status-dot'),txt=$('status-text'),br=$('btn-run'),bs=$('btn-stop');
+  if(v){dot.className='running';txt.textContent='Running...';if(br){br.disabled=true;br.textContent='⟨ψ⟩ Running...';}if(bs)bs.disabled=false;}
+  else{dot.className='';txt.textContent='Ready';if(br){br.disabled=false;br.innerHTML='▶ Run';}if(bs)bs.disabled=true;}
+}
+
+function fitView(){
+  if(!ST.blocks.size){ST.vs=1;ST.vx=60;ST.vy=60;applyVP();return;}
+  let mx=Infinity,my=Infinity,Mx=-Infinity,My=-Infinity;
+  ST.blocks.forEach(b=>{mx=Math.min(mx,b.x);my=Math.min(my,b.y);Mx=Math.max(Mx,b.x+220);My=Math.max(My,b.y+150);});
+  const ca=$('canvas-area').getBoundingClientRect(),pad=60;
+  ST.vs=Math.min(1.2,Math.min((ca.width-pad*2)/(Mx-mx||1),(ca.height-pad*2)/(My-my||1)));
+  ST.vx=-mx*ST.vs+pad;ST.vy=-my*ST.vs+pad;applyVP();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// METRICS
+// ═══════════════════════════════════════════════════════════════════
+function updateMetrics(m){
+  const sV=(id,v)=>{const e=$(id);if(e)e.textContent=v;};
+  const sB=(id,p,hot,warm)=>{const e=$(id);if(!e)return;e.style.width=Math.min(100,Math.max(0,p))+'%';e.className='mbar-fill '+(p>hot?'hot':p>warm?'warm':'normal');};
+  if(m.cpu!==undefined){sB('cpu-bar',m.cpu,80,60);sV('cpu-val',m.cpu+'%');}
+  if(m.heap_mb!==undefined&&m.heap_total){sB('mem-bar',Math.round(m.heap_mb/m.heap_total*100),85,65);sV('mem-val',m.heap_mb+'/'+m.heap_total+'MB');}
+  if(m.sys_pct!==undefined)sV('sys-val','SYS '+m.sys_pct+'%');
+  if(m.uptime!==undefined){const u=m.uptime;sV('uptime-val','UP '+Math.floor(u/3600)+'h'+Math.floor(u%3600/60)+'m'+u%60+'s');}
+  if(m.blocks!==undefined)sV('blk-val',m.blocks+' blocks');
+}
+function connectSSE(){
+  const sse=new EventSource('/api/events');
+  const sv=$('sse-val');
+  sse.onopen=()=>{if(sv){sv.textContent='⚡ Live';sv.style.color='var(--green)';}};
+  sse.addEventListener('metrics',e=>{try{updateMetrics(JSON.parse(e.data));}catch(ex){}});
+  sse.addEventListener('run_line',e=>{try{const d=JSON.parse(e.data);addLog(d.type||'print',d.text||'');}catch(ex){}});
+  sse.onerror=()=>{if(sv){sv.textContent='⚡ offline';sv.style.color='var(--text3)';}};
+}
+connectSSE();
+setInterval(async()=>{try{const r=await fetch('/api/metrics');updateMetrics(await r.json());}catch(e){}},5000);
+
+// ═══════════════════════════════════════════════════════════════════
+// VIDEO RECORDING
+// ═══════════════════════════════════════════════════════════════════
+let _rec=null,_chunks=[];
+$('btn-rec').addEventListener('click',async()=>{
+  try{
+    const stream=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:30}});
+    _rec=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp9'});_chunks=[];
+    _rec.ondataavailable=e=>{if(e.data.size>0)_chunks.push(e.data);};
+    _rec.onstop=()=>{
+      const blob=new Blob(_chunks,{type:'video/webm'});const url=URL.createObjectURL(blob);
+      const vid=ce('video');vid.src=url;vid.controls=true;vid.style='width:100%;border-radius:6px';
+      $('video-preview').innerHTML='';$('video-preview').appendChild(vid);
+      $('btn-rec-dl').disabled=false;$('btn-rec-dl').onclick=()=>{const a=ce('a');a.href=url;a.download='session.webm';a.click();};
+    };
+    _rec.start();$('btn-rec').disabled=true;$('btn-rec-stop').disabled=false;
+    addLog('info','⏺ Recording — select this window in the dialog');
+  }catch(e){addLog('error','Recording unavailable: '+e.message);}
+});
+$('btn-rec-stop').addEventListener('click',()=>{if(_rec&&_rec.state!=='inactive'){_rec.stop();_rec.stream.getTracks().forEach(t=>t.stop());}$('btn-rec').disabled=false;$('btn-rec-stop').disabled=true;});
+
+// ═══════════════════════════════════════════════════════════════════
+// TOOLBAR BINDINGS
+// ═══════════════════════════════════════════════════════════════════
+$('btn-run').addEventListener('click',runProgram);
+$('btn-compile').addEventListener('click',compileBlocks);
+$('btn-stop').addEventListener('click',()=>{ST.running=false;setRunning(false);addLog('warn','■ Stopped');});
+$('btn-new').addEventListener('click',()=>{if(confirm('Clear canvas?'))clearCanvas();});
+$('btn-save').addEventListener('click',saveCanvas);
+$('btn-load').addEventListener('click',()=>$('file-load').click());
+$('btn-examples').addEventListener('click',openExamples);
+$('btn-settings').addEventListener('click',openSettings);
+$('btn-fit').addEventListener('click',fitView);
+$('btn-fit2').addEventListener('click',fitView);
+$('btn-zi').addEventListener('click',()=>{ST.vs=Math.min(2.5,ST.vs*1.2);applyVP();});
+$('btn-zo').addEventListener('click',()=>{ST.vs=Math.max(0.15,ST.vs*0.8);applyVP();});
+$('btn-zr').addEventListener('click',()=>{ST.vs=1;ST.vx=60;ST.vy=60;applyVP();});
+$('theme-sel').addEventListener('change',e=>{applyTheme(e.target.value);saveSettings({theme:e.target.value});});
+$('file-load').addEventListener('change',e=>{
+  const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=ev=>{try{loadFromJSON(JSON.parse(ev.target.result));}catch(ex){addLog('error','Load failed: '+ex.message);}};
+  r.readAsText(f);e.target.value='';
+});
+$('modal-overlay').addEventListener('click',e=>{if(e.target===$('modal-overlay'))closeModal();});
+
+// ═══════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════
+async function init(){
+  resetLayout();
+  buildPalette();
+  showPropsEmpty();
+  updateHint();
+  applyVP();
+  await loadSettings();
+  // Apply saved theme
+  const savedTheme=localStorage.getItem('sk-theme')||ST.settings.theme||'';
+  if(savedTheme){document.body.className=savedTheme;$('theme-sel').value=savedTheme;}
+  // Health check
+  try{
+    const r=await fetch('/api/health');const d=await r.json();
+    $('blk-val').textContent=d.n_blocks+' blocks';
+    $('eng-badge').textContent=(d.engine||'JS').toUpperCase();
+    addLog('info','⟨ψ⟩ Sanskrit Visual Builder v3.2 — ETL + Data Science + Quantum');
+    addLog('info','📦 '+d.n_blocks+' quantum blocks · 28 ETL ops · 7 DS ops');
+    addLog('info','💡 Drag blocks → connect → Run · Click Examples for 50+ pre-built pipelines');
+  }catch(e){addLog('error','Server not responding. Run: node src/server/server.js');}
+  // Load default Bell state example
+  setTimeout(()=>{
+    loadFromJSON({title:'Bell State — Getting Started',
+      blocks:[
+        {id:'s1',type:'quantum_register',x:80, y:200,params:{n_qubits:2,name:'q'}},
+        {id:'s2',type:'h_gate',          x:360,y:200,params:{qubit:0}},
+        {id:'s3',type:'cnot_gate',       x:640,y:200,params:{control:0,target:1}},
+        {id:'s4',type:'measure_all',     x:920,y:200,params:{shots:1000}},
+        {id:'s5',type:'log_block',       x:1200,y:130,params:{label:'Result: only 00 or 11!'}},
+        {id:'s6',type:'histogram_chart', x:1200,y:310,params:{title:'Bell State',color:'purple'}},
+      ],
+      wires:[
+        {fromId:'s1',fromPort:'out',toId:'s2',toPort:'in'},
+        {fromId:'s2',fromPort:'out',toId:'s3',toPort:'in'},
+        {fromId:'s3',fromPort:'out',toId:'s4',toPort:'in'},
+        {fromId:'s4',fromPort:'result',toId:'s5',toPort:'in'},
+        {fromId:'s4',fromPort:'result',toId:'s6',toPort:'data'},
+      ],
+    });
+    addLog('info','📋 Bell State loaded — click ▶ Run to execute!');
+  },400);
+
+  // Auto-save
+  setInterval(()=>{
+    if(ST.settings.autoSave!==false&&ST.blocks.size>0){
+      try{localStorage.setItem('sk-canvas',JSON.stringify(canvasToJSON()));}catch(e){}
+    }
+  },30000);
+}
+
+init().catch(console.error);
+</script>
 </body>
 </html>

@@ -1,562 +1,562 @@
 /**
- * public/js/canvas.js
- * SVG-based visual canvas: drag blocks from palette, connect with wires,
- * generate Sanskrit code from the visual graph.
+ * public/js/canvas.js  — Sanskrit Visual Builder v3.1 FINAL
+ *
+ * Features:
+ *  ✓ Magnetic wire snapping — glow ring appears when within SNAP_R of a port
+ *  ✓ Delete key removes selected block or selected wire
+ *  ✓ Click wire to select/highlight, press DEL to remove
+ *  ✓ exportSans() / importSans() for .sans file format
+ *  ✓ addBlockById() for recommendations panel
+ *  ✓ Correct param key reading (key || name)
+ *  ✓ Correct port reading  (id||name, dt||type)
  */
 
-const PORT_R   = 7;
 const GRID     = 20;
-const BLK_W    = 180;
-const BLK_H_BASE = 70;
-const HDR_H    = 28;
-const PARAM_H  = 18;
-const PORT_SPACING = 22;
+const BLK_W    = 200;
+const HDR_H    = 32;
+const PARAM_H  = 19;
+const PORT_R   = 8;
+const MIN_H    = 76;
+const SNAP_R   = 52;   // magnetic snap radius in canvas px
 
-// Port type → CSS class and wire colour
-const PORT_CLASSES = {
-  quantum: 'port-quantum',
-  number:  'port-number',
-  list:    'port-list',
-  dict:    'port-dict',
-  string:  'port-string',
-  any:     'port-any',
-  bool:    'port-any',
+// ── Category → header colour ──────────────────────────────────────────────────
+const CAT_COL = {
+  quantum_reg:'#0D9488', quantum_gate:'#6C3FC5', quantum_meas:'#4338CA',
+  quantum_algo:'#2563EB', error_mit:'#0891B2',  noise:'#EA580C',
+  chemistry:'#059669',   drug:'#7C3AED',         biology:'#16A34A',
+  physics:'#4338CA',     ml:'#65A30D',           genai:'#9333EA',
+  math:'#6366F1',        output:'#F59E0B',        utility:'#374151',
+  classical:'#CE4A2E',   fn_block:'#D97706',      medical:'#0891B2',
+  materials:'#78716C',   astro:'#475569',         finance:'#065F46',
+  Quantum:'#1D4ED8',     Chemistry:'#059669',     Biology:'#16A34A',
+  Physics:'#4338CA',     ML:'#65A30D',            Data:'#EA580C',
+  Output:'#F59E0B',      Utility:'#374151',       Math:'#6366F1',
 };
-const WIRE_CLASSES = {
-  quantum: 'wire-quantum',
-  number:  'wire-number',
-  list:    'wire-list',
-  dict:    'wire-dict',
-};
-
-// Category header colours
-const CAT_COLOURS = {
-  'Quantum':      '#1D4ED8',
-  'Chemistry':    '#059669',
-  'Biology':      '#7C3AED',
-  'Physics':      '#DB2777',
-  'ML':           '#D97706',
-  'Data':         '#EA580C',
-  'Output':       '#0E7490',
-  'Utility':      '#374151',
-  'Math':         '#92400E',
-  'Drug':         '#4338CA',
-  'Materials':    '#5B21B6',
-  'Astrophysics': '#1E40AF',
-  'Finance':      '#065F46',
-  'NLP':          '#1E3A5F',
-  'Climate':      '#166534',
-};
-
-function catColor(cat) {
-  const top = (cat || '').split('/')[0].trim();
-  return CAT_COLOURS[top] || '#374151';
+function hdrCol(block) {
+  return block.raw?.color || block.color
+    || CAT_COL[block.def?.cat] || CAT_COL[(block.def?.category||'').split('/')[0]?.trim()] || '#374151';
 }
 
-let nextId = 1;
+// ── Port colours ──────────────────────────────────────────────────────────────
+const PFILL  = { register:'#7C3AED',qubit:'#6D28D9',classical:'#1D4ED8',number:'#1D4ED8',list:'#0F766E',dict:'#B45309',string:'#374151',bool:'#059669',any:'#064E3B' };
+const PSTK   = { register:'#A78BFA',qubit:'#C4B5FD',classical:'#60A5FA',number:'#60A5FA',list:'#2DD4BF',dict:'#FCD34D',string:'#9CA3AF',bool:'#34D399',any:'#34D399' };
+const WCOL   = { register:'#7C3AED',qubit:'#6D28D9',number:'#1D4ED8',list:'#0F766E',dict:'#B45309',any:'#0F4C5C' };
 
+// ── Normalise param: read key || name ─────────────────────────────────────────
+function nP(p) {
+  if (!p || typeof p!=='object') return {key:'val',label:'Value',type:'string',def:''};
+  return {
+    key:   p.key   || p.name  || p.id    || 'val',
+    label: p.label || p.name  || p.key   || 'Value',
+    type:  p.type  || 'string',
+    def:   p.value !== undefined ? p.value : p.default !== undefined ? p.default : '',
+    options: p.options||null, min:p.min, max:p.max, step:p.step,
+  };
+}
+// ── Normalise port: read id||name, dt||type ───────────────────────────────────
+function nPort(p,defaultDir) {
+  if (!p||typeof p!=='object') return {name:'port',type:'any',dir:defaultDir};
+  const dir = p.dir || defaultDir;
+  return { name: p.id||p.name||'port', type: p.dt||p.type||'any', dir, label: p.label||p.id||p.name||'' };
+}
+
+// ── Normalise block definition ────────────────────────────────────────────────
+function normDef(raw) {
+  if (!raw) return {id:'?',label:'Block',cat:'',params:[],ins:[],outs:[],toSq:null};
+  const allParams = (raw.params||[]).filter(p=>!['bypass','code_override','override_code'].includes(p.key||p.name||''));
+  return {
+    id:    raw.id   || '?',
+    label: raw.label|| raw.name || raw.id || 'Block',
+    cat:   raw.cat  || raw.category || 'Utility',
+    color: raw.color|| null,
+    info:  typeof raw.info==='string' ? raw.info : (raw.description||''),
+    params: allParams.map(nP),
+    ins:  (raw.inputs ||[]).filter(p=>(p.dir||'in')==='in').map(p=>nPort(p,'in')),
+    outs: (raw.outputs||[]).map(p=>nPort(p,'out')),
+    toSq: raw.toSq||null,
+  };
+}
+
+function bH(def) {
+  const vis = def.params.filter(p=>!['bypass','log_result','noise_model','error_rate'].includes(p.key));
+  return Math.max(MIN_H, HDR_H + Math.min(vis.length,5)*PARAM_H + Math.max(def.ins.length,def.outs.length)*24 + 14);
+}
+
+function portXY(def,portName,dir,bx,by,bh) {
+  const list = dir==='out' ? def.outs : def.ins;
+  const idx  = list.findIndex(p=>p.name===portName);
+  if (idx<0) return null;
+  return { x: dir==='out'?bx+BLK_W:bx, y: by+HDR_H+(idx+1)*(bh-HDR_H)/(list.length+1), type:list[idx].type };
+}
+
+let _nid = 1;
+
+// ── BLOCK DEFS CACHE ──────────────────────────────────────────────────────────
+const _defCache = new Map();
+async function fetchDef(blockId) {
+  if (_defCache.has(blockId)) return _defCache.get(blockId);
+  try {
+    const r = await fetch(`/api/blocks?id=${encodeURIComponent(blockId)}`);
+    if (r.ok) {
+      const d = await r.json();
+      const arr = d.blocks||(Array.isArray(d)?d:[d]);
+      const found = arr.find(b=>b.id===blockId)||arr[0];
+      if (found) { _defCache.set(blockId,found); return found; }
+    }
+  } catch(e) {}
+  return null;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
 export class Canvas {
+// ═══════════════════════════════════════════════════════════════════════════════
   constructor(svgEl) {
-    this.svg       = svgEl;
-    this.blocksEl  = svgEl.querySelector('#canvas-blocks');
-    this.wiresEl   = svgEl.querySelector('#canvas-wires');
-    this.wireDraft = svgEl.querySelector('#wire-draft');
-    this.gridEl    = svgEl.querySelector('#canvas-grid');
-    this.emptyHint = document.getElementById('canvas-empty-hint');
+    this.svg   = svgEl;
+    this.bG    = svgEl.querySelector('#canvas-blocks');
+    this.wG    = svgEl.querySelector('#canvas-wires');
+    this.draft = svgEl.querySelector('#wire-draft');
+    this.gridG = svgEl.querySelector('#canvas-grid');
+    this.snapEl= svgEl.querySelector('#snap-indicator');
+    this.hint  = document.getElementById('canvas-empty-hint');
 
-    this.blocks    = new Map();   // id → { def, el, x, y, params, ports }
-    this.wires     = new Map();   // id → { fromBlock, fromPort, toBlock, toPort, el }
-    this.selected  = null;
+    this.blocks = new Map();   // id → block
+    this.wires  = new Map();   // id → wire
+    this.selBlock= null;       // selected block id
+    this.selWire = null;       // selected wire id
+    this.dw      = null;       // drawing wire state
+    this.drag    = null;       // dragging block
+    this.pan     = null;       // panning
 
-    // Viewport transform
-    this.viewX = 0; this.viewY = 0; this.viewScale = 1;
-
-    // Wire drawing state
-    this.drawingWire = null;   // { fromBlock, fromPort, startX, startY }
-
-    // Drag state
-    this.dragging = null;      // { block, startMX, startMY, startBX, startBY }
-    this.panning  = false;
-    this.panStart = null;
-
+    this.vx=0; this.vy=0; this.vs=1;
     this.onBlockSelect = null;
   }
 
-  init() {
-    this._drawGrid();
-    this._bindSVGEvents();
-    this._bindDropEvents();
+  init() { this._grid(); this._events(); this._drop(); }
+
+  // ── Grid ──────────────────────────────────────────────────────────────────
+  _grid() {
+    let s='';
+    for(let x=0;x<=6000;x+=GRID) s+=`<line x1="${x}" y1="0" x2="${x}" y2="4000" stroke="${x%(GRID*5)?'#1A2030':'#1E2840'}" stroke-width="1"/>`;
+    for(let y=0;y<=4000;y+=GRID) s+=`<line x1="0" y1="${y}" x2="6000" y2="${y}" stroke="${y%(GRID*5)?'#1A2030':'#1E2840'}" stroke-width="1"/>`;
+    this.gridG.innerHTML=s;
   }
 
-  // ── Grid ────────────────────────────────────────────────────────────────────
-  _drawGrid() {
-    const W = 8000, H = 6000;
-    let html = '';
-    for (let x = 0; x <= W; x += GRID) {
-      const major = x % (GRID*5) === 0;
-      html += `<line x1="${x}" y1="0" x2="${x}" y2="${H}" class="${major?'canvas-grid-major':'canvas-grid-line'}"/>`;
-    }
-    for (let y = 0; y <= H; y += GRID) {
-      const major = y % (GRID*5) === 0;
-      html += `<line x1="0" y1="${y}" x2="${W}" y2="${y}" class="${major?'canvas-grid-major':'canvas-grid-line'}"/>`;
-    }
-    this.gridEl.innerHTML = html;
+  _vp() {
+    const t=`translate(${this.vx},${this.vy}) scale(${this.vs})`;
+    [this.gridG,this.bG,this.wG].forEach(g=>g?.setAttribute('transform',t));
   }
 
-  // ── Drop handling ────────────────────────────────────────────────────────────
-  _bindDropEvents() {
-    const wrap = this.svg.parentElement;
-    wrap.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
-    wrap.addEventListener('drop', e => {
+  _toC(ex,ey) {
+    const r=this.svg.getBoundingClientRect();
+    return {x:(ex-r.left-this.vx)/this.vs, y:(ey-r.top-this.vy)/this.vs};
+  }
+
+  // ── Drop from palette ──────────────────────────────────────────────────────
+  _drop() {
+    const w=this.svg.parentElement;
+    w.addEventListener('dragover',e=>{e.preventDefault();e.dataTransfer.dropEffect='copy';});
+    w.addEventListener('drop',async e=>{
       e.preventDefault();
       try {
-        const data = JSON.parse(e.dataTransfer.getData('text/plain'));
-        if (data.type === 'block') {
-          const rect = wrap.getBoundingClientRect();
-          const x = (e.clientX - rect.left - this.viewX) / this.viewScale;
-          const y = (e.clientY - rect.top  - this.viewY) / this.viewScale;
-          this._dropBlock(data.blockId, x, y);
-        }
-      } catch(err) {}
+        const d=JSON.parse(e.dataTransfer.getData('text/plain'));
+        if(d.type!=='block') return;
+        const pt=this._toC(e.clientX,e.clientY);
+        const raw=await fetchDef(d.blockId);
+        this.addBlock(raw||{id:d.blockId,label:d.label||d.blockId,cat:'Utility'}, Math.round(pt.x/GRID)*GRID, Math.round(pt.y/GRID)*GRID);
+      } catch(e2){console.warn('drop',e2);}
     });
   }
 
-  async _dropBlock(blockId, x, y) {
-    // Fetch block definition from server or use cached
-    let def = this._blockDefs?.get(blockId);
-    if (!def) {
-      try {
-        const res = await fetch(`/api/blocks?id=${blockId}`);
-        if (res.ok) {
-          const data = await res.json();
-          def = (data.blocks || [data]).find(b => b.id === blockId);
-        }
-      } catch(e) {}
-    }
-    if (!def) {
-      def = { id: blockId, label: blockId, category: 'Utility', params: [], inputs: [], outputs: [] };
-    }
-    const snapped = { x: Math.round(x/GRID)*GRID, y: Math.round(y/GRID)*GRID };
-    this.addBlock(def, snapped.x, snapped.y);
-  }
-
-  // ── Block creation ───────────────────────────────────────────────────────────
-  addBlock(def, x, y) {
-    const id   = `blk_${nextId++}`;
-    const params = {};
-    (def.params || []).forEach(p => { params[p.name] = p.default ?? ''; });
-
-    const nIn  = (def.inputs  || []).length;
-    const nOut = (def.outputs || []).length;
-    const nParam = (def.params || []).length;
-    const height = Math.max(BLK_H_BASE, HDR_H + nParam * PARAM_H + 20);
-
-    const g = document.createElementNS('http://www.w3.org/2000/svg','g');
-    g.classList.add('block-group');
-    g.dataset.blockId = id;
-    this._renderBlock(g, def, id, x, y, params, height);
-    this.blocksEl.appendChild(g);
-
-    const block = { def, el: g, x, y, params, height, id };
-    this.blocks.set(id, block);
-
-    this._bindBlockEvents(block);
-    this._updateEmptyHint();
-    if (this.onBlockSelect) this.onBlockSelect(block);
+  // ── Add block ──────────────────────────────────────────────────────────────
+  addBlock(raw,x,y) {
+    const def=normDef(raw);
+    const id=`b${_nid++}`;
+    const h=bH(def);
+    const params={};
+    def.params.forEach(p=>{params[p.key]=p.def;});
+    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    g.dataset.bid=id;
+    this._paint(g,def,id,x,y,h,params,raw);
+    this.bG.appendChild(g);
+    const block={def,id,x,y,h,params,el:g,raw};
+    this.blocks.set(id,block);
+    this._hint();
+    if(this.onBlockSelect) this.onBlockSelect(block);
     return block;
   }
 
-  _renderBlock(g, def, id, x, y, params, height) {
-    const color = catColor(def.category);
-    const nIn   = (def.inputs  || []).length;
-    const nOut  = (def.outputs || []).length;
+  // ── addBlockById — for recommendations ────────────────────────────────────
+  async addBlockById(blockId) {
+    const raw = await fetchDef(blockId);
+    const x   = 100 + (this.blocks.size % 5)*240;
+    const y   = 100 + Math.floor(this.blocks.size/5)*180;
+    return this.addBlock(raw||{id:blockId,label:blockId,cat:'Utility'},x,y);
+  }
 
-    g.innerHTML = `
-      <rect class="block-body" x="${x}" y="${y}" width="${BLK_W}" height="${height}" rx="8"/>
-      <rect class="block-outline" x="${x}" y="${y}" width="${BLK_W}" height="${height}" rx="8" fill="none" stroke="#3D4B61" stroke-width="1"/>
-      <rect x="${x}" y="${y}" width="${BLK_W}" height="${HDR_H}" rx="8" fill="${color}"/>
-      <rect x="${x}" y="${y+HDR_H-4}" width="${BLK_W}" height="4" fill="${color}"/>
-      <text class="block-title" x="${x+10}" y="${y+18}">${def.label || def.id}</text>
-      <text class="block-cat"   x="${x+10}" y="${y+26}" opacity="0.7">${(def.category||'').split('/').slice(-1)[0] || ''}</text>
-      ${this._renderParams(def, x, y, params)}
-      ${this._renderPorts(def, id, x, y, height, nIn, nOut)}
+  // ── Paint ─────────────────────────────────────────────────────────────────
+  _paint(g,def,id,x,y,h,params,raw) {
+    const col=hdrCol({def,raw,color:def.color});
+    const catL=(def.cat||'').split(/[/_]/).pop()?.trim()||'';
+    const BW=BLK_W;
+
+    // Visible params (skip internal ones)
+    const visPar=def.params.filter(p=>!['bypass','log_result','noise_model','error_rate','code_override','override_code'].includes(p.key));
+
+    let pSVG=''; let py=y+HDR_H+13;
+    visPar.slice(0,5).forEach(p=>{
+      const cur=params[p.key]!==undefined&&params[p.key]!==null?params[p.key]:p.def;
+      const v=String(cur??''); const disp=v.length>15?v.slice(0,15)+'…':v;
+      pSVG+=`<text x="${x+10}" y="${py}" font-size="10" fill="#64748B" font-family="Segoe UI,sans-serif">${p.label}:</text><text x="${x+BW-10}" y="${py}" text-anchor="end" font-size="10" fill="#CBD5E1" font-family="Segoe UI,sans-serif">${disp}</text>`;
+      py+=PARAM_H;
+    });
+
+    let portSVG='';
+    def.ins.forEach((p,i)=>{
+      const pp=y+HDR_H+(i+1)*(h-HDR_H)/(def.ins.length+1);
+      const f=PFILL[p.type]||PFILL.any, s=PSTK[p.type]||PSTK.any;
+      portSVG+=`<circle cx="${x}" cy="${pp}" r="${PORT_R}" fill="${f}" stroke="${s}" stroke-width="1.5" data-bid="${id}" data-port="${p.name}" data-dir="in" style="cursor:crosshair"/><text x="${x+PORT_R+5}" y="${pp+4}" font-size="9" fill="#475569" font-family="Segoe UI,sans-serif">${p.label||p.name}</text>`;
+    });
+    def.outs.forEach((p,i)=>{
+      const pp=y+HDR_H+(i+1)*(h-HDR_H)/(def.outs.length+1);
+      const f=PFILL[p.type]||PFILL.any, s=PSTK[p.type]||PSTK.any;
+      portSVG+=`<circle cx="${x+BW}" cy="${pp}" r="${PORT_R}" fill="${f}" stroke="${s}" stroke-width="1.5" data-bid="${id}" data-port="${p.name}" data-dir="out" style="cursor:crosshair"/><text x="${x+BW-PORT_R-5}" y="${pp+4}" text-anchor="end" font-size="9" fill="#475569" font-family="Segoe UI,sans-serif">${p.label||p.name}</text>`;
+    });
+
+    // Icon if available
+    const icon=raw?.icon?`<text x="${x+BW-14}" y="${y+19}" font-size="13" text-anchor="end" font-family="Segoe UI,sans-serif" opacity="0.6">${raw.icon}</text>`:'';
+
+    g.innerHTML=`
+      <rect x="${x+3}" y="${y+4}" width="${BW}" height="${h}" rx="8" fill="rgba(0,0,0,0.3)"/>
+      <rect x="${x}" y="${y}" width="${BW}" height="${h}" rx="8" fill="#1E2538" stroke="#2D3748" stroke-width="1"/>
+      <rect x="${x}" y="${y}" width="${BW}" height="${HDR_H}" rx="8" fill="${col}"/>
+      <rect x="${x}" y="${y+HDR_H-6}" width="${BW}" height="6" fill="${col}"/>
+      ${icon}
+      <text x="${x+10}" y="${y+21}" font-size="13" font-weight="600" fill="white" font-family="Segoe UI,sans-serif">${def.label}</text>
+      <text x="${x+10}" y="${y+30}" font-size="9" fill="rgba(255,255,255,0.55)" font-family="Segoe UI,sans-serif">${catL}</text>
+      ${pSVG}${portSVG}
+      <rect class="sel-ol" x="${x}" y="${y}" width="${BW}" height="${h}" rx="8" fill="none" stroke="#00e5ff" stroke-width="2" opacity="0" filter="url(#glow)"/>
     `;
   }
 
-  _renderParams(def, x, y, params) {
-    let html = ''; let py = y + HDR_H + 14;
-    (def.params || []).slice(0, 5).forEach(p => {
-      const v = String(params[p.name] ?? p.default ?? '');
-      html += `<text class="block-param-label" x="${x+10}" y="${py}">${p.name}:</text>`;
-      html += `<text class="block-param-value" x="${x+80}" y="${py}">${v.length>12 ? v.slice(0,12)+'…' : v}</text>`;
-      py += PARAM_H;
-    });
-    return html;
+  _repaint(block) {
+    this._paint(block.el,block.def,block.id,block.x,block.y,block.h,block.params,block.raw);
+    this.wires.forEach(w=>{if(w.fb===block.id||w.tb===block.id)this._drawWire(w);});
+    if(this.selBlock===block.id) block.el.querySelector('.sel-ol')?.setAttribute('opacity','1');
   }
 
-  _renderPorts(def, id, x, y, height, nIn, nOut) {
-    let html = '';
-    (def.inputs || []).forEach((port, i) => {
-      const py = y + HDR_H + (i+1) * (height - HDR_H) / (nIn + 1);
-      const cls = PORT_CLASSES[port.type] || 'port-any';
-      html += `<circle class="port ${cls}" data-block="${id}" data-port="${port.name}" data-dir="in"
-                        cx="${x}" cy="${py}" r="${PORT_R}"/>`;
-      html += `<text class="port-label" x="${x+12}" y="${py+4}">${port.name}</text>`;
-    });
-    (def.outputs || []).forEach((port, i) => {
-      const py = y + HDR_H + (i+1) * (height - HDR_H) / (nOut + 1);
-      const cls = PORT_CLASSES[port.type] || 'port-any';
-      html += `<circle class="port ${cls}" data-block="${id}" data-port="${port.name}" data-dir="out"
-                        cx="${x+BLK_W}" cy="${py}" r="${PORT_R}"/>`;
-      html += `<text class="port-label" text-anchor="end" x="${x+BLK_W-12}" y="${py+4}">${port.name}</text>`;
-    });
-    return html;
+  // ── Wire ─────────────────────────────────────────────────────────────────
+  _curve(x1,y1,x2,y2){const cx=(x1+x2)/2;return `M ${x1} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2} ${y2}`;}
+
+  _drawWire(w){
+    const fb=this.blocks.get(w.fb),tb=this.blocks.get(w.tb);
+    if(!fb||!tb)return;
+    const fp=portXY(fb.def,w.fp,'out',fb.x,fb.y,fb.h);
+    const tp=portXY(tb.def,w.tp,'in', tb.x,tb.y,tb.h);
+    if(!fp||!tp)return;
+    w.el.setAttribute('d',this._curve(fp.x,fp.y,tp.x,tp.y));
+    w.el.setAttribute('stroke',WCOL[fp.type]||WCOL.any);
   }
 
-  // ── Block / wire events ───────────────────────────────────────────────────────
-  _bindSVGEvents() {
-    this.svg.addEventListener('mousedown',  e => this._onMouseDown(e));
-    this.svg.addEventListener('mousemove',  e => this._onMouseMove(e));
-    this.svg.addEventListener('mouseup',    e => this._onMouseUp(e));
-    this.svg.addEventListener('wheel',      e => this._onWheel(e), { passive: false });
-    this.svg.addEventListener('click',      e => this._onClick(e));
-    this.svg.addEventListener('dblclick',   e => this._onDblClick(e));
-    document.addEventListener('keydown',    e => this._onKey(e));
-  }
-
-  _bindBlockEvents(block) {
-    // Ports: start/end wire drawing
-    block.el.querySelectorAll('.port').forEach(portEl => {
-      portEl.addEventListener('mousedown', e => {
-        e.stopPropagation();
-        const dir   = portEl.dataset.dir;
-        const bId   = portEl.dataset.block;
-        const pName = portEl.dataset.port;
-        if (dir === 'out') this._startWire(e, bId, pName);
-      });
-      portEl.addEventListener('mouseup', e => {
-        e.stopPropagation();
-        const dir   = portEl.dataset.dir;
-        const bId   = portEl.dataset.block;
-        const pName = portEl.dataset.port;
-        if (dir === 'in' && this.drawingWire) this._endWire(bId, pName);
-      });
-    });
-  }
-
-  _svgPoint(e) {
-    const rect = this.svg.getBoundingClientRect();
-    return {
-      x: (e.clientX - rect.left - this.viewX) / this.viewScale,
-      y: (e.clientY - rect.top  - this.viewY) / this.viewScale,
-    };
-  }
-
-  _onMouseDown(e) {
-    const blkEl = e.target.closest('.block-group');
-    if (blkEl && !e.target.classList.contains('port')) {
-      e.preventDefault();
-      const block = this.blocks.get(blkEl.dataset.blockId);
-      if (!block) return;
-      this._selectBlock(block);
-      const pt = this._svgPoint(e);
-      this.dragging = { block, startMX: pt.x, startMY: pt.y, startBX: block.x, startBY: block.y };
-    } else if (e.target === this.svg || e.target.id === 'canvas-grid' || e.target.tagName === 'line') {
-      e.preventDefault();
-      this._selectBlock(null);
-      this.panning = true;
-      this.panStart = { x: e.clientX, y: e.clientY, vx: this.viewX, vy: this.viewY };
-    }
-  }
-
-  _onMouseMove(e) {
-    if (this.dragging) {
-      const pt = this._svgPoint(e);
-      const dx = pt.x - this.dragging.startMX;
-      const dy = pt.y - this.dragging.startMY;
-      const nx = Math.round((this.dragging.startBX + dx) / GRID) * GRID;
-      const ny = Math.round((this.dragging.startBY + dy) / GRID) * GRID;
-      this._moveBlock(this.dragging.block, nx, ny);
-    } else if (this.panning && this.panStart) {
-      this.viewX = this.panStart.vx + (e.clientX - this.panStart.x);
-      this.viewY = this.panStart.vy + (e.clientY - this.panStart.y);
-      this._applyTransform();
-    } else if (this.drawingWire) {
-      const pt = this._svgPoint(e);
-      this._updateDraftWire(pt.x, pt.y);
-    }
-  }
-
-  _onMouseUp(e) {
-    this.dragging = null;
-    this.panning  = false;
-    if (this.drawingWire) { this._cancelWire(); }
-  }
-
-  _onWheel(e) {
-    e.preventDefault();
-    const rect  = this.svg.getBoundingClientRect();
-    const mx    = e.clientX - rect.left;
-    const my    = e.clientY - rect.top;
-    const delta = e.deltaY > 0 ? 0.9 : 1.1;
-    this.viewScale = Math.min(2.5, Math.max(0.3, this.viewScale * delta));
-    this.viewX = mx - (mx - this.viewX) * delta;
-    this.viewY = my - (my - this.viewY) * delta;
-    this._applyTransform();
-  }
-
-  _onClick(e) {
-    const wireEl = e.target.closest('.wire');
-    if (wireEl) {
-      this.wires.forEach((w,id) => {
-        if (w.el === wireEl) { wireEl.classList.toggle('selected'); }
-      });
-    }
-  }
-
-  _onDblClick(e) {
-    // Double-click empty canvas → reset view
-    if (e.target === this.svg || e.target.id === 'canvas-grid') {
-      this.viewX = 60; this.viewY = 60; this.viewScale = 1;
-      this._applyTransform();
-    }
-  }
-
-  _onKey(e) {
-    if ((e.key === 'Delete' || e.key === 'Backspace') && document.activeElement.tagName !== 'INPUT') {
-      // Delete selected block
-      if (this.selected) {
-        this._deleteBlock(this.selected.id);
-        this.selected = null;
-        if (this.onBlockSelect) this.onBlockSelect(null);
-      }
-      // Delete selected wire
-      this.wires.forEach((w,id) => {
-        if (w.el.classList.contains('selected')) this._deleteWire(id);
-      });
-    }
-    if (e.key === 'Escape') { this.selected = null; this.wires.forEach(w=>w.el.classList.remove('selected')); }
-  }
-
-  _applyTransform() {
-    [this.blocksEl, this.wiresEl, this.gridEl].forEach(el => {
-      el.setAttribute('transform', `translate(${this.viewX},${this.viewY}) scale(${this.viewScale})`);
-    });
-    this.wireDraft.parentElement.setAttribute('transform',
-      `translate(${this.viewX},${this.viewY}) scale(${this.viewScale})`);
-  }
-
-  _selectBlock(block) {
-    if (this.selected) this.selected.el.classList.remove('selected');
-    this.selected = block;
-    if (block) block.el.classList.add('selected');
-    if (this.onBlockSelect) this.onBlockSelect(block);
-  }
-
-  _moveBlock(block, nx, ny) {
-    block.x = nx; block.y = ny;
-    this._rerenderBlock(block);
-    this._rerenderWires(block.id);
-  }
-
-  _rerenderBlock(block) {
-    this._renderBlock(block.el, block.def, block.id, block.x, block.y, block.params, block.height);
-    this._bindBlockEvents(block);
-  }
-
-  _rerenderWires(blockId) {
-    this.wires.forEach((w, wid) => {
-      if (w.fromBlock === blockId || w.toBlock === blockId) {
-        this._drawWire(w);
-      }
-    });
-  }
-
-  _deleteBlock(id) {
-    const block = this.blocks.get(id);
-    if (!block) return;
-    block.el.remove();
-    this.blocks.delete(id);
-    // Remove connected wires
-    const toDelete = [];
-    this.wires.forEach((w,wid) => { if (w.fromBlock===id || w.toBlock===id) toDelete.push(wid); });
-    toDelete.forEach(wid => this._deleteWire(wid));
-    this._updateEmptyHint();
-  }
-
-  // ── Wire drawing ──────────────────────────────────────────────────────────────
-  _portPosition(blockId, portName, dir) {
-    const block = this.blocks.get(blockId);
-    if (!block) return null;
-    const ports = dir === 'out' ? (block.def.outputs || []) : (block.def.inputs || []);
-    const idx   = ports.findIndex(p => p.name === portName);
-    if (idx < 0) return null;
-    const count = ports.length;
-    const py    = block.y + HDR_H + (idx+1) * (block.height - HDR_H) / (count+1);
-    const px    = dir === 'out' ? block.x + BLK_W : block.x;
-    return { x: px, y: py, port: ports[idx] };
-  }
-
-  _startWire(e, blockId, portName) {
-    const pos = this._portPosition(blockId, portName, 'out');
-    if (!pos) return;
-    e.preventDefault();
-    this.drawingWire = { fromBlock: blockId, fromPort: portName, startX: pos.x, startY: pos.y };
-    this.wireDraft.setAttribute('d', `M ${pos.x} ${pos.y}`);
-  }
-
-  _updateDraftWire(mx, my) {
-    if (!this.drawingWire) return;
-    const { startX, startY } = this.drawingWire;
-    const cx = (startX + mx) / 2;
-    this.wireDraft.setAttribute('d', `M ${startX} ${startY} C ${cx} ${startY}, ${cx} ${my}, ${mx} ${my}`);
-  }
-
-  _endWire(toBlock, toPort) {
-    if (!this.drawingWire) return;
-    const { fromBlock, fromPort } = this.drawingWire;
-    this._cancelWire();
-    if (fromBlock === toBlock) return;  // no self-wires
-    // Check no duplicate
-    let dup = false;
-    this.wires.forEach(w => { if (w.fromBlock===fromBlock && w.fromPort===fromPort && w.toBlock===toBlock && w.toPort===toPort) dup=true; });
-    if (dup) return;
-    const wid = `wire_${nextId++}`;
-    const wireEl = document.createElementNS('http://www.w3.org/2000/svg','path');
-    wireEl.classList.add('wire');
-    const fromDef = this.blocks.get(fromBlock)?.def;
-    const portDef = (fromDef?.outputs||[]).find(p=>p.name===fromPort);
-    if (portDef) wireEl.classList.add(WIRE_CLASSES[portDef.type] || '');
-    this.wiresEl.appendChild(wireEl);
-    const wire = { fromBlock, fromPort, toBlock, toPort, el: wireEl };
-    this.wires.set(wid, wire);
+  _addWire(fb,fp,tb,tp){
+    if(fb===tb)return;
+    for(const w of this.wires.values()) if(w.fb===fb&&w.fp===fp&&w.tb===tb&&w.tp===tp)return;
+    const wid=`w${_nid++}`;
+    const el=document.createElementNS('http://www.w3.org/2000/svg','path');
+    el.setAttribute('fill','none'); el.setAttribute('stroke-width','2.5');
+    el.setAttribute('stroke-linecap','round'); el.setAttribute('marker-end','url(#arrowhead)');
+    el.style.cursor='pointer'; el.dataset.wid=wid;
+    this.wG.appendChild(el);
+    const wire={fb,fp,tb,tp,el};
+    this.wires.set(wid,wire);
     this._drawWire(wire);
   }
 
-  _drawWire(wire) {
-    const from = this._portPosition(wire.fromBlock, wire.fromPort, 'out');
-    const to   = this._portPosition(wire.toBlock,   wire.toPort,  'in');
-    if (!from || !to) return;
-    const cx = (from.x + to.x) / 2;
-    wire.el.setAttribute('d', `M ${from.x} ${from.y} C ${cx} ${from.y}, ${cx} ${to.y}, ${to.x} ${to.y}`);
-  }
+  _delWire(wid){const w=this.wires.get(wid);if(w){w.el.remove();this.wires.delete(wid);}}
 
-  _cancelWire() {
-    this.drawingWire = null;
-    this.wireDraft.setAttribute('d', '');
-  }
+  _cancelWire(){this.dw=null;if(this.draft){this.draft.setAttribute('d','');this.draft.style.display='none';}if(this.snapEl)this.snapEl.setAttribute('opacity','0');}
 
-  _deleteWire(wid) {
-    const w = this.wires.get(wid);
-    if (w) { w.el.remove(); this.wires.delete(wid); }
-  }
-
-  // ── Block parameter update ───────────────────────────────────────────────────
-  updateBlockParam(blockId, field, value) {
-    const block = this.blocks.get(blockId);
-    if (!block) return;
-    block.params[field] = value;
-    this._rerenderBlock(block);
-    this._rerenderWires(blockId);
-  }
-
-  // ── Code generation from canvas ───────────────────────────────────────────────
-  toCode() {
-    if (this.blocks.size === 0) return '';
-    const lines = ['-- Generated by Sanskrit Visual Builder v3.1', ''];
-
-    // Topological sort of blocks by wire order
-    const order = this._topoSort();
-
-    for (const blockId of order) {
-      const block = this.blocks.get(blockId);
-      if (!block) continue;
-      const code = this._blockToCode(block);
-      if (code) lines.push(code);
+  // ── Find nearest input port within SNAP_R ────────────────────────────────
+  _findSnap(cx,cy,excludeBlockId) {
+    let best=null, bestD=SNAP_R;
+    for(const block of this.blocks.values()){
+      if(block.id===excludeBlockId) continue;
+      block.def.ins.forEach(p=>{
+        const pos=portXY(block.def,p.name,'in',block.x,block.y,block.h);
+        if(!pos)return;
+        const d=Math.hypot(cx-pos.x,cy-pos.y);
+        if(d<bestD){bestD=d;best={block,portName:p.name,x:pos.x,y:pos.y};}
+      });
     }
+    return best;
+  }
+
+  // ── Events — SVG delegation ───────────────────────────────────────────────
+  _events() {
+    const svg=this.svg;
+
+    svg.addEventListener('mousedown',e=>{
+      // Port → start wire
+      const portEl=e.target.closest('[data-dir]');
+      if(portEl){
+        e.stopPropagation();e.preventDefault();
+        if(portEl.dataset.dir==='out'){
+          const bid=portEl.dataset.bid, pn=portEl.dataset.port;
+          const block=this.blocks.get(bid);if(!block)return;
+          const pos=portXY(block.def,pn,'out',block.x,block.y,block.h);
+          if(pos)this.dw={bid,port:pn,sx:pos.x,sy:pos.y};
+        }
+        return;
+      }
+      // Wire click → select wire
+      const wireEl=e.target.closest('[data-wid]');
+      if(wireEl){
+        e.stopPropagation();
+        this._selectWire(wireEl.dataset.wid);
+        return;
+      }
+      // Block drag
+      const bg=e.target.closest('[data-bid]');
+      if(bg){
+        e.preventDefault();
+        const bid=bg.dataset.bid, block=this.blocks.get(bid);if(!block)return;
+        this._selectBlock(bid);
+        const pt=this._toC(e.clientX,e.clientY);
+        this.drag={bid,ox:pt.x-block.x,oy:pt.y-block.y};
+        return;
+      }
+      // Deselect + pan
+      this._deselect();
+      this.pan={mx:e.clientX,my:e.clientY,vx:this.vx,vy:this.vy};
+    });
+
+    svg.addEventListener('mousemove',e=>{
+      if(this.dw){
+        const pt=this._toC(e.clientX,e.clientY);
+        // Magnetic snap
+        const snap=this._findSnap(pt.x,pt.y,this.dw.bid);
+        if(snap&&this.snapEl){
+          // Convert snap coords to screen
+          const sx=snap.x*this.vs+this.vx, sy=snap.y*this.vs+this.vy;
+          this.snapEl.setAttribute('cx',sx);this.snapEl.setAttribute('cy',sy);
+          this.snapEl.setAttribute('r',Math.round(14*this.vs));
+          this.snapEl.setAttribute('opacity','0.9');
+        } else if(this.snapEl){
+          this.snapEl.setAttribute('opacity','0');
+        }
+        // Draw draft wire
+        const x2=snap?snap.x:pt.x, y2=snap?snap.y:pt.y;
+        const x1=this.dw.sx,y1=this.dw.sy;
+        const cx=(x1+x2)/2;
+        const sx1=x1*this.vs+this.vx,sy1=y1*this.vs+this.vy;
+        const sx2=x2*this.vs+this.vx,sy2=y2*this.vs+this.vy;
+        const scx=(sx1+sx2)/2;
+        if(this.draft){this.draft.setAttribute('d',`M ${sx1} ${sy1} C ${scx} ${sy1}, ${scx} ${sy2}, ${sx2} ${sy2}`);this.draft.style.display='block';}
+        return;
+      }
+      if(this.drag){
+        const pt=this._toC(e.clientX,e.clientY);
+        const block=this.blocks.get(this.drag.bid);if(!block)return;
+        block.x=Math.round((pt.x-this.drag.ox)/GRID)*GRID;
+        block.y=Math.round((pt.y-this.drag.oy)/GRID)*GRID;
+        this._repaint(block);return;
+      }
+      if(this.pan){this.vx=this.pan.vx+(e.clientX-this.pan.mx);this.vy=this.pan.vy+(e.clientY-this.pan.my);this._vp();}
+    });
+
+    svg.addEventListener('mouseup',e=>{
+      if(this.dw){
+        const pt=this._toC(e.clientX,e.clientY);
+        // Check for snap first
+        const snap=this._findSnap(pt.x,pt.y,this.dw.bid);
+        if(snap){
+          this._addWire(this.dw.bid,this.dw.port,snap.block.id,snap.portName);
+          this._cancelWire();return;
+        }
+        // Check port under mouse
+        const portEl=e.target.closest('[data-dir]');
+        if(portEl&&portEl.dataset.dir==='in'&&portEl.dataset.bid!==this.dw.bid){
+          this._addWire(this.dw.bid,this.dw.port,portEl.dataset.bid,portEl.dataset.port);
+        }
+        this._cancelWire();return;
+      }
+      this.drag=null;this.pan=null;
+    });
+
+    svg.addEventListener('mouseleave',()=>{if(this.dw)this._cancelWire();this.drag=null;this.pan=null;});
+
+    svg.addEventListener('wheel',e=>{
+      e.preventDefault();
+      const r=svg.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
+      const f=e.deltaY>0?0.9:1.1;
+      const ns=Math.min(2.5,Math.max(0.25,this.vs*f));
+      this.vx=mx-(mx-this.vx)*(ns/this.vs);this.vy=my-(my-this.vy)*(ns/this.vs);this.vs=ns;this._vp();
+    },{passive:false});
+
+    svg.addEventListener('dblclick',e=>{if(!e.target.closest('[data-bid]')){this.vs=1;this.vx=60;this.vy=60;this._vp();}});
+
+    // Wire click delegate on wires group
+    this.wG.addEventListener('click',e=>{
+      const el=e.target.closest('[data-wid]');
+      if(el){e.stopPropagation();this._selectWire(el.dataset.wid);}
+    });
+
+    document.addEventListener('keydown',e=>{
+      if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName))return;
+      if(e.key==='Delete'||e.key==='Backspace'){
+        // Delete selected wire first
+        if(this.selWire){this._delWire(this.selWire);this.selWire=null;return;}
+        // Delete selected block
+        if(this.selBlock){
+          const block=this.blocks.get(this.selBlock);
+          if(block){block.el.remove();this.blocks.delete(this.selBlock);}
+          // Remove connected wires
+          [...this.wires.entries()].forEach(([wid,w])=>{if(w.fb===this.selBlock||w.tb===this.selBlock){w.el.remove();this.wires.delete(wid);}});
+          this.selBlock=null;this._hint();
+          if(this.onBlockSelect)this.onBlockSelect(null);
+        }
+      }
+      if(e.key==='Escape'){this._cancelWire();this._deselect();}
+    });
+  }
+
+  _selectBlock(bid){
+    if(this.selWire){const w=this.wires.get(this.selWire);if(w)w.el.setAttribute('stroke-width','2.5');this.selWire=null;}
+    if(this.selBlock&&this.selBlock!==bid)this.blocks.get(this.selBlock)?.el.querySelector('.sel-ol')?.setAttribute('opacity','0');
+    this.selBlock=bid;
+    this.blocks.get(bid)?.el.querySelector('.sel-ol')?.setAttribute('opacity','1');
+    if(this.onBlockSelect)this.onBlockSelect(this.blocks.get(bid));
+  }
+
+  _selectWire(wid){
+    if(this.selBlock){this.blocks.get(this.selBlock)?.el.querySelector('.sel-ol')?.setAttribute('opacity','0');this.selBlock=null;if(this.onBlockSelect)this.onBlockSelect(null);}
+    if(this.selWire&&this.selWire!==wid){const pw=this.wires.get(this.selWire);if(pw)pw.el.setAttribute('stroke-width','2.5');}
+    this.selWire=wid;
+    const w=this.wires.get(wid);if(w){w.el.setAttribute('stroke-width','4');w.el.setAttribute('filter','url(#glow)');}
+  }
+
+  _deselect(){
+    if(this.selBlock){this.blocks.get(this.selBlock)?.el.querySelector('.sel-ol')?.setAttribute('opacity','0');this.selBlock=null;if(this.onBlockSelect)this.onBlockSelect(null);}
+    if(this.selWire){const w=this.wires.get(this.selWire);if(w){w.el.setAttribute('stroke-width','2.5');w.el.removeAttribute('filter');}this.selWire=null;}
+  }
+
+  // ── Update param from properties panel ───────────────────────────────────
+  updateBlockParam(blockId,key,value){
+    const block=this.blocks.get(blockId);if(!block)return;
+    block.params[key]=value;this._repaint(block);
+  }
+
+  // ── Code generation ────────────────────────────────────────────────────────
+  toCode(){
+    if(!this.blocks.size)return'';
+    const lines=['-- Generated by Sanskrit Visual Builder v3.1',''];
+    this._topo().forEach(id=>{
+      const b=this.blocks.get(id);if(!b)return;
+      if(b.raw?.toSq){try{lines.push(b.raw.toSq(b.params));return;}catch(e){}}
+      const c=this._bCode(b);if(c)lines.push(c);
+    });
     return lines.join('\n');
   }
 
-  _topoSort() {
-    const inEdges = new Map();
-    this.blocks.forEach((_, id) => inEdges.set(id, 0));
-    this.wires.forEach(w => { inEdges.set(w.toBlock, (inEdges.get(w.toBlock)||0) + 1); });
-    const queue  = [...inEdges.entries()].filter(([,v])=>v===0).map(([k])=>k);
-    const result = [];
-    while (queue.length) {
-      const cur = queue.shift(); result.push(cur);
-      this.wires.forEach(w => {
-        if (w.fromBlock === cur) {
-          const nv = (inEdges.get(w.toBlock)||1) - 1;
-          inEdges.set(w.toBlock, nv);
-          if (nv === 0) queue.push(w.toBlock);
-        }
-      });
-    }
-    // Append any remaining (cycles or isolated)
-    this.blocks.forEach((_,id) => { if (!result.includes(id)) result.push(id); });
-    return result;
+  _topo(){
+    const deg=new Map();this.blocks.forEach((_,id)=>deg.set(id,0));
+    this.wires.forEach(w=>deg.set(w.tb,(deg.get(w.tb)||0)+1));
+    const q=[...deg.entries()].filter(([,v])=>v===0).map(([k])=>k);
+    const r=[];
+    while(q.length){const c=q.shift();r.push(c);this.wires.forEach(w=>{if(w.fb===c){const n=(deg.get(w.tb)||1)-1;deg.set(w.tb,n);if(!n)q.push(w.tb);}});}
+    this.blocks.forEach((_,id)=>{if(!r.includes(id))r.push(id);});
+    return r;
   }
 
-  _blockToCode(block) {
-    const { def, params } = block;
-    const id = def.id;
-    const p  = params;
+  _upReg(bid){const w=[...this.wires.values()].find(w=>w.tb===bid);if(!w)return null;const fb=this.blocks.get(w.fb);return fb?.params?.name||fb?.params?.register||null;}
 
-    // Find what this block's quantum register input comes from
-    const regWire = [...this.wires.values()].find(w => w.toBlock === block.id);
-    const regVar  = regWire ? this._varName(regWire.fromBlock) : (p.name || 'q');
-
-    switch(id) {
-      case 'quantum_register': return `let ${p.name||'q'} = qubits(${p.n_qubits||2})`;
-      case 'hadamard':  return `H(${regVar}[${p.qubit||0}])`;
-      case 'x_gate':    return `X(${regVar}[${p.qubit||0}])`;
-      case 'y_gate':    return `Y(${regVar}[${p.qubit||0}])`;
-      case 'z_gate':    return `Z(${regVar}[${p.qubit||0}])`;
-      case 's_gate':    return `S(${regVar}[${p.qubit||0}])`;
-      case 't_gate':    return `T(${regVar}[${p.qubit||0}])`;
-      case 'rx_gate':   return `Rx(${regVar}[${p.qubit||0}], ${p.theta||1.5708})`;
-      case 'ry_gate':   return `Ry(${regVar}[${p.qubit||0}], ${p.theta||1.5708})`;
-      case 'rz_gate':   return `Rz(${regVar}[${p.qubit||0}], ${p.theta||1.5708})`;
-      case 'cnot_gate': return `CNOT(${regVar}[${p.control||0}], ${regVar}[${p.target||1}])`;
-      case 'cz_gate':   return `CZ(${regVar}[${p.qubit_a||0}], ${regVar}[${p.qubit_b||1}])`;
-      case 'swap_gate': return `SWAP(${regVar}[${p.qubit_a||0}], ${regVar}[${p.qubit_b||1}])`;
-      case 'toffoli_gate': return `Toffoli(${regVar}[${p.ctrl1||0}], ${regVar}[${p.ctrl2||1}], ${regVar}[${p.target||2}])`;
-      case 'measure_all': return `let result_${block.id.replace('blk_','')} = measure_all(${regVar}, shots=${p.shots||1000})\nprint(result_${block.id.replace('blk_','')}.histogram)`;
-      case 'measure_single': return `let bit_${block.id.replace('blk_','')} = measure(${regVar}[${p.qubit||0}])`;
-      case 'statevector_block': return `let sv_${block.id.replace('blk_','')} = statevector(${regVar})\nprint(sv_${block.id.replace('blk_','')})`;
-      case 'vqe_block': return `let vqe_result = vqe(molecule, ansatz="${p.ansatz||'UCCSD'}", shots=${p.shots||2000})\nprint(vqe_result.energy)`;
-      case 'grover_block': return `let gr = grover(${p.n_qubits||4}, [${p.target||7}], ${p.shots||1000})\nprint(gr.histogram)`;
-      case 'qft_block': return `${regVar}.qft(${regVar}.n_qubits, ${p.inverse||false})`;
-      case 'print_block': {
-        const inWire = [...this.wires.values()].find(w => w.toBlock === block.id);
-        const val = inWire ? `result_${inWire.fromBlock.replace('blk_','')}` : '"value"';
-        return `print(${val})`;
-      }
-      default: return `-- ${def.label || id}`;
+  _bCode(b){
+    const {def,params:p,id}=b; const n=id;
+    const reg=this._upReg(id)||p.name||p.register||'q';
+    switch(def.id){
+      case 'q_register':    return `let ${p.name||'q'} = qubits(${p.n_qubits||2})`;
+      case 'h_gate':        return `H(${reg}[${p.qubit??0}])`;
+      case 'x_gate':        return `X(${reg}[${p.qubit??0}])`;
+      case 'y_gate':        return `Y(${reg}[${p.qubit??0}])`;
+      case 'z_gate':        return `Z(${reg}[${p.qubit??0}])`;
+      case 's_gate':        return `S(${reg}[${p.qubit??0}])`;
+      case 't_gate':        return `T(${reg}[${p.qubit??0}])`;
+      case 'sdg_gate':      return `Sdg(${reg}[${p.qubit??0}])`;
+      case 'tdg_gate':      return `Tdg(${reg}[${p.qubit??0}])`;
+      case 'sx_gate':       return `SX(${reg}[${p.qubit??0}])`;
+      case 'rx_gate':       return `Rx(${reg}[${p.qubit??0}], ${p.theta??1.5708})`;
+      case 'ry_gate':       return `Ry(${reg}[${p.qubit??0}], ${p.theta??1.5708})`;
+      case 'rz_gate':       return `Rz(${reg}[${p.qubit??0}], ${p.theta??1.5708})`;
+      case 'cnot_gate':     return `CNOT(${reg}[${p.control??0}], ${reg}[${p.target??1}])`;
+      case 'cz_gate':       return `CZ(${reg}[${p.qubit_a??0}], ${reg}[${p.qubit_b??1}])`;
+      case 'swap_gate':     return `SWAP(${reg}[${p.qubit_a??0}], ${reg}[${p.qubit_b??1}])`;
+      case 'toffoli_gate':  return `Toffoli(${reg}[${p.ctrl1??0}], ${reg}[${p.ctrl2??1}], ${reg}[${p.target??2}])`;
+      case 'measure_all':   return `let result_${n}=measure_all(${reg},shots=${p.shots??1000})\nprint(result_${n}.histogram)`;
+      case 'measure_qubit': return `let bit_${n}=measure(${reg}[${p.qubit??0}])\nprint(bit_${n})`;
+      case 'statevector_block':return`let sv_${n}=statevector(${reg})\nprint(sv_${n})`;
+      case 'grover_algo':   return `let gr_${n}=grover(${p.n_qubits??4},[${p.target??7}],${p.shots??1000})\nprint(gr_${n}.histogram)`;
+      case 'vqe_solver':    return `let vqe_${n}=vqe(molecule,ansatz="${p.ansatz||'UCCSD'}",shots=${p.shots??2000})\nprint(vqe_${n}.energy)`;
+      case 'qft_block':     return `${reg}.qft(${reg}.n_qubits,${p.inverse||false})`;
+      case 'print_block':   return `print(${reg})`;
+      default: return `-- ${def.label}`;
     }
   }
 
-  _varName(blockId) {
-    const block = this.blocks.get(blockId);
-    if (!block) return 'q';
-    return block.params.name || 'q';
+  // ── .sans export / import ─────────────────────────────────────────────────
+  exportSans(){
+    if(!this.blocks.size) return null;
+    return {
+      version: '3.1',
+      title:   'Sanskrit Canvas Diagram',
+      created: new Date().toISOString(),
+      blocks: [...this.blocks.values()].map(b=>({
+        id:    b.id,
+        defId: b.def.id,
+        x:     b.x, y: b.y,
+        params:{ ...b.params },
+        label: b.def.label,
+        cat:   b.def.cat,
+      })),
+      wires: [...this.wires.values()].map(w=>({
+        from:{ blockId:w.fb, port:w.fp },
+        to:  { blockId:w.tb, port:w.tp },
+      })),
+    };
   }
 
-  // ── Utility ───────────────────────────────────────────────────────────────────
-  clear() {
-    this.blocks.forEach(b => b.el.remove());
-    this.blocks.clear();
-    this.wires.forEach(w => w.el.remove());
-    this.wires.clear();
-    this.selected = null;
-    this._updateEmptyHint();
-    if (this.onBlockSelect) this.onBlockSelect(null);
-  }
+  async importSans(data){
+    this.clear();
+    if(!data) return;
+    // Support both .sans files and canvas-example objects from server
+    const blocks = data.blocks||[];
+    const wires  = data.wires||[];
+    const idMap  = {};   // old id → new block
 
-  _updateEmptyHint() {
-    if (this.emptyHint) {
-      this.emptyHint.classList.toggle('hidden', this.blocks.size > 0);
+    for(const bd of blocks){
+      const defId = bd.defId||bd.id;
+      const raw   = await fetchDef(defId) || {id:defId, label:bd.label||defId, cat:bd.cat||'Utility'};
+      const block = this.addBlock(raw, bd.x||100, bd.y||100);
+      idMap[bd.id] = block;
+      // Restore params
+      if(bd.params) Object.entries(bd.params).forEach(([k,v])=>{ block.params[k]=v; });
+      this._repaint(block);
     }
+
+    // Restore wires
+    wires.forEach(w=>{
+      const fb=idMap[w.from?.blockId||w.from], tb=idMap[w.to?.blockId||w.to];
+      if(fb&&tb) this._addWire(fb.id, w.from?.port||'ro', tb.id, w.to?.port||'ri');
+    });
+
+    this._hint();
   }
+
+  // ── Utility ────────────────────────────────────────────────────────────────
+  clear(){
+    this.blocks.forEach(b=>b.el.remove());this.blocks.clear();
+    this.wires.forEach(w=>w.el.remove()); this.wires.clear();
+    this.selBlock=null;this.selWire=null;this._cancelWire();this._hint();
+    if(this.onBlockSelect)this.onBlockSelect(null);
+  }
+
+  _hint(){this.hint?.classList.toggle('hidden',this.blocks.size>0);}
 }
