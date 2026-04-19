@@ -87,10 +87,10 @@ function inferTypes(columns, rows) {
   columns.forEach(col=>{
     const vals=rows.map(r=>r[col]).filter(v=>v!==''&&v!==null&&v!==undefined);
     if(!vals.length){types[col]='string';return;}
-    const numVals=vals.filter(v=>!isNaN(Number(v))&&v.trim()!=='');
+    const numVals=vals.filter(v=>typeof v==='number'||(!isNaN(Number(v))&&String(v).trim()!==''));
     if(numVals.length===vals.length){types[col]=vals.some(v=>String(v).includes('.'))?'float':'integer';}
-    else if(vals.every(v=>/^\d{4}-\d{2}-\d{2}/.test(v))){types[col]='date';}
-    else if(vals.every(v=>v==='true'||v==='false')){types[col]='boolean';}
+    else if(vals.every(v=>/^\d{4}-\d{2}-\d{2}/.test(String(v)))){types[col]='date';}
+    else if(vals.every(v=>v===true||v===false||v==='true'||v==='false')){types[col]='boolean';}
     else types[col]='string';
   });
   return types;
