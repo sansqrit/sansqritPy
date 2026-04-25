@@ -1027,7 +1027,15 @@ async function loadServerBlocks(){
         id:b.id,label:b.label,cat:'srv_'+(b.cat||'utility'),
         color:b.color||'#374151',icon:b.icon||'◆',desc:typeof b.info==='string'?b.info:(b.description||''),
         params,ins,outs,isViz:false,vizType:null,
-        code:b.toSq?(p)=>{try{return b.toSq(p);}catch(e){return '-- '+b.label;}}:(p)=>`-- ${b.label}`,
+        code:(p)=>{
+          if((b.id||'').startsWith('applied_')){
+            const out=p.output_var||('result_'+(b.id||'applied').replace(/[^a-zA-Z0-9_]/g,'_'));
+            const qs=v=>JSON.stringify(String(v||''));
+            return `let ${out} = applied_solver(problem=${qs(p.problem_name||b.label)}, domain=${qs(p.domain_id||b.cat||'applied')}, method=${qs(p.method||'Hybrid solver')}, objective=${qs(p.objective||'rank candidates')}, samples=${Number(p.sample_size)||25})\nprint(${out})`;
+          }
+          if(b.toSq){try{return b.toSq(p);}catch(e){return '-- '+b.label;}}
+          return `-- ${b.label}`;
+        },
       };
       added++;
     });
@@ -1785,7 +1793,7 @@ function setRunning(v){
 
 async function runProgram(){
   if(ST.running)return;
-  const hasETL=[...ST.blocks.values()].some(b=>b.def.cat&&(b.def.cat.startsWith('etl')||b.def.cat==='ds'));
+  const hasETL=[...ST.blocks.values()].some(b=>!!clientOperationForBlock(b));
   const hasQ=[...ST.blocks.values()].some(b=>['q_reg','q_gate','q_meas','q_algo'].includes(b.def.cat)||b.type==='quantum_register');
   clearOutput();setRunning(true);
   const code=blocksToCode();
@@ -1802,6 +1810,9 @@ async function runProgram(){
 function clientOperationForBlock(b){
   if(!b)return null;
   if(b.type==='sample_data')return 'csv_reader';
+  if(b.type&&b.type.startsWith('applied_'))return 'domain_solver';
+  if(b.params&&b.params.domain_id&&b.params.problem_name)return 'domain_solver';
+  if(b.def.cat&&b.def.cat.startsWith('srv_domain_'))return 'domain_solver';
   if(b.def.cat&&(b.def.cat.startsWith('etl')||b.def.cat==='ds'))return b.type;
   if(['csv_reader','json_reader','xml_reader','excel_reader','normalize','encode','filter_rows','sort_rows','group_by','pivot','validate_schema','profile'].includes(b.type))return b.type;
   return null;
@@ -1843,6 +1854,7 @@ async function runETL(){
     if(data.dataset){out.dataset=data.dataset;(b.def.outs||[]).forEach(p=>{out[p.n]=data.dataset;});}
     if(data.train_dataset)out.dataset=data.train_dataset;
     if(data.test_dataset)out.test_dataset=data.test_dataset;if(data.model)out.model=data.model;
+    if(data.result){out.report=data.result;out.score=data.result.best_score;}
     if(data.profile){out.profile=data.profile;(b.def.outs||[]).forEach(p=>{if(p.n==='profile')out[p.n]=data.profile;});}
     if(data.correlation_matrix){out.matrix=data.correlation_matrix;(b.def.outs||[]).forEach(p=>{if(p.n==='matrix')out[p.n]=data.correlation_matrix;});}
     outputs.set(bid,out);
@@ -2501,6 +2513,7 @@ function _autoSave(){
         body:JSON.stringify({name:_curJobName,canvas:JSON.parse(data)})
       }).catch(function(){});
     }
+    _scheduleJobAutosave();
   },1500);
 }
 // Hook into block/wire changes for auto-save
@@ -2563,6 +2576,35 @@ function _loadExNewTab(ex){
 }
 
 // ── JOBS MODAL ────────────────────────────────────────────────────
+// Always save every tab to jobs/<timestamp>/ as separate tab files.
+var _jobAutosaveSession='autosave_'+new Date().toISOString().replace(/[:.]/g,'-').slice(0,19);
+var _jobAutosaveTimer=null,_jobAutosaveBusy=false;
+function _tabCanvasForAutosave(t){
+  if(t.id===_activeTab)return canvasToJSON();
+  if(t.data){try{return JSON.parse(t.data);}catch(e){}}
+  return {version:'3.2',title:t.label||t.id,created:new Date().toISOString(),blocks:[],wires:[]};
+}
+function _collectTabsForAutosave(){
+  _saveCurTabData();
+  return _tabs.map(function(t){return{id:t.id,label:t.label,active:t.id===_activeTab,canvas:_tabCanvasForAutosave(t)};});
+}
+function _scheduleJobAutosave(){
+  clearTimeout(_jobAutosaveTimer);
+  _jobAutosaveTimer=setTimeout(function(){_autosaveTabsToJobs(false);},1000);
+}
+async function _autosaveTabsToJobs(force){
+  if(_jobAutosaveBusy)return;
+  if(!force&&ST.settings&&ST.settings.autoSave===false)return;
+  _jobAutosaveBusy=true;
+  try{
+    var tabs=_collectTabsForAutosave();
+    await fetch('/api/jobs/autosave-tabs',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({sessionId:_jobAutosaveSession,activeTab:_activeTab,tabs:tabs})});
+  }catch(e){}finally{_jobAutosaveBusy=false;}
+}
+setInterval(function(){_autosaveTabsToJobs(false);},5000);
+window._autosaveTabsToJobs=_autosaveTabsToJobs;
+
 function openJobsModal(){
   var box=$('modal-box'),ov=$('modal-ov');if(!box||!ov)return;
   box.style.width='600px';

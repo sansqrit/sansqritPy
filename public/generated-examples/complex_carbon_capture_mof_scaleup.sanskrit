@@ -1,0 +1,267 @@
+{
+  "id": "complex_carbon_capture_mof_scaleup",
+  "title": "Carbon Capture MOF Scale-Up Decision Stack",
+  "cat": "Complex Materials",
+  "diff": "Advanced",
+  "desc": "Ranks capture materials while balancing CO2 selectivity, regeneration energy, polymer synthesis, and grid integration.",
+  "blocks": [
+    {
+      "id": "a1",
+      "type": "applied_carbon_capture_materials",
+      "x": 80,
+      "y": 150,
+      "params": {
+        "method": "GCMC surrogate",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a2",
+      "type": "applied_hydrogen_storage_material_design",
+      "x": 360,
+      "y": 150,
+      "params": {
+        "method": "Adsorption descriptor screen",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a3",
+      "type": "applied_polymer_synthesis_modeling",
+      "x": 640,
+      "y": 150,
+      "params": {
+        "method": "Kinetic Monte Carlo",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a4",
+      "type": "applied_topological_insulator_discovery",
+      "x": 920,
+      "y": 150,
+      "params": {
+        "method": "Band inversion screen",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a5",
+      "type": "applied_catalyst_design_for_nitrogen_fixation",
+      "x": 80,
+      "y": 330,
+      "params": {
+        "method": "DFT descriptor screen",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a6",
+      "type": "applied_nanomaterial_electronic_properties",
+      "x": 360,
+      "y": 330,
+      "params": {
+        "method": "Tight binding",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a7",
+      "type": "applied_power_grid_load_balancing",
+      "x": 640,
+      "y": 330,
+      "params": {
+        "method": "OPF",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a8",
+      "type": "applied_battery_chemistry_lithium_sulfur",
+      "x": 920,
+      "y": 330,
+      "params": {
+        "method": "Electrochemical surrogate",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a9",
+      "type": "applied_high_temperature_superconductors",
+      "x": 80,
+      "y": 510,
+      "params": {
+        "method": "Graph neural surrogate",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a10",
+      "type": "applied_photovoltaic_efficiency_optimization",
+      "x": 360,
+      "y": 510,
+      "params": {
+        "method": "Shockley-Queisser proxy",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a11",
+      "type": "applied_renewable_energy_forecasting",
+      "x": 640,
+      "y": 510,
+      "params": {
+        "method": "Temporal transformer",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "prof",
+      "type": "profile",
+      "x": 80,
+      "y": 740,
+      "params": {}
+    },
+    {
+      "id": "tbl",
+      "type": "table_display",
+      "x": 360,
+      "y": 740,
+      "params": {
+        "title": "Carbon Capture MOF Scale-Up Decision Stack Results",
+        "page_size": 50
+      }
+    },
+    {
+      "id": "bar",
+      "type": "bar_chart",
+      "x": 640,
+      "y": 740,
+      "params": {
+        "title": "Carbon Capture MOF Scale-Up Decision Stack Score Ranking",
+        "orientation": "vertical"
+      }
+    },
+    {
+      "id": "pview",
+      "type": "profile_display",
+      "x": 920,
+      "y": 740,
+      "params": {
+        "title": "Carbon Capture MOF Scale-Up Decision Stack Profile"
+      }
+    },
+    {
+      "id": "log",
+      "type": "log_block",
+      "x": 1200,
+      "y": 740,
+      "params": {
+        "label": "Scenario recommendation report"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "a1",
+      "fromPort": "dataset",
+      "toId": "a2",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a2",
+      "fromPort": "dataset",
+      "toId": "a3",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a3",
+      "fromPort": "dataset",
+      "toId": "a4",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a4",
+      "fromPort": "dataset",
+      "toId": "a5",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a5",
+      "fromPort": "dataset",
+      "toId": "a6",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a6",
+      "fromPort": "dataset",
+      "toId": "a7",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a7",
+      "fromPort": "dataset",
+      "toId": "a8",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a8",
+      "fromPort": "dataset",
+      "toId": "a9",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a9",
+      "fromPort": "dataset",
+      "toId": "a10",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a10",
+      "fromPort": "dataset",
+      "toId": "a11",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a11",
+      "fromPort": "dataset",
+      "toId": "prof",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a11",
+      "fromPort": "dataset",
+      "toId": "tbl",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a11",
+      "fromPort": "dataset",
+      "toId": "bar",
+      "toPort": "data"
+    },
+    {
+      "fromId": "prof",
+      "fromPort": "profile",
+      "toId": "pview",
+      "toPort": "profile"
+    },
+    {
+      "fromId": "a11",
+      "fromPort": "report",
+      "toId": "log",
+      "toPort": "in"
+    }
+  ]
+}

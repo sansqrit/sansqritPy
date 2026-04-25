@@ -1936,9 +1936,10 @@ export const searchBlocks = (query) => {
 // ── Merge extra block files ───────────────────────────────────────────────
 import { EXTRA_BLOCKS, EXTRA_CATEGORIES } from "./registry_extra.js";
 import { EXTRA_BLOCKS_B } from "./registry_extra_b.js";
+import { EXTRA_DOMAIN_BLOCKS, EXTRA_DOMAIN_CATEGORIES } from "./registry_domain_expansion.js";
 
-Object.assign(CATEGORIES, EXTRA_CATEGORIES);
-BLOCKS.push(...EXTRA_BLOCKS, ...EXTRA_BLOCKS_B);
+Object.assign(CATEGORIES, EXTRA_CATEGORIES, EXTRA_DOMAIN_CATEGORIES);
+BLOCKS.push(...EXTRA_BLOCKS, ...EXTRA_BLOCKS_B, ...EXTRA_DOMAIN_BLOCKS);
 
 // Log block count at import time (visible in server console)
 console.log(`[registry] Loaded ${BLOCKS.length} blocks across ${Object.keys(CATEGORIES).length} categories`);

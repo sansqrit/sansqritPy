@@ -1,0 +1,254 @@
+{
+  "id": "complex_energy_grid_renewables_dispatch",
+  "title": "Energy Grid Renewables Dispatch",
+  "cat": "Complex Energy",
+  "diff": "Advanced",
+  "desc": "Forecasts renewable energy, balances grid load, models storage chemistry, hydrogen storage, and carbon capture operations.",
+  "blocks": [
+    {
+      "id": "a1",
+      "type": "applied_photovoltaic_efficiency_optimization",
+      "x": 80,
+      "y": 140,
+      "params": {
+        "method": "Shockley-Queisser proxy",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a2",
+      "type": "applied_renewable_energy_forecasting",
+      "x": 360,
+      "y": 140,
+      "params": {
+        "method": "Temporal transformer",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a3",
+      "type": "applied_global_climate_modeling",
+      "x": 640,
+      "y": 140,
+      "params": {
+        "method": "Earth system surrogate",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a4",
+      "type": "applied_polar_ice_sheet_modeling",
+      "x": 920,
+      "y": 140,
+      "params": {
+        "method": "Ice flow model",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a5",
+      "type": "applied_battery_chemistry_lithium_sulfur",
+      "x": 1200,
+      "y": 140,
+      "params": {
+        "method": "Electrochemical surrogate",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a6",
+      "type": "applied_high_temperature_superconductors",
+      "x": 80,
+      "y": 300,
+      "params": {
+        "method": "Graph neural surrogate",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a7",
+      "type": "applied_weather_pattern_prediction",
+      "x": 360,
+      "y": 300,
+      "params": {
+        "method": "Weather Pattern Prediction",
+        "sample_size": 48,
+        "confidence_target": 0.864,
+        "scenario_role": "enrichment solver"
+      }
+    },
+    {
+      "id": "a8",
+      "type": "applied_ocean_current_simulation",
+      "x": 640,
+      "y": 300,
+      "params": {
+        "method": "Ocean Current Simulation",
+        "sample_size": 52,
+        "confidence_target": 0.876,
+        "scenario_role": "enrichment solver"
+      }
+    },
+    {
+      "id": "a9",
+      "type": "applied_urban_heat_island_mitigation",
+      "x": 920,
+      "y": 300,
+      "params": {
+        "method": "Urban Heat Island Mitigation",
+        "sample_size": 56,
+        "confidence_target": 0.888,
+        "scenario_role": "enrichment solver"
+      }
+    },
+    {
+      "id": "a10",
+      "type": "applied_power_grid_load_balancing",
+      "x": 1200,
+      "y": 300,
+      "params": {
+        "method": "Power Grid Load Balancing",
+        "sample_size": 60,
+        "confidence_target": 0.9,
+        "scenario_role": "enrichment solver"
+      }
+    },
+    {
+      "id": "prof",
+      "type": "profile",
+      "x": 80,
+      "y": 520,
+      "params": {}
+    },
+    {
+      "id": "tbl",
+      "type": "table_display",
+      "x": 360,
+      "y": 520,
+      "params": {
+        "title": "Energy Grid Renewables Dispatch Results",
+        "page_size": 50
+      }
+    },
+    {
+      "id": "bar",
+      "type": "bar_chart",
+      "x": 640,
+      "y": 520,
+      "params": {
+        "title": "Energy Grid Renewables Dispatch Score Ranking",
+        "orientation": "vertical"
+      }
+    },
+    {
+      "id": "pview",
+      "type": "profile_display",
+      "x": 920,
+      "y": 520,
+      "params": {
+        "title": "Energy Grid Renewables Dispatch Profile"
+      }
+    },
+    {
+      "id": "log",
+      "type": "log_block",
+      "x": 1200,
+      "y": 520,
+      "params": {
+        "label": "Scenario recommendation report"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "a1",
+      "fromPort": "dataset",
+      "toId": "a2",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a2",
+      "fromPort": "dataset",
+      "toId": "a3",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a3",
+      "fromPort": "dataset",
+      "toId": "a4",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a4",
+      "fromPort": "dataset",
+      "toId": "a5",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a5",
+      "fromPort": "dataset",
+      "toId": "a6",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a6",
+      "fromPort": "dataset",
+      "toId": "a7",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a7",
+      "fromPort": "dataset",
+      "toId": "a8",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a8",
+      "fromPort": "dataset",
+      "toId": "a9",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a9",
+      "fromPort": "dataset",
+      "toId": "a10",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a10",
+      "fromPort": "dataset",
+      "toId": "prof",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a10",
+      "fromPort": "dataset",
+      "toId": "tbl",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a10",
+      "fromPort": "dataset",
+      "toId": "bar",
+      "toPort": "data"
+    },
+    {
+      "fromId": "prof",
+      "fromPort": "profile",
+      "toId": "pview",
+      "toPort": "profile"
+    },
+    {
+      "fromId": "a10",
+      "fromPort": "report",
+      "toId": "log",
+      "toPort": "in"
+    }
+  ]
+}

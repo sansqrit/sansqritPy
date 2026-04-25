@@ -1,0 +1,267 @@
+{
+  "id": "complex_vaccine_response_design_loop",
+  "title": "Vaccine Response and Adjuvant Design Loop",
+  "cat": "Complex Biomedical",
+  "diff": "Advanced",
+  "desc": "Designs adjuvants and antibody-antigen response while checking capsid dynamics, immune targets, PK/PD, and trial readiness.",
+  "blocks": [
+    {
+      "id": "a1",
+      "type": "applied_in_silico_clinical_trials",
+      "x": 80,
+      "y": 150,
+      "params": {
+        "method": "Agent cohort simulation",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a2",
+      "type": "applied_neurological_pathway_simulation",
+      "x": 360,
+      "y": 150,
+      "params": {
+        "method": "Neural mass model",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a3",
+      "type": "applied_pharmacokinetics_modeling",
+      "x": 640,
+      "y": 150,
+      "params": {
+        "method": "Compartment model",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a4",
+      "type": "applied_protein_protein_interaction_networks",
+      "x": 920,
+      "y": 150,
+      "params": {
+        "method": "Graph clustering",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a5",
+      "type": "applied_allosteric_regulation_modeling",
+      "x": 80,
+      "y": 330,
+      "params": {
+        "method": "MD covariance network",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a6",
+      "type": "applied_cancer_immunotherapy_targeting",
+      "x": 360,
+      "y": 330,
+      "params": {
+        "method": "Neoantigen ranking",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a7",
+      "type": "applied_drug_repurposing_screens",
+      "x": 640,
+      "y": 330,
+      "params": {
+        "method": "Connectivity Map",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a8",
+      "type": "applied_metabolomics_pathway_analysis",
+      "x": 920,
+      "y": 330,
+      "params": {
+        "method": "Pathway enrichment",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a9",
+      "type": "applied_personalized_genomic_sequencing",
+      "x": 80,
+      "y": 510,
+      "params": {
+        "method": "Variant annotation",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a10",
+      "type": "applied_post_translational_modification_modeling",
+      "x": 360,
+      "y": 510,
+      "params": {
+        "method": "Motif model",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a11",
+      "type": "applied_vaccine_adjuvant_design",
+      "x": 640,
+      "y": 510,
+      "params": {
+        "method": "Immune response surrogate",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "prof",
+      "type": "profile",
+      "x": 80,
+      "y": 740,
+      "params": {}
+    },
+    {
+      "id": "tbl",
+      "type": "table_display",
+      "x": 360,
+      "y": 740,
+      "params": {
+        "title": "Vaccine Response and Adjuvant Design Loop Results",
+        "page_size": 50
+      }
+    },
+    {
+      "id": "bar",
+      "type": "bar_chart",
+      "x": 640,
+      "y": 740,
+      "params": {
+        "title": "Vaccine Response and Adjuvant Design Loop Score Ranking",
+        "orientation": "vertical"
+      }
+    },
+    {
+      "id": "pview",
+      "type": "profile_display",
+      "x": 920,
+      "y": 740,
+      "params": {
+        "title": "Vaccine Response and Adjuvant Design Loop Profile"
+      }
+    },
+    {
+      "id": "log",
+      "type": "log_block",
+      "x": 1200,
+      "y": 740,
+      "params": {
+        "label": "Scenario recommendation report"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "a1",
+      "fromPort": "dataset",
+      "toId": "a2",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a2",
+      "fromPort": "dataset",
+      "toId": "a3",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a3",
+      "fromPort": "dataset",
+      "toId": "a4",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a4",
+      "fromPort": "dataset",
+      "toId": "a5",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a5",
+      "fromPort": "dataset",
+      "toId": "a6",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a6",
+      "fromPort": "dataset",
+      "toId": "a7",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a7",
+      "fromPort": "dataset",
+      "toId": "a8",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a8",
+      "fromPort": "dataset",
+      "toId": "a9",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a9",
+      "fromPort": "dataset",
+      "toId": "a10",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a10",
+      "fromPort": "dataset",
+      "toId": "a11",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a11",
+      "fromPort": "dataset",
+      "toId": "prof",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a11",
+      "fromPort": "dataset",
+      "toId": "tbl",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a11",
+      "fromPort": "dataset",
+      "toId": "bar",
+      "toPort": "data"
+    },
+    {
+      "fromId": "prof",
+      "fromPort": "profile",
+      "toId": "pview",
+      "toPort": "profile"
+    },
+    {
+      "fromId": "a11",
+      "fromPort": "report",
+      "toId": "log",
+      "toPort": "in"
+    }
+  ]
+}

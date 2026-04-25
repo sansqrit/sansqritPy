@@ -1,0 +1,449 @@
+{
+  "version": "3.2",
+  "title": "Sanskrit Canvas",
+  "created": "2026-04-25T11:08:53.753Z",
+  "blocks": [
+    {
+      "id": "a1",
+      "uid": "a1",
+      "type": "applied_dft_optimization",
+      "x": 80,
+      "y": 150,
+      "params": {
+        "domain_id": "domain_molecular",
+        "problem_name": "DFT Optimization",
+        "method": "B3LYP/6-31G*",
+        "objective": "minimize total energy",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 20,
+        "confidence_target": 0.84,
+        "output_var": "result_6"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "a2",
+      "uid": "a2",
+      "type": "applied_hartree_fock_method_enhancements",
+      "x": 360,
+      "y": 150,
+      "params": {
+        "domain_id": "domain_molecular",
+        "problem_name": "Hartree-Fock Method Enhancements",
+        "method": "DIIS",
+        "objective": "minimize SCF residual",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 20,
+        "confidence_target": 0.84,
+        "output_var": "result_7"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "a3",
+      "uid": "a3",
+      "type": "applied_molecular_docking",
+      "x": 640,
+      "y": 150,
+      "params": {
+        "domain_id": "domain_molecular",
+        "problem_name": "Molecular Docking",
+        "method": "AutoDock Vina",
+        "objective": "minimize binding free energy",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 20,
+        "confidence_target": 0.84,
+        "output_var": "result_1"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "a4",
+      "uid": "a4",
+      "type": "applied_protein_folding",
+      "x": 920,
+      "y": 150,
+      "params": {
+        "domain_id": "domain_molecular",
+        "problem_name": "Protein Folding",
+        "method": "AlphaFold style inference",
+        "objective": "maximize fold confidence",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 20,
+        "confidence_target": 0.84,
+        "output_var": "result_2"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "a5",
+      "uid": "a5",
+      "type": "applied_solvent_solute_interaction_modeling",
+      "x": 80,
+      "y": 330,
+      "params": {
+        "domain_id": "domain_molecular",
+        "problem_name": "Solvent-Solute Interaction Modeling",
+        "method": "PCM/SMD",
+        "objective": "minimize solvation free energy",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 20,
+        "confidence_target": 0.84,
+        "output_var": "result_10"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "a6",
+      "uid": "a6",
+      "type": "applied_antibody_antigen_binding_dynamics",
+      "x": 360,
+      "y": 330,
+      "params": {
+        "domain_id": "domain_biomed",
+        "problem_name": "Antibody-Antigen Binding Dynamics",
+        "method": "Rosetta interface",
+        "objective": "maximize neutralization proxy",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 20,
+        "confidence_target": 0.84,
+        "output_var": "result_28"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "a7",
+      "uid": "a7",
+      "type": "applied_crispr_cas9_target_optimization",
+      "x": 640,
+      "y": 330,
+      "params": {
+        "domain_id": "domain_biomed",
+        "problem_name": "CRISPR-Cas9 Target Optimization",
+        "method": "Azimuth score",
+        "objective": "maximize specificity",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 20,
+        "confidence_target": 0.84,
+        "output_var": "result_40"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "a8",
+      "uid": "a8",
+      "type": "applied_drug_toxicity_prediction",
+      "x": 920,
+      "y": 330,
+      "params": {
+        "domain_id": "domain_biomed",
+        "problem_name": "Drug Toxicity Prediction",
+        "method": "Tox21 ensemble",
+        "objective": "minimize toxicity risk",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 20,
+        "confidence_target": 0.84,
+        "output_var": "result_31"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "a9",
+      "uid": "a9",
+      "type": "applied_microbiome_functional_analysis",
+      "x": 80,
+      "y": 510,
+      "params": {
+        "domain_id": "domain_biomed",
+        "problem_name": "Microbiome Functional Analysis",
+        "method": "Metagenomic pathway model",
+        "objective": "maximize functional signal",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 20,
+        "confidence_target": 0.84,
+        "output_var": "result_41"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "a10",
+      "uid": "a10",
+      "type": "applied_pharmacodynamics_modeling",
+      "x": 360,
+      "y": 510,
+      "params": {
+        "domain_id": "domain_biomed",
+        "problem_name": "Pharmacodynamics Modeling",
+        "method": "Emax model",
+        "objective": "maximize therapeutic index",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 20,
+        "confidence_target": 0.84,
+        "output_var": "result_36"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "a11",
+      "uid": "a11",
+      "type": "applied_protein_aggregation_dynamics",
+      "x": 640,
+      "y": 510,
+      "params": {
+        "domain_id": "domain_biomed",
+        "problem_name": "Protein Aggregation Dynamics",
+        "method": "Coarse-grained MD",
+        "objective": "minimize aggregation risk",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 20,
+        "confidence_target": 0.84,
+        "output_var": "result_45"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "a12",
+      "uid": "a12",
+      "type": "applied_viral_capsid_assembly_simulation",
+      "x": 920,
+      "y": 510,
+      "params": {
+        "domain_id": "domain_biomed",
+        "problem_name": "Viral Capsid Assembly Simulation",
+        "method": "Coarse-grained MD",
+        "objective": "minimize malformed assembly",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 20,
+        "confidence_target": 0.84,
+        "output_var": "result_30"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "prof",
+      "uid": "prof",
+      "type": "profile",
+      "x": 80,
+      "y": 740,
+      "params": {},
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "tbl",
+      "uid": "tbl",
+      "type": "table_display",
+      "x": 360,
+      "y": 740,
+      "params": {
+        "title": "Real-Time Antiviral Lead Factory Results",
+        "page_size": 50,
+        "show_bars": "true"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "bar",
+      "uid": "bar",
+      "type": "bar_chart",
+      "x": 640,
+      "y": 740,
+      "params": {
+        "title": "Real-Time Antiviral Lead Factory Score Ranking",
+        "orientation": "vertical"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "pview",
+      "uid": "pview",
+      "type": "profile_display",
+      "x": 920,
+      "y": 740,
+      "params": {
+        "title": "Real-Time Antiviral Lead Factory Profile"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "log",
+      "uid": "log",
+      "type": "log_block",
+      "x": 1200,
+      "y": 740,
+      "params": {
+        "label": "Scenario recommendation report"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fid": "a1",
+      "fp": "dataset",
+      "tid": "a2",
+      "tp": "dataset"
+    },
+    {
+      "fid": "a2",
+      "fp": "dataset",
+      "tid": "a3",
+      "tp": "dataset"
+    },
+    {
+      "fid": "a3",
+      "fp": "dataset",
+      "tid": "a4",
+      "tp": "dataset"
+    },
+    {
+      "fid": "a4",
+      "fp": "dataset",
+      "tid": "a5",
+      "tp": "dataset"
+    },
+    {
+      "fid": "a5",
+      "fp": "dataset",
+      "tid": "a6",
+      "tp": "dataset"
+    },
+    {
+      "fid": "a6",
+      "fp": "dataset",
+      "tid": "a7",
+      "tp": "dataset"
+    },
+    {
+      "fid": "a7",
+      "fp": "dataset",
+      "tid": "a8",
+      "tp": "dataset"
+    },
+    {
+      "fid": "a8",
+      "fp": "dataset",
+      "tid": "a9",
+      "tp": "dataset"
+    },
+    {
+      "fid": "a9",
+      "fp": "dataset",
+      "tid": "a10",
+      "tp": "dataset"
+    },
+    {
+      "fid": "a10",
+      "fp": "dataset",
+      "tid": "a11",
+      "tp": "dataset"
+    },
+    {
+      "fid": "a11",
+      "fp": "dataset",
+      "tid": "a12",
+      "tp": "dataset"
+    },
+    {
+      "fid": "a12",
+      "fp": "dataset",
+      "tid": "prof",
+      "tp": "dataset"
+    },
+    {
+      "fid": "a12",
+      "fp": "dataset",
+      "tid": "tbl",
+      "tp": "dataset"
+    },
+    {
+      "fid": "a12",
+      "fp": "dataset",
+      "tid": "bar",
+      "tp": "data"
+    },
+    {
+      "fid": "prof",
+      "fp": "profile",
+      "tid": "pview",
+      "tp": "profile"
+    },
+    {
+      "fid": "a12",
+      "fp": "report",
+      "tid": "log",
+      "tp": "in"
+    }
+  ],
+  "name": "Real-Time Antiviral Lead Factory",
+  "tabId": "t1777115086665",
+  "active": true,
+  "savedAt": "2026-04-25T11:08:53.758Z"
+}

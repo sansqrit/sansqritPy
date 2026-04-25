@@ -1,0 +1,284 @@
+{
+  "id": "complex_protein_design_safety_review",
+  "title": "De Novo Protein Design Safety Review",
+  "cat": "Complex Biomedical",
+  "diff": "Expert",
+  "desc": "Generates protein designs, screens folding, aggregation, PTMs, PPI networks, and antibody-antigen binding dynamics.",
+  "blocks": [
+    {
+      "id": "a1",
+      "type": "applied_protein_protein_interaction_networks",
+      "x": 80,
+      "y": 150,
+      "params": {
+        "method": "Graph clustering",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a2",
+      "type": "applied_dft_optimization",
+      "x": 360,
+      "y": 150,
+      "params": {
+        "method": "B3LYP/6-31G*",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a3",
+      "type": "applied_hartree_fock_method_enhancements",
+      "x": 640,
+      "y": 150,
+      "params": {
+        "method": "DIIS",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a4",
+      "type": "applied_molecular_docking",
+      "x": 920,
+      "y": 150,
+      "params": {
+        "method": "AutoDock Vina",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a5",
+      "type": "applied_protein_folding",
+      "x": 80,
+      "y": 330,
+      "params": {
+        "method": "AlphaFold style inference",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a6",
+      "type": "applied_solvent_solute_interaction_modeling",
+      "x": 360,
+      "y": 330,
+      "params": {
+        "method": "PCM/SMD",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a7",
+      "type": "applied_antibody_antigen_binding_dynamics",
+      "x": 640,
+      "y": 330,
+      "params": {
+        "method": "Rosetta interface",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a8",
+      "type": "applied_crispr_cas9_target_optimization",
+      "x": 920,
+      "y": 330,
+      "params": {
+        "method": "Azimuth score",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a9",
+      "type": "applied_drug_toxicity_prediction",
+      "x": 80,
+      "y": 510,
+      "params": {
+        "method": "Tox21 ensemble",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a10",
+      "type": "applied_microbiome_functional_analysis",
+      "x": 360,
+      "y": 510,
+      "params": {
+        "method": "Metagenomic pathway model",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a11",
+      "type": "applied_pharmacodynamics_modeling",
+      "x": 640,
+      "y": 510,
+      "params": {
+        "method": "Emax model",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a12",
+      "type": "applied_protein_aggregation_dynamics",
+      "x": 920,
+      "y": 510,
+      "params": {
+        "method": "Coarse-grained MD",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "prof",
+      "type": "profile",
+      "x": 80,
+      "y": 740,
+      "params": {}
+    },
+    {
+      "id": "tbl",
+      "type": "table_display",
+      "x": 360,
+      "y": 740,
+      "params": {
+        "title": "De Novo Protein Design Safety Review Results",
+        "page_size": 50
+      }
+    },
+    {
+      "id": "bar",
+      "type": "bar_chart",
+      "x": 640,
+      "y": 740,
+      "params": {
+        "title": "De Novo Protein Design Safety Review Score Ranking",
+        "orientation": "vertical"
+      }
+    },
+    {
+      "id": "pview",
+      "type": "profile_display",
+      "x": 920,
+      "y": 740,
+      "params": {
+        "title": "De Novo Protein Design Safety Review Profile"
+      }
+    },
+    {
+      "id": "log",
+      "type": "log_block",
+      "x": 1200,
+      "y": 740,
+      "params": {
+        "label": "Scenario recommendation report"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "a1",
+      "fromPort": "dataset",
+      "toId": "a2",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a2",
+      "fromPort": "dataset",
+      "toId": "a3",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a3",
+      "fromPort": "dataset",
+      "toId": "a4",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a4",
+      "fromPort": "dataset",
+      "toId": "a5",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a5",
+      "fromPort": "dataset",
+      "toId": "a6",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a6",
+      "fromPort": "dataset",
+      "toId": "a7",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a7",
+      "fromPort": "dataset",
+      "toId": "a8",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a8",
+      "fromPort": "dataset",
+      "toId": "a9",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a9",
+      "fromPort": "dataset",
+      "toId": "a10",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a10",
+      "fromPort": "dataset",
+      "toId": "a11",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a11",
+      "fromPort": "dataset",
+      "toId": "a12",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a12",
+      "fromPort": "dataset",
+      "toId": "prof",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a12",
+      "fromPort": "dataset",
+      "toId": "tbl",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a12",
+      "fromPort": "dataset",
+      "toId": "bar",
+      "toPort": "data"
+    },
+    {
+      "fromId": "prof",
+      "fromPort": "profile",
+      "toId": "pview",
+      "toPort": "profile"
+    },
+    {
+      "fromId": "a12",
+      "fromPort": "report",
+      "toId": "log",
+      "toPort": "in"
+    }
+  ]
+}

@@ -1,0 +1,252 @@
+{
+  "id": "complex_autonomous_lab_reaction_pathways",
+  "title": "Autonomous Lab Reaction Pathways",
+  "cat": "Complex Chemistry",
+  "diff": "Expert",
+  "desc": "Runs reaction pathway search, isomerization, transition states, solvation, retrosynthesis, and robotic experiment selection.",
+  "blocks": [
+    {
+      "id": "a1",
+      "type": "applied_excitation_energy_calculations",
+      "x": 80,
+      "y": 140,
+      "params": {
+        "method": "TD-DFT",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a2",
+      "type": "applied_metalloenzyme_inhibitor_design",
+      "x": 360,
+      "y": 140,
+      "params": {
+        "method": "Docking with metal constraints",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a3",
+      "type": "applied_non_covalent_interaction_analysis",
+      "x": 640,
+      "y": 140,
+      "params": {
+        "method": "SAPT",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a4",
+      "type": "applied_small_molecule_binding_affinity",
+      "x": 920,
+      "y": 140,
+      "params": {
+        "method": "QSAR ensemble",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a5",
+      "type": "applied_air_traffic_control_management",
+      "x": 1200,
+      "y": 140,
+      "params": {
+        "method": "Conflict graph coloring",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a6",
+      "type": "applied_last_mile_delivery_logistics",
+      "x": 80,
+      "y": 300,
+      "params": {
+        "method": "VRPTW",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a7",
+      "type": "applied_robotic_path_planning",
+      "x": 360,
+      "y": 300,
+      "params": {
+        "method": "A*",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a8",
+      "type": "applied_warehouse_layout_design",
+      "x": 640,
+      "y": 300,
+      "params": {
+        "method": "Facility layout optimizer",
+        "sample_size": 20,
+        "confidence_target": 0.84
+      }
+    },
+    {
+      "id": "a9",
+      "type": "applied_molecular_docking",
+      "x": 920,
+      "y": 300,
+      "params": {
+        "method": "Molecular Docking",
+        "sample_size": 56,
+        "confidence_target": 0.888,
+        "scenario_role": "enrichment solver"
+      }
+    },
+    {
+      "id": "a10",
+      "type": "applied_dft_optimization",
+      "x": 1200,
+      "y": 300,
+      "params": {
+        "method": "Dft Optimization",
+        "sample_size": 60,
+        "confidence_target": 0.9,
+        "scenario_role": "enrichment solver"
+      }
+    },
+    {
+      "id": "prof",
+      "type": "profile",
+      "x": 80,
+      "y": 520,
+      "params": {}
+    },
+    {
+      "id": "tbl",
+      "type": "table_display",
+      "x": 360,
+      "y": 520,
+      "params": {
+        "title": "Autonomous Lab Reaction Pathways Results",
+        "page_size": 50
+      }
+    },
+    {
+      "id": "bar",
+      "type": "bar_chart",
+      "x": 640,
+      "y": 520,
+      "params": {
+        "title": "Autonomous Lab Reaction Pathways Score Ranking",
+        "orientation": "vertical"
+      }
+    },
+    {
+      "id": "pview",
+      "type": "profile_display",
+      "x": 920,
+      "y": 520,
+      "params": {
+        "title": "Autonomous Lab Reaction Pathways Profile"
+      }
+    },
+    {
+      "id": "log",
+      "type": "log_block",
+      "x": 1200,
+      "y": 520,
+      "params": {
+        "label": "Scenario recommendation report"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "a1",
+      "fromPort": "dataset",
+      "toId": "a2",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a2",
+      "fromPort": "dataset",
+      "toId": "a3",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a3",
+      "fromPort": "dataset",
+      "toId": "a4",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a4",
+      "fromPort": "dataset",
+      "toId": "a5",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a5",
+      "fromPort": "dataset",
+      "toId": "a6",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a6",
+      "fromPort": "dataset",
+      "toId": "a7",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a7",
+      "fromPort": "dataset",
+      "toId": "a8",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a8",
+      "fromPort": "dataset",
+      "toId": "a9",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a9",
+      "fromPort": "dataset",
+      "toId": "a10",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a10",
+      "fromPort": "dataset",
+      "toId": "prof",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a10",
+      "fromPort": "dataset",
+      "toId": "tbl",
+      "toPort": "dataset"
+    },
+    {
+      "fromId": "a10",
+      "fromPort": "dataset",
+      "toId": "bar",
+      "toPort": "data"
+    },
+    {
+      "fromId": "prof",
+      "fromPort": "profile",
+      "toId": "pview",
+      "toPort": "profile"
+    },
+    {
+      "fromId": "a10",
+      "fromPort": "report",
+      "toId": "log",
+      "toPort": "in"
+    }
+  ]
+}
