@@ -99,7 +99,7 @@ export const BLOCKS = [
   // ═══════════════════════════════════════════════════════════════════════
   {
     id:'q_register', label:'Quantum Register', cat:'quantum_reg', color:'#0D9488', icon:'📦',
-    info:'N-qubit register. Auto-sharded above 10 qubits. Each shard tracks only non-zero amplitudes — enables 30+ qubit simulation on a laptop.',
+    info:'N-qubit register. Auto-sharded into 10-qubit sparse chunks; supports 120+ qubit local sampling/top-N summaries while exact merged entanglement groups stay bounded.',
     params:[pn('n_qubits','Qubits',2,1,200), ps('name','Register name','q'), psel('initial_state','Initial state',['|0...0⟩','|+...+⟩'],'|0...0⟩'), pb('log_on_create','Log shard map',true), ...BYPASS],
     inputs:[], outputs:[rOut()],
     toSq: p=>`let ${p.name} = qubits(${p.n_qubits})`,
@@ -331,7 +331,7 @@ export const BLOCKS = [
     info:'Returns [{state,re,im,prob}] sorted by probability. NON-DESTRUCTIVE — does not collapse.',
     params:[ps('register','Register','q'), pn('top_n','Top N states',10,1,1000), ps('output_var','Output','sv'), ...BYPASS],
     inputs:[rIn()], outputs:[rOut(), cOut('sv','State vector')],
-    toSq: p=>`let ${p.output_var} = statevector(${p.register})`,
+    toSq: p=>`let ${p.output_var} = statevector(${p.register}, top_n=${p.top_n})`,
   },
   {
     id:'probabilities_block', label:'Probabilities', cat:'quantum_meas', color:'#4338CA', icon:'P(x)',
@@ -347,9 +347,9 @@ export const BLOCKS = [
   {
     id:'qft_block', label:'QFT', cat:'quantum_algo', color:'#2563EB', icon:'QFT',
     info:'Quantum Fourier Transform. O(n²) CP+H gates. Core of Shor\'s and QPE.',
-    params:[ps('register','Register','q'), pn('n_qubits','Qubits',4,1,30), pb('inverse','Inverse QFT',false), pb('swap_bits','Bit reversal',true), ...BYPASS],
+    params:[ps('register','Register','q'), pn('n_qubits','Qubits',4,1,20), pn('offset','Offset',0,0,199), pb('inverse','Inverse QFT',false), pb('swap_bits','Bit reversal',true), ...BYPASS],
     inputs:[rIn()], outputs:[rOut()],
-    toSq: p=>`${p.inverse?'iqft':'qft'}(${p.register}, ${p.n_qubits})`,
+    toSq: p=>`${p.inverse?'iqft':'qft'}(${p.register}, n_qubits=${p.n_qubits}, offset=${p.offset||0})`,
   },
   {
     id:'vqe_block', label:'VQE', cat:'quantum_algo', color:'#2563EB', icon:'VQE',
@@ -651,10 +651,10 @@ export const BLOCKS = [
   },
   {
     id:'cross_shard_gate', label:'Cross-Shard Gate', cat:'sharding', color:'#65A30D', icon:'⊗',
-    info:'2-qubit gate spanning shard boundary. Uses Schmidt decomposition — avoids 20-qubit merge (6 GB .bin files).',
+    info:'2-qubit gate spanning a shard boundary. The engine merges only bounded exact entanglement groups; keep cross-shard groups at 20 qubits or less.',
     params:[pn('qubit_a','Global qubit A',9,0,199), pn('qubit_b','Global qubit B',10,0,199), psel('gate','Gate type',['CNOT','CZ','SWAP'],'CNOT'), pb('log_entanglement','Log entanglement',true), ...BYPASS],
     inputs:[rIn('a'), rIn('b')], outputs:[rOut('ao'), rOut('bo')],
-    toSq: p=>`CNOT(q[${p.qubit_a}], q[${p.qubit_b}])  # cross-shard via Schmidt`,
+    toSq: p=>`CNOT(q[${p.qubit_a}], q[${p.qubit_b}])  # exact bounded cross-shard merge`,
   },
 
   // ═══════════════════════════════════════════════════════════════════════

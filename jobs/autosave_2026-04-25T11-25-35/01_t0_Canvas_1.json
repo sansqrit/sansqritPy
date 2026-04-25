@@ -1,14 +1,14 @@
 {
   "version": "3.2",
   "title": "Sanskrit Canvas",
-  "created": "2026-04-25T11:26:18.301Z",
+  "created": "2026-04-25T12:14:06.760Z",
   "blocks": [
     {
       "id": "qr1",
       "uid": "qr1",
       "type": "quantum_register",
-      "x": 80,
-      "y": 80,
+      "x": 60,
+      "y": 40,
       "params": {
         "n_qubits": 2,
         "name": "q"
@@ -23,8 +23,8 @@
       "id": "qh1",
       "uid": "qh1",
       "type": "h_gate",
-      "x": 360,
-      "y": 80,
+      "x": 310,
+      "y": 40,
       "params": {
         "qubit": 0
       },
@@ -38,8 +38,8 @@
       "id": "qc1",
       "uid": "qc1",
       "type": "cnot_gate",
-      "x": 640,
-      "y": 80,
+      "x": 560,
+      "y": 40,
       "params": {
         "control": 0,
         "target": 1
@@ -54,8 +54,8 @@
       "id": "qm1",
       "uid": "qm1",
       "type": "measure_all",
-      "x": 920,
-      "y": 80,
+      "x": 810,
+      "y": 40,
       "params": {
         "shots": 1024
       },
@@ -69,8 +69,8 @@
       "id": "qv1",
       "uid": "qv1",
       "type": "histogram_chart",
-      "x": 1200,
-      "y": 80,
+      "x": 1060,
+      "y": 40,
       "params": {
         "title": "Bell State: 00 or 11",
         "color": "purple"
@@ -85,8 +85,8 @@
       "id": "ql1",
       "uid": "ql1",
       "type": "log_block",
-      "x": 1200,
-      "y": 260,
+      "x": 1310,
+      "y": 40,
       "params": {
         "label": "Quantum entanglement confirmed!"
       },
@@ -100,8 +100,8 @@
       "id": "gr1",
       "uid": "gr1",
       "type": "quantum_register",
-      "x": 80,
-      "y": 260,
+      "x": 60,
+      "y": 320,
       "params": {
         "n_qubits": 3,
         "name": "ghz"
@@ -116,8 +116,8 @@
       "id": "gh1",
       "uid": "gh1",
       "type": "h_gate",
-      "x": 360,
-      "y": 260,
+      "x": 310,
+      "y": 320,
       "params": {
         "qubit": 0
       },
@@ -131,7 +131,7 @@
       "id": "gc1",
       "uid": "gc1",
       "type": "cnot_gate",
-      "x": 640,
+      "x": 560,
       "y": 260,
       "params": {
         "control": 0,
@@ -147,8 +147,8 @@
       "id": "gc2",
       "uid": "gc2",
       "type": "cnot_gate",
-      "x": 920,
-      "y": 260,
+      "x": 560,
+      "y": 380,
       "params": {
         "control": 0,
         "target": 2
@@ -163,8 +163,8 @@
       "id": "gm1",
       "uid": "gm1",
       "type": "measure_all",
-      "x": 1200,
-      "y": 440,
+      "x": 810,
+      "y": 320,
       "params": {
         "shots": 512
       },
@@ -178,8 +178,8 @@
       "id": "gpc",
       "uid": "gpc",
       "type": "pie_chart",
-      "x": 1480,
-      "y": 80,
+      "x": 1060,
+      "y": 320,
       "params": {
         "title": "GHZ: Only 000 or 111"
       },
@@ -193,8 +193,8 @@
       "id": "ed1",
       "uid": "ed1",
       "type": "inline_data",
-      "x": 80,
-      "y": 440,
+      "x": 60,
+      "y": 620,
       "params": {
         "data": "[{\"date\":\"2024-01-15\",\"region\":\"North\",\"product\":\"Widget A\",\"units\":120,\"price\":25.5,\"revenue\":3060,\"cost\":1800},{\"date\":\"2024-01-16\",\"region\":\"South\",\"product\":\"Widget B\",\"units\":85,\"price\":42,\"revenue\":3570,\"cost\":2100},{\"date\":\"2024-01-17\",\"region\":\"East\",\"product\":\"Widget A\",\"units\":200,\"price\":25.5,\"revenue\":5100,\"cost\":3000},{\"date\":\"2024-01-18\",\"region\":\"West\",\"product\":\"Widget C\",\"units\":60,\"price\":78,\"revenue\":4680,\"cost\":2800},{\"date\":\"2024-01-19\",\"region\":\"North\",\"product\":\"Widget B\",\"units\":145,\"price\":42,\"revenue\":6090,\"cost\":3600},{\"date\":\"2024-01-20\",\"region\":\"South\",\"product\":\"Widget C\",\"units\":30,\"price\":78,\"revenue\":2340,\"cost\":1400},{\"date\":\"2024-01-21\",\"region\":\"East\",\"product\":\"Widget B\",\"units\":95,\"price\":42,\"revenue\":3990,\"cost\":2350},{\"date\":\"2024-01-22\",\"region\":\"West\",\"product\":\"Widget A\",\"units\":180,\"price\":25.5,\"revenue\":4590,\"cost\":2700},{\"date\":\"2024-01-23\",\"region\":\"North\",\"product\":\"Widget C\",\"units\":70,\"price\":78,\"revenue\":5460,\"cost\":3270},{\"date\":\"2024-01-24\",\"region\":\"South\",\"product\":\"Widget A\",\"units\":210,\"price\":25.5,\"revenue\":5355,\"cost\":3150}]"
       },
@@ -208,8 +208,8 @@
       "id": "ect",
       "uid": "ect",
       "type": "cast_types",
-      "x": 360,
-      "y": 440,
+      "x": 320,
+      "y": 620,
       "params": {
         "mapping": "{\"units\":\"integer\",\"revenue\":\"float\",\"cost\":\"float\",\"price\":\"float\"}"
       },
@@ -223,8 +223,8 @@
       "id": "eac",
       "uid": "eac",
       "type": "add_column",
-      "x": 640,
-      "y": 440,
+      "x": 580,
+      "y": 620,
       "params": {
         "name": "profit",
         "formula": "row[\"revenue\"] - row[\"cost\"]"
@@ -239,8 +239,8 @@
       "id": "efr",
       "uid": "efr",
       "type": "filter_rows",
-      "x": 920,
-      "y": 440,
+      "x": 840,
+      "y": 620,
       "params": {
         "column": "revenue",
         "operator": ">",
@@ -257,7 +257,7 @@
       "id": "egb",
       "uid": "egb",
       "type": "group_by",
-      "x": 1200,
+      "x": 1100,
       "y": 620,
       "params": {
         "group_by": "region",
@@ -273,8 +273,8 @@
       "id": "esr",
       "uid": "esr",
       "type": "sort_rows",
-      "x": 1480,
-      "y": 260,
+      "x": 1360,
+      "y": 620,
       "params": {
         "column": "total_rev",
         "order": "desc"
@@ -289,8 +289,8 @@
       "id": "etb",
       "uid": "etb",
       "type": "table_display",
-      "x": 1760,
-      "y": 80,
+      "x": 1620,
+      "y": 560,
       "params": {
         "title": "Revenue by Region",
         "page_size": 25,
@@ -306,8 +306,8 @@
       "id": "ebc",
       "uid": "ebc",
       "type": "bar_chart",
-      "x": 1760,
-      "y": 260,
+      "x": 1620,
+      "y": 820,
       "params": {
         "title": "Regional Revenue Chart",
         "orientation": "vertical"
@@ -322,8 +322,8 @@
       "id": "ep1",
       "uid": "ep1",
       "type": "profile",
-      "x": 1200,
-      "y": 800,
+      "x": 840,
+      "y": 880,
       "params": {},
       "flags": {
         "bypass": false,
@@ -335,8 +335,8 @@
       "id": "epd",
       "uid": "epd",
       "type": "profile_display",
-      "x": 1480,
-      "y": 440,
+      "x": 1100,
+      "y": 880,
       "params": {
         "title": "Sales Data Profile"
       },
@@ -350,8 +350,8 @@
       "id": "esc",
       "uid": "esc",
       "type": "scatter_chart",
-      "x": 1200,
-      "y": 980,
+      "x": 1360,
+      "y": 880,
       "params": {
         "title": "Units vs Revenue",
         "x_col": "units",
@@ -367,8 +367,8 @@
       "id": "elg",
       "uid": "elg",
       "type": "log_block",
-      "x": 1760,
-      "y": 440,
+      "x": 1620,
+      "y": 1060,
       "params": {
         "label": "ETL complete - see Tables and Charts tabs!"
       },
@@ -509,6 +509,6 @@
   ],
   "name": "Canvas 1",
   "tabId": "t0",
-  "active": false,
-  "savedAt": "2026-04-25T12:14:06.790Z"
+  "active": true,
+  "savedAt": "2026-04-25T12:14:06.780Z"
 }

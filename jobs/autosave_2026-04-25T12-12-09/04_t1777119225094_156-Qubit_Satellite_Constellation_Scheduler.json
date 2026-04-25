@@ -1,0 +1,564 @@
+{
+  "version": "3.2",
+  "title": "Sanskrit Canvas",
+  "created": "2026-04-25T12:14:45.750Z",
+  "blocks": [
+    {
+      "id": "large_qubit_012_q",
+      "uid": "large_qubit_012_q_uid",
+      "type": "quantum_register",
+      "x": 60,
+      "y": 160,
+      "params": {
+        "n_qubits": 156,
+        "name": "q"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b01",
+      "uid": "large_qubit_012_b01_uid",
+      "type": "x_gate",
+      "x": 300,
+      "y": 80,
+      "params": {
+        "qubit": 13
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b02",
+      "uid": "large_qubit_012_b02_uid",
+      "type": "x_gate",
+      "x": 510,
+      "y": 190,
+      "params": {
+        "qubit": 37
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b03",
+      "uid": "large_qubit_012_b03_uid",
+      "type": "x_gate",
+      "x": 720,
+      "y": 300,
+      "params": {
+        "qubit": 61
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b04",
+      "uid": "large_qubit_012_b04_uid",
+      "type": "x_gate",
+      "x": 930,
+      "y": 410,
+      "params": {
+        "qubit": 85
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b05",
+      "uid": "large_qubit_012_b05_uid",
+      "type": "x_gate",
+      "x": 1140,
+      "y": 80,
+      "params": {
+        "qubit": 109
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b06",
+      "uid": "large_qubit_012_b06_uid",
+      "type": "x_gate",
+      "x": 1350,
+      "y": 190,
+      "params": {
+        "qubit": 133
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b07",
+      "uid": "large_qubit_012_b07_uid",
+      "type": "h_gate",
+      "x": 1560,
+      "y": 300,
+      "params": {
+        "qubit": 9
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b08",
+      "uid": "large_qubit_012_b08_uid",
+      "type": "h_gate",
+      "x": 1770,
+      "y": 410,
+      "params": {
+        "qubit": 29
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b09",
+      "uid": "large_qubit_012_b09_uid",
+      "type": "h_gate",
+      "x": 1980,
+      "y": 80,
+      "params": {
+        "qubit": 49
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b10",
+      "uid": "large_qubit_012_b10_uid",
+      "type": "h_gate",
+      "x": 300,
+      "y": 300,
+      "params": {
+        "qubit": 69
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b11",
+      "uid": "large_qubit_012_b11_uid",
+      "type": "h_gate",
+      "x": 510,
+      "y": 410,
+      "params": {
+        "qubit": 89
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b12",
+      "uid": "large_qubit_012_b12_uid",
+      "type": "h_gate",
+      "x": 720,
+      "y": 80,
+      "params": {
+        "qubit": 109
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b13",
+      "uid": "large_qubit_012_b13_uid",
+      "type": "h_gate",
+      "x": 930,
+      "y": 190,
+      "params": {
+        "qubit": 129
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b14",
+      "uid": "large_qubit_012_b14_uid",
+      "type": "h_gate",
+      "x": 1140,
+      "y": 300,
+      "params": {
+        "qubit": 149
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b15",
+      "uid": "large_qubit_012_b15_uid",
+      "type": "rz_gate",
+      "x": 1350,
+      "y": 410,
+      "params": {
+        "qubit": 19,
+        "theta": 0.628319
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b16",
+      "uid": "large_qubit_012_b16_uid",
+      "type": "rz_gate",
+      "x": 1560,
+      "y": 80,
+      "params": {
+        "qubit": 39,
+        "theta": 0.628319
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b17",
+      "uid": "large_qubit_012_b17_uid",
+      "type": "rz_gate",
+      "x": 1770,
+      "y": 190,
+      "params": {
+        "qubit": 79,
+        "theta": 0.628319
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b18",
+      "uid": "large_qubit_012_b18_uid",
+      "type": "rz_gate",
+      "x": 1980,
+      "y": 300,
+      "params": {
+        "qubit": 119,
+        "theta": 0.628319
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b19",
+      "uid": "large_qubit_012_b19_uid",
+      "type": "cnot_gate",
+      "x": 300,
+      "y": 80,
+      "params": {
+        "control": 9,
+        "target": 10
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b20",
+      "uid": "large_qubit_012_b20_uid",
+      "type": "cnot_gate",
+      "x": 510,
+      "y": 190,
+      "params": {
+        "control": 49,
+        "target": 50
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b21",
+      "uid": "large_qubit_012_b21_uid",
+      "type": "cnot_gate",
+      "x": 720,
+      "y": 300,
+      "params": {
+        "control": 89,
+        "target": 90
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b22",
+      "uid": "large_qubit_012_b22_uid",
+      "type": "cnot_gate",
+      "x": 930,
+      "y": 410,
+      "params": {
+        "control": 129,
+        "target": 130
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_b23",
+      "uid": "large_qubit_012_b23_uid",
+      "type": "qft_block",
+      "x": 1140,
+      "y": 80,
+      "params": {
+        "n_qubits": 10,
+        "offset": 140,
+        "inverse": "false"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_statevector",
+      "uid": "large_qubit_012_statevector_uid",
+      "type": "statevector_block",
+      "x": 1590,
+      "y": 90,
+      "params": {
+        "top_n": 16
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "large_qubit_012_measure",
+      "uid": "large_qubit_012_measure_uid",
+      "type": "measure_all",
+      "x": 1590,
+      "y": 270,
+      "params": {
+        "shots": 64
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fid": "large_qubit_012_q",
+      "fp": "out",
+      "tid": "large_qubit_012_b01",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b01",
+      "fp": "out",
+      "tid": "large_qubit_012_b02",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b02",
+      "fp": "out",
+      "tid": "large_qubit_012_b03",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b03",
+      "fp": "out",
+      "tid": "large_qubit_012_b04",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b04",
+      "fp": "out",
+      "tid": "large_qubit_012_b05",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b05",
+      "fp": "out",
+      "tid": "large_qubit_012_b06",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b06",
+      "fp": "out",
+      "tid": "large_qubit_012_b07",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b07",
+      "fp": "out",
+      "tid": "large_qubit_012_b08",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b08",
+      "fp": "out",
+      "tid": "large_qubit_012_b09",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b09",
+      "fp": "out",
+      "tid": "large_qubit_012_b10",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b10",
+      "fp": "out",
+      "tid": "large_qubit_012_b11",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b11",
+      "fp": "out",
+      "tid": "large_qubit_012_b12",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b12",
+      "fp": "out",
+      "tid": "large_qubit_012_b13",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b13",
+      "fp": "out",
+      "tid": "large_qubit_012_b14",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b14",
+      "fp": "out",
+      "tid": "large_qubit_012_b15",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b15",
+      "fp": "out",
+      "tid": "large_qubit_012_b16",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b16",
+      "fp": "out",
+      "tid": "large_qubit_012_b17",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b17",
+      "fp": "out",
+      "tid": "large_qubit_012_b18",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b18",
+      "fp": "out",
+      "tid": "large_qubit_012_b19",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b19",
+      "fp": "out",
+      "tid": "large_qubit_012_b20",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b20",
+      "fp": "out",
+      "tid": "large_qubit_012_b21",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b21",
+      "fp": "out",
+      "tid": "large_qubit_012_b22",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b22",
+      "fp": "out",
+      "tid": "large_qubit_012_b23",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b23",
+      "fp": "out",
+      "tid": "large_qubit_012_statevector",
+      "tp": "in"
+    },
+    {
+      "fid": "large_qubit_012_b23",
+      "fp": "out",
+      "tid": "large_qubit_012_measure",
+      "tp": "in"
+    }
+  ],
+  "name": "156-Qubit Satellite Constellation Scheduler",
+  "tabId": "t1777119225094",
+  "active": true,
+  "savedAt": "2026-04-25T12:14:45.756Z"
+}

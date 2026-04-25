@@ -673,7 +673,7 @@ export class SanskritInterpreter {
     const GP=['Rx','Ry','Rz','P','Phase','U3'];
 
     if(name.endsWith('_all')){const base=name.replace('_all','');const reg=args[0];const angle=+args[1]||0;if(reg instanceof QuantumRegister)for(let q=0;q<reg.nQ;q++){if(G1.includes(base))reg[base](q);else if(GP.includes(base))reg[base](q,angle);}return;}
-    if(name==='qft'||name==='iqft'){const reg=args[0] instanceof QuantumRegister?args[0]:rq(args[0]).reg;reg.qft(reg.nQ,name==='iqft');return;}
+    if(name==='qft'||name==='iqft'){const kw=args._kw||{};const reg=args[0] instanceof QuantumRegister?args[0]:rq(args[0]).reg;const nQ2=+(args[1]??kw.n_qubits??reg.nQ)||reg.nQ;const inv=name==='iqft'||!!(args[2]??kw.inverse??false);const offset=+(args[3]??kw.offset??0)||0;reg.qft(nQ2,inv,offset);return;}
     if(G1.includes(name)){const{reg,q}=rq(args[0]);reg[name](q);}
     else if(GP.includes(name)){const{reg,q}=rq(args[0]);const t=+args[1]||0,p=+args[2]||0,l=+args[3]||0;if(name==='U3')reg.U3(q,t,p,l);else if(name==='Phase')reg.P(q,t);else reg[name](q,t);}
     else if(name==='CNOT'||name==='CX'){const{reg,q:c}=rq(args[0]);reg.CNOT(c,rq(args[1]).q);}
@@ -862,9 +862,9 @@ export class SanskritInterpreter {
       return QAlgorithms.grover(nQ,marked,shots);
     }
     if(name==='measure_all'){const reg=args[0];if(!(reg instanceof QuantumRegister))return{histogram:{}};const shots=+args[1]||kw.shots||1;const result=reg.measureAll(shots);if(this.onMeasure)this.onMeasure({type:'all',result,reg:reg.name});this._log(`MEASURE_ALL:${JSON.stringify(result.histogram)}`);return result;}
-    if(name==='statevector'){const reg=args[0];if(!(reg instanceof QuantumRegister))return[];const sv=reg.statevector();if(this.onState)this.onState({type:'statevector',data:sv,reg:reg.name});return sv;}
-    if(name==='probabilities'){const r=args[0];return r instanceof QuantumRegister?r.probabilities():{};}
-    if(name==='probability'){const reg=args[0] instanceof QuantumRegister?args[0]:null;if(reg){const s=String(args[1]||kw.state||'0'.repeat(reg.nQ));return reg.probabilities()[s]||0;}return 0;}
+    if(name==='statevector'){const reg=args[0];if(!(reg instanceof QuantumRegister))return[];const limit=+(args[1]??kw.top_n??kw.limit)||undefined;const sv=reg.statevector(limit);if(this.onState)this.onState({type:'statevector',data:sv,reg:reg.name});return sv;}
+    if(name==='probabilities'){const r=args[0];const limit=+(args[1]??kw.top_n??kw.limit)||undefined;return r instanceof QuantumRegister?r.probabilities(limit):{};}
+    if(name==='probability'){const reg=args[0] instanceof QuantumRegister?args[0]:null;if(reg){const s=String(args[1]||kw.state||'0'.repeat(reg.nQ));return reg.probability(s);}return 0;}
     if(name==='expectation_val'||name==='expectation_value'){
       const reg=args[0];
       if(reg instanceof QuantumRegister){
@@ -875,7 +875,8 @@ export class SanskritInterpreter {
       return 0;
     }
     if(name==='expectation_z'){const ref=args[0];if(ref&&ref.__qref__){const r=this._get(ref.reg);return r instanceof QuantumRegister?r.expectation_z(ref.idx):0;}return 0;}
-    if(name==='qft'){const reg=args[0];if(reg instanceof QuantumRegister)reg.qft(reg.nQ,!!(args[1]||kw.inverse||false));return reg;}
+    if(name==='qft'){const reg=args[0];if(reg instanceof QuantumRegister){const nQ2=+(args[1]??kw.n_qubits??reg.nQ)||reg.nQ;const inv=!!(args[2]??kw.inverse??false);const offset=+(args[3]??kw.offset??0)||0;reg.qft(nQ2,inv,offset);}return reg;}
+    if(name==='iqft'){const reg=args[0];if(reg instanceof QuantumRegister){const nQ2=+(args[1]??kw.n_qubits??reg.nQ)||reg.nQ;const offset=+(args[2]??kw.offset??0)||0;reg.qft(nQ2,true,offset);}return reg;}
     if(name==='bell_state')return QAlgorithms.bell(args[0]||kw.type||'Phi+');
     if(name==='ghz_state')return QAlgorithms.ghz(+args[0]||kw.n_qubits||3);
     if(name==='teleport')return{fidelity:0.9998,success:true,classical_bits:[0,0]};
@@ -973,10 +974,12 @@ export class SanskritInterpreter {
     if(obj instanceof QuantumRegister){
       if(meth==='measure')return obj.measureAll(+args[0]||kw.shots||1);
       if(meth==='measure_all')return obj.measureAll(+args[0]||kw.shots||1);
-      if(meth==='statevector')return obj.statevector();
-      if(meth==='probabilities')return obj.probabilities();
+      if(meth==='statevector')return obj.statevector(+(args[0]??kw.top_n??kw.limit)||undefined);
+      if(meth==='probabilities')return obj.probabilities(+(args[0]??kw.top_n??kw.limit)||undefined);
+      if(meth==='probability')return obj.probability(args[0]||kw.state||'0'.repeat(obj.nQ));
       if(meth==='diag')return obj.diag();
-      if(meth==='qft'){const nQ2=+args[0]||obj.nQ;const inv=!!(args[1]||false);obj.qft(nQ2,inv);return obj;}
+      if(meth==='qft'){const nQ2=+(args[0]??kw.n_qubits??obj.nQ)||obj.nQ;const inv=!!(args[1]??kw.inverse??false);const offset=+(args[2]??kw.offset??0)||0;obj.qft(nQ2,inv,offset);return obj;}
+      if(meth==='iqft'){const nQ2=+(args[0]??kw.n_qubits??obj.nQ)||obj.nQ;const offset=+(args[1]??kw.offset??0)||0;obj.qft(nQ2,true,offset);return obj;}
     }
     if(obj&&typeof obj==='object'){
       if(meth==='keys')return Object.keys(obj);if(meth==='values')return Object.values(obj);

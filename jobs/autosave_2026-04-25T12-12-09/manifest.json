@@ -1,0 +1,40 @@
+{
+  "sessionId": "autosave_2026-04-25T12-12-09",
+  "savedAt": "2026-04-25T12:14:45.756Z",
+  "activeTab": "t1777119225094",
+  "tabCount": 4,
+  "tabs": [
+    {
+      "id": "t0",
+      "label": "Canvas 1",
+      "active": false,
+      "file": "01_t0_Canvas_1.json",
+      "blocks": 24,
+      "wires": 21
+    },
+    {
+      "id": "_example",
+      "label": "📋 Example",
+      "active": false,
+      "file": "02__example____Example.json",
+      "blocks": 24,
+      "wires": 21
+    },
+    {
+      "id": "t1777119192435",
+      "label": "Machine Learning Ops Example 1",
+      "active": false,
+      "file": "03_t1777119192435_Machine_Learning_Ops_Example_1.json",
+      "blocks": 25,
+      "wires": 24
+    },
+    {
+      "id": "t1777119225094",
+      "label": "156-Qubit Satellite Constellation Scheduler",
+      "active": true,
+      "file": "04_t1777119225094_156-Qubit_Satellite_Constellation_Scheduler.json",
+      "blocks": 26,
+      "wires": 25
+    }
+  ]
+}

@@ -552,8 +552,8 @@ def('outlier_detection','Outlier Detection','ds','#7C3AED','🎯',
 
 // ── QUANTUM ────────────────────────────────────────────────────────
 def('quantum_register','Quantum Register','q_reg','#0D9488','📦',
-  'Create N qubits all in state |0>.',
-  [pn('n_qubits','Qubits',2,1,30),pt('name','Name','q')],
+  'Create N qubits in a sparse 10-qubit sharded local register.',
+  [pn('n_qubits','Qubits',2,1,100000),pt('name','Name','q')],
   [],[qo()], p=>`let ${p.name||'q'}=qubits(${p.n_qubits||2})`);
 
 def('h_gate','H Gate (Hadamard)','q_gate','#6C3FC5','H',
@@ -638,9 +638,9 @@ def('measure_qubit','Measure Qubit','q_meas','#2563EB','M',
   (p,r,id)=>`let b_${id}=measure(${r}[${p.qubit||0}])\nprint(b_${id})`);
 
 def('statevector_block','Statevector','q_meas','#1D4ED8','ψ',
-  'Get full complex quantum state vector.',
-  [],[qi()],[{n:'out',t:'result',l:'Statevector'}],
-  (p,r,id)=>`let sv_${id}=statevector(${r})\nprint(sv_${id})`);
+  'Get top complex amplitudes without expanding huge sharded registers.',
+  [pn('top_n','Top states',16,1,1000)],[qi()],[{n:'out',t:'result',l:'Statevector'}],
+  (p,r,id)=>`let sv_${id}=statevector(${r},top_n=${p.top_n||16})\nprint(sv_${id})`);
 
 def('grover_block','Grover Search','q_algo','#1D4ED8','🔍',
   'O(√N) quantum search. Finds target in database.',
@@ -656,8 +656,8 @@ def('vqe_block','VQE','q_algo','#1D4ED8','⚗',
 
 def('qft_block','QFT','q_algo','#1D4ED8','QFT',
   'Quantum Fourier Transform.',
-  [ps('inverse','Inverse','false',['false','true'])],[qi()],[qo()],
-  (p,r)=>`${r}.qft(${r}.n_qubits,${p.inverse||false})`);
+  [pn('n_qubits','Window',10,1,20),pn('offset','Offset',0,0,99999),ps('inverse','Inverse','false',['false','true'])],[qi()],[qo()],
+  (p,r)=>`qft(${r},n_qubits=${p.n_qubits||10},inverse=${p.inverse==='true'||p.inverse===true},offset=${p.offset||0})`);
 
 def('shor_block','Shor Factor','q_algo','#0E7490','🔢',
   'Integer factoring via quantum period finding.',

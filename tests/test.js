@@ -95,6 +95,27 @@ await test('Multi-shot probabilities', async()=>{
   if(Math.abs((probs['0']||0)-0.5)>0.001) throw new Error(JSON.stringify(probs));
 });
 
+await test('120-qubit sharded top-N statevector', async()=>{
+  const q=new QuantumRegister('q',120);
+  for(let i=0;i<120;i++) q.H(i);
+  const sv=q.statevector(16);
+  const r=q.measureAll(32);
+  if(sv.length!==16) throw new Error(`topN=${sv.length}`);
+  if(!sv.truncated) throw new Error('expected truncated top-N statevector');
+  if(Object.keys(r.histogram).some(k=>k.length!==120)) throw new Error('bad sample key length');
+  const d=q.diag();
+  if(!d.precomputed.gate_matrices || !d.precomputed.rotation_samples) throw new Error('precomputed lookup not loaded');
+});
+
+await test('120-qubit disjoint cross-shard Bell pairs', async()=>{
+  const q=new QuantumRegister('q',120);
+  const pairs=[[9,10],[29,30],[49,50],[69,70],[89,90],[109,110]];
+  for(const [c,t] of pairs){ q.H(c); q.CNOT(c,t); }
+  const h=q.measureAll(128).histogram;
+  const ok=Object.keys(h).every(k=>pairs.every(([c,t])=>k[c]===k[t]));
+  if(!ok) throw new Error('pair correlations failed');
+});
+
 // ═════════════════════════════════════════════════════════════
 console.log('\n═══ DSL Tests ═══');
 // ═════════════════════════════════════════════════════════════

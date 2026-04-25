@@ -1,0 +1,534 @@
+{
+  "id": "large_qubit_014",
+  "uid": "uid_large_qubit_014",
+  "title": "128-Qubit Carbon Capture MOF Search",
+  "cat": "Materials",
+  "diff": "Advanced",
+  "desc": "Samples metal-organic framework feature combinations with shard-local QFT scoring windows.",
+  "domain": "Materials",
+  "blocks": [
+    {
+      "id": "large_qubit_014_q",
+      "uid": "large_qubit_014_q_uid",
+      "type": "quantum_register",
+      "x": 60,
+      "y": 160,
+      "params": {
+        "n_qubits": 128,
+        "name": "q"
+      }
+    },
+    {
+      "id": "large_qubit_014_b01",
+      "uid": "large_qubit_014_b01_uid",
+      "type": "x_gate",
+      "x": 300,
+      "y": 80,
+      "params": {
+        "qubit": 15
+      }
+    },
+    {
+      "id": "large_qubit_014_b02",
+      "uid": "large_qubit_014_b02_uid",
+      "type": "x_gate",
+      "x": 510,
+      "y": 190,
+      "params": {
+        "qubit": 35
+      }
+    },
+    {
+      "id": "large_qubit_014_b03",
+      "uid": "large_qubit_014_b03_uid",
+      "type": "x_gate",
+      "x": 720,
+      "y": 300,
+      "params": {
+        "qubit": 55
+      }
+    },
+    {
+      "id": "large_qubit_014_b04",
+      "uid": "large_qubit_014_b04_uid",
+      "type": "x_gate",
+      "x": 930,
+      "y": 410,
+      "params": {
+        "qubit": 75
+      }
+    },
+    {
+      "id": "large_qubit_014_b05",
+      "uid": "large_qubit_014_b05_uid",
+      "type": "x_gate",
+      "x": 1140,
+      "y": 80,
+      "params": {
+        "qubit": 95
+      }
+    },
+    {
+      "id": "large_qubit_014_b06",
+      "uid": "large_qubit_014_b06_uid",
+      "type": "x_gate",
+      "x": 1350,
+      "y": 190,
+      "params": {
+        "qubit": 115
+      }
+    },
+    {
+      "id": "large_qubit_014_b07",
+      "uid": "large_qubit_014_b07_uid",
+      "type": "h_gate",
+      "x": 1560,
+      "y": 300,
+      "params": {
+        "qubit": 0
+      }
+    },
+    {
+      "id": "large_qubit_014_b08",
+      "uid": "large_qubit_014_b08_uid",
+      "type": "h_gate",
+      "x": 1770,
+      "y": 410,
+      "params": {
+        "qubit": 11
+      }
+    },
+    {
+      "id": "large_qubit_014_b09",
+      "uid": "large_qubit_014_b09_uid",
+      "type": "h_gate",
+      "x": 1980,
+      "y": 80,
+      "params": {
+        "qubit": 22
+      }
+    },
+    {
+      "id": "large_qubit_014_b10",
+      "uid": "large_qubit_014_b10_uid",
+      "type": "h_gate",
+      "x": 300,
+      "y": 300,
+      "params": {
+        "qubit": 33
+      }
+    },
+    {
+      "id": "large_qubit_014_b11",
+      "uid": "large_qubit_014_b11_uid",
+      "type": "h_gate",
+      "x": 510,
+      "y": 410,
+      "params": {
+        "qubit": 44
+      }
+    },
+    {
+      "id": "large_qubit_014_b12",
+      "uid": "large_qubit_014_b12_uid",
+      "type": "h_gate",
+      "x": 720,
+      "y": 80,
+      "params": {
+        "qubit": 55
+      }
+    },
+    {
+      "id": "large_qubit_014_b13",
+      "uid": "large_qubit_014_b13_uid",
+      "type": "h_gate",
+      "x": 930,
+      "y": 190,
+      "params": {
+        "qubit": 66
+      }
+    },
+    {
+      "id": "large_qubit_014_b14",
+      "uid": "large_qubit_014_b14_uid",
+      "type": "h_gate",
+      "x": 1140,
+      "y": 300,
+      "params": {
+        "qubit": 77
+      }
+    },
+    {
+      "id": "large_qubit_014_b15",
+      "uid": "large_qubit_014_b15_uid",
+      "type": "h_gate",
+      "x": 1350,
+      "y": 410,
+      "params": {
+        "qubit": 88
+      }
+    },
+    {
+      "id": "large_qubit_014_b16",
+      "uid": "large_qubit_014_b16_uid",
+      "type": "h_gate",
+      "x": 1560,
+      "y": 80,
+      "params": {
+        "qubit": 99
+      }
+    },
+    {
+      "id": "large_qubit_014_b17",
+      "uid": "large_qubit_014_b17_uid",
+      "type": "h_gate",
+      "x": 1770,
+      "y": 190,
+      "params": {
+        "qubit": 110
+      }
+    },
+    {
+      "id": "large_qubit_014_b18",
+      "uid": "large_qubit_014_b18_uid",
+      "type": "h_gate",
+      "x": 1980,
+      "y": 300,
+      "params": {
+        "qubit": 121
+      }
+    },
+    {
+      "id": "large_qubit_014_b19",
+      "uid": "large_qubit_014_b19_uid",
+      "type": "rz_gate",
+      "x": 300,
+      "y": 80,
+      "params": {
+        "qubit": 5,
+        "theta": 0.448799
+      }
+    },
+    {
+      "id": "large_qubit_014_b20",
+      "uid": "large_qubit_014_b20_uid",
+      "type": "rz_gate",
+      "x": 510,
+      "y": 190,
+      "params": {
+        "qubit": 45,
+        "theta": 0.448799
+      }
+    },
+    {
+      "id": "large_qubit_014_b21",
+      "uid": "large_qubit_014_b21_uid",
+      "type": "rz_gate",
+      "x": 720,
+      "y": 300,
+      "params": {
+        "qubit": 85,
+        "theta": 0.448799
+      }
+    },
+    {
+      "id": "large_qubit_014_b22",
+      "uid": "large_qubit_014_b22_uid",
+      "type": "rz_gate",
+      "x": 930,
+      "y": 410,
+      "params": {
+        "qubit": 125,
+        "theta": 0.448799
+      }
+    },
+    {
+      "id": "large_qubit_014_b23",
+      "uid": "large_qubit_014_b23_uid",
+      "type": "qft_block",
+      "x": 1140,
+      "y": 80,
+      "params": {
+        "n_qubits": 10,
+        "offset": 90,
+        "inverse": "false"
+      }
+    },
+    {
+      "id": "large_qubit_014_statevector",
+      "uid": "large_qubit_014_statevector_uid",
+      "type": "statevector_block",
+      "x": 1590,
+      "y": 90,
+      "params": {
+        "top_n": 16
+      }
+    },
+    {
+      "id": "large_qubit_014_measure",
+      "uid": "large_qubit_014_measure_uid",
+      "type": "measure_all",
+      "x": 1590,
+      "y": 270,
+      "params": {
+        "shots": 64
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fid": "large_qubit_014_q",
+      "fp": "out",
+      "tid": "large_qubit_014_b01",
+      "tp": "in",
+      "fromId": "large_qubit_014_q",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b01",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b01",
+      "fp": "out",
+      "tid": "large_qubit_014_b02",
+      "tp": "in",
+      "fromId": "large_qubit_014_b01",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b02",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b02",
+      "fp": "out",
+      "tid": "large_qubit_014_b03",
+      "tp": "in",
+      "fromId": "large_qubit_014_b02",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b03",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b03",
+      "fp": "out",
+      "tid": "large_qubit_014_b04",
+      "tp": "in",
+      "fromId": "large_qubit_014_b03",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b04",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b04",
+      "fp": "out",
+      "tid": "large_qubit_014_b05",
+      "tp": "in",
+      "fromId": "large_qubit_014_b04",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b05",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b05",
+      "fp": "out",
+      "tid": "large_qubit_014_b06",
+      "tp": "in",
+      "fromId": "large_qubit_014_b05",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b06",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b06",
+      "fp": "out",
+      "tid": "large_qubit_014_b07",
+      "tp": "in",
+      "fromId": "large_qubit_014_b06",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b07",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b07",
+      "fp": "out",
+      "tid": "large_qubit_014_b08",
+      "tp": "in",
+      "fromId": "large_qubit_014_b07",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b08",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b08",
+      "fp": "out",
+      "tid": "large_qubit_014_b09",
+      "tp": "in",
+      "fromId": "large_qubit_014_b08",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b09",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b09",
+      "fp": "out",
+      "tid": "large_qubit_014_b10",
+      "tp": "in",
+      "fromId": "large_qubit_014_b09",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b10",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b10",
+      "fp": "out",
+      "tid": "large_qubit_014_b11",
+      "tp": "in",
+      "fromId": "large_qubit_014_b10",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b11",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b11",
+      "fp": "out",
+      "tid": "large_qubit_014_b12",
+      "tp": "in",
+      "fromId": "large_qubit_014_b11",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b12",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b12",
+      "fp": "out",
+      "tid": "large_qubit_014_b13",
+      "tp": "in",
+      "fromId": "large_qubit_014_b12",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b13",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b13",
+      "fp": "out",
+      "tid": "large_qubit_014_b14",
+      "tp": "in",
+      "fromId": "large_qubit_014_b13",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b14",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b14",
+      "fp": "out",
+      "tid": "large_qubit_014_b15",
+      "tp": "in",
+      "fromId": "large_qubit_014_b14",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b15",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b15",
+      "fp": "out",
+      "tid": "large_qubit_014_b16",
+      "tp": "in",
+      "fromId": "large_qubit_014_b15",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b16",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b16",
+      "fp": "out",
+      "tid": "large_qubit_014_b17",
+      "tp": "in",
+      "fromId": "large_qubit_014_b16",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b17",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b17",
+      "fp": "out",
+      "tid": "large_qubit_014_b18",
+      "tp": "in",
+      "fromId": "large_qubit_014_b17",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b18",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b18",
+      "fp": "out",
+      "tid": "large_qubit_014_b19",
+      "tp": "in",
+      "fromId": "large_qubit_014_b18",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b19",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b19",
+      "fp": "out",
+      "tid": "large_qubit_014_b20",
+      "tp": "in",
+      "fromId": "large_qubit_014_b19",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b20",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b20",
+      "fp": "out",
+      "tid": "large_qubit_014_b21",
+      "tp": "in",
+      "fromId": "large_qubit_014_b20",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b21",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b21",
+      "fp": "out",
+      "tid": "large_qubit_014_b22",
+      "tp": "in",
+      "fromId": "large_qubit_014_b21",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b22",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b22",
+      "fp": "out",
+      "tid": "large_qubit_014_b23",
+      "tp": "in",
+      "fromId": "large_qubit_014_b22",
+      "fromPort": "out",
+      "toId": "large_qubit_014_b23",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b23",
+      "fp": "out",
+      "tid": "large_qubit_014_statevector",
+      "tp": "in",
+      "fromId": "large_qubit_014_b23",
+      "fromPort": "out",
+      "toId": "large_qubit_014_statevector",
+      "toPort": "in"
+    },
+    {
+      "fid": "large_qubit_014_b23",
+      "fp": "out",
+      "tid": "large_qubit_014_measure",
+      "tp": "in",
+      "fromId": "large_qubit_014_b23",
+      "fromPort": "out",
+      "toId": "large_qubit_014_measure",
+      "toPort": "in"
+    }
+  ],
+  "notes": {
+    "qubits": 128,
+    "expected": "Top-N statevector and 64-shot histogram complete locally using sparse 10-qubit shards."
+  }
+}

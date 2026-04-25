@@ -1,0 +1,718 @@
+{
+  "version": "3.2",
+  "title": "Sanskrit Canvas",
+  "created": "2026-04-25T12:13:45.094Z",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "ml_01_b01",
+      "type": "csv_reader",
+      "x": 80,
+      "y": 80,
+      "params": {
+        "filename": "local/ml_1.csv",
+        "separator": ",",
+        "preview_rows": 100,
+        "file_path": "local/ml_1.csv",
+        "header": true,
+        "auto_types": true,
+        "encoding": "utf-8",
+        "output_var": "df",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "ml_01_b02",
+      "type": "time_series_forecast",
+      "x": 360,
+      "y": 80,
+      "params": {
+        "ts_var": "ts",
+        "model": "Prophet",
+        "forecast_horizon": 30,
+        "lookback": 90,
+        "output_var": "forecast",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b03",
+      "uid": "ml_01_b03",
+      "type": "anomaly_ml",
+      "x": 640,
+      "y": 80,
+      "params": {
+        "X_var": "X",
+        "method": "IsolationForest",
+        "contamination": 0.05,
+        "output_var": "anomalies",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b04",
+      "uid": "ml_01_b04",
+      "type": "clustering_block",
+      "x": 920,
+      "y": 80,
+      "params": {
+        "X_var": "X",
+        "method": "k-means",
+        "n_clusters": 5,
+        "output_var": "labels",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b05",
+      "uid": "ml_01_b05",
+      "type": "normalizing_flow",
+      "x": 1200,
+      "y": 80,
+      "params": {
+        "data_var": "data",
+        "architecture": "RealNVP",
+        "n_flows": 8,
+        "epochs": 200,
+        "output_model": "flow_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b06",
+      "uid": "ml_01_b06",
+      "type": "shap_explain",
+      "x": 1480,
+      "y": 80,
+      "params": {
+        "model_var": "model",
+        "X_var": "X",
+        "explainer": "TreeExplainer",
+        "max_display": 20,
+        "output_var": "shap_values",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b07",
+      "uid": "ml_01_b07",
+      "type": "gp_regression",
+      "x": 1760,
+      "y": 80,
+      "params": {
+        "X_train": "X_train",
+        "y_train": "y_train",
+        "kernel": "RBF",
+        "noise_level": 0.01,
+        "output_var": "gp_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b08",
+      "uid": "ml_01_b08",
+      "type": "causal_inference",
+      "x": 2040,
+      "y": 80,
+      "params": {
+        "data_var": "data",
+        "treatment_var": "T",
+        "outcome_var": "Y",
+        "confounders": "[\"age\",\"sex\",\"income\"]",
+        "method": "DoWhy",
+        "output_var": "causal_effect",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b09",
+      "uid": "ml_01_b09",
+      "type": "survival_analysis",
+      "x": 2320,
+      "y": 80,
+      "params": {
+        "data_var": "survival_data",
+        "time_col": "time",
+        "event_col": "event",
+        "model": "Cox_PH",
+        "output_var": "surv_result",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b10",
+      "uid": "ml_01_b10",
+      "type": "active_learning_block",
+      "x": 2600,
+      "y": 80,
+      "params": {
+        "unlabelled_var": "X_pool",
+        "model_var": "model",
+        "strategy": "uncertainty",
+        "n_query": 10,
+        "output_var": "queried_X",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b11",
+      "uid": "ml_01_b11",
+      "type": "train_model",
+      "x": 2880,
+      "y": 80,
+      "params": {
+        "X_train": "X_train",
+        "y_train": "y_train",
+        "model_type": "RandomForest",
+        "hyperparams": "{\"n_estimators\":100}",
+        "cross_validate": true,
+        "output_model": "model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b12",
+      "uid": "ml_01_b12",
+      "type": "predict_block",
+      "x": 3160,
+      "y": 80,
+      "params": {
+        "model_var": "model",
+        "X_var": "X_test",
+        "return_proba": false,
+        "output_var": "y_pred",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b13",
+      "uid": "ml_01_b13",
+      "type": "xgboost_block",
+      "x": 3440,
+      "y": 80,
+      "params": {
+        "X_train": "X_train",
+        "y_train": "y_train",
+        "library": "LightGBM",
+        "n_estimators": 500,
+        "max_depth": 6,
+        "lr": 0.05,
+        "early_stopping": true,
+        "output_model": "gbm_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b14",
+      "uid": "ml_01_b14",
+      "type": "automl_block",
+      "x": 3720,
+      "y": 80,
+      "params": {
+        "X_train": "X_train",
+        "y_train": "y_train",
+        "tool": "AutoGluon",
+        "time_limit_s": 3600,
+        "task": "classification",
+        "output_model": "automl_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b15",
+      "uid": "ml_01_b15",
+      "type": "neural_net",
+      "x": 4000,
+      "y": 80,
+      "params": {
+        "layers": "[{\"type\":\"Linear\",\"in\":128,\"out\":64},{\"type\":\"ReLU\"},{\"type\":\"Linear\",\"in\":64,\"out\":1}]",
+        "loss": "CrossEntropy",
+        "optimizer": "Adam",
+        "epochs": 100,
+        "lr": 0.001,
+        "batch_size": 32,
+        "output_model": "nn_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b16",
+      "uid": "ml_01_b16",
+      "type": "filter_rows",
+      "x": 4280,
+      "y": 80,
+      "params": {
+        "column": "score",
+        "operator": ">",
+        "value": "0.5",
+        "limit": 0,
+        "data_var": "df",
+        "condition": "row.score > 0.5",
+        "output_var": "filtered",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b17",
+      "uid": "ml_01_b17",
+      "type": "map_transform",
+      "x": 4560,
+      "y": 80,
+      "params": {
+        "data_var": "df",
+        "transform_expr": "x * 1.05",
+        "output_var": "mapped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b18",
+      "uid": "ml_01_b18",
+      "type": "sort_rows",
+      "x": 4840,
+      "y": 80,
+      "params": {
+        "column": "x",
+        "order": "asc",
+        "data_var": "df",
+        "key_expr": "x",
+        "descending": false,
+        "output_var": "sorted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b19",
+      "uid": "ml_01_b19",
+      "type": "group_by",
+      "x": 5120,
+      "y": 80,
+      "params": {
+        "group_by": "category",
+        "aggregations": "[]",
+        "data_var": "df",
+        "key_fn": "x[\"category\"]",
+        "agg": "list",
+        "output_var": "grouped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b20",
+      "uid": "ml_01_b20",
+      "type": "pivot",
+      "x": 5400,
+      "y": 80,
+      "params": {
+        "index": "region",
+        "columns": "product",
+        "values": "revenue",
+        "aggfn": "sum",
+        "data_var": "df",
+        "aggfunc": "sum",
+        "output_var": "pivoted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b21",
+      "uid": "ml_01_b21",
+      "type": "window_transform",
+      "x": 5680,
+      "y": 80,
+      "params": {
+        "data_var": "df",
+        "window_size": 7,
+        "agg": "mean",
+        "center": false,
+        "output_var": "windowed",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b22",
+      "uid": "ml_01_b22",
+      "type": "resample_block",
+      "x": 5960,
+      "y": 80,
+      "params": {
+        "data_var": "df",
+        "freq": "1h",
+        "method": "mean",
+        "output_var": "resampled",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b23",
+      "uid": "ml_01_b23",
+      "type": "encode",
+      "x": 6240,
+      "y": 80,
+      "params": {
+        "column": "",
+        "method": "onehot",
+        "X_var": "X",
+        "col": "category",
+        "output_var": "encoded",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b24",
+      "uid": "ml_01_b24",
+      "type": "type_cast",
+      "x": 6520,
+      "y": 80,
+      "params": {
+        "input_var": "x",
+        "to_type": "float",
+        "output_var": "casted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b25",
+      "uid": "ml_01_b25",
+      "type": "table_display",
+      "x": 6800,
+      "y": 80,
+      "params": {
+        "title": "Data Table",
+        "page_size": 25,
+        "show_bars": "true",
+        "data_var": "results",
+        "max_rows": 100,
+        "sortable": true,
+        "filterable": true,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fid": "b01",
+      "fp": "dataset",
+      "tid": "b02",
+      "tp": "series"
+    },
+    {
+      "fid": "b02",
+      "fp": "forecast",
+      "tid": "b03",
+      "tp": "X"
+    },
+    {
+      "fid": "b03",
+      "fp": "labels",
+      "tid": "b04",
+      "tp": "X"
+    },
+    {
+      "fid": "b04",
+      "fp": "labels",
+      "tid": "b05",
+      "tp": "data"
+    },
+    {
+      "fid": "b05",
+      "fp": "model",
+      "tid": "b06",
+      "tp": "model"
+    },
+    {
+      "fid": "b06",
+      "fp": "shap_values",
+      "tid": "b07",
+      "tp": "X"
+    },
+    {
+      "fid": "b07",
+      "fp": "model",
+      "tid": "b08",
+      "tp": "data"
+    },
+    {
+      "fid": "b08",
+      "fp": "ate",
+      "tid": "b09",
+      "tp": "data"
+    },
+    {
+      "fid": "b09",
+      "fp": "survival_curve",
+      "tid": "b10",
+      "tp": "pool"
+    },
+    {
+      "fid": "b10",
+      "fp": "labelled_X",
+      "tid": "b11",
+      "tp": "X"
+    },
+    {
+      "fid": "b11",
+      "fp": "model",
+      "tid": "b12",
+      "tp": "model"
+    },
+    {
+      "fid": "b12",
+      "fp": "predictions",
+      "tid": "b13",
+      "tp": "X"
+    },
+    {
+      "fid": "b13",
+      "fp": "model",
+      "tid": "b14",
+      "tp": "X"
+    },
+    {
+      "fid": "b14",
+      "fp": "model",
+      "tid": "b15",
+      "tp": "X"
+    },
+    {
+      "fid": "b15",
+      "fp": "model",
+      "tid": "b16",
+      "tp": "dataset"
+    },
+    {
+      "fid": "b16",
+      "fp": "dataset",
+      "tid": "b17",
+      "tp": "ai"
+    },
+    {
+      "fid": "b17",
+      "fp": "result",
+      "tid": "b18",
+      "tp": "dataset"
+    },
+    {
+      "fid": "b18",
+      "fp": "dataset",
+      "tid": "b19",
+      "tp": "dataset"
+    },
+    {
+      "fid": "b19",
+      "fp": "dataset",
+      "tid": "b20",
+      "tp": "dataset"
+    },
+    {
+      "fid": "b20",
+      "fp": "dataset",
+      "tid": "b21",
+      "tp": "data"
+    },
+    {
+      "fid": "b21",
+      "fp": "result",
+      "tid": "b22",
+      "tp": "data"
+    },
+    {
+      "fid": "b22",
+      "fp": "result",
+      "tid": "b23",
+      "tp": "dataset"
+    },
+    {
+      "fid": "b23",
+      "fp": "dataset",
+      "tid": "b24",
+      "tp": "ci"
+    },
+    {
+      "fid": "b24",
+      "fp": "result",
+      "tid": "b25",
+      "tp": "dataset"
+    }
+  ],
+  "name": "Machine Learning Ops Example 1",
+  "tabId": "t1777119192435",
+  "active": false,
+  "savedAt": "2026-04-25T12:14:45.756Z"
+}

@@ -39,6 +39,10 @@
  * 10. pauli_expectation was a null stub.  Implemented in stdlib.js.
  */
 
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 // ── Complex number helpers ─────────────────────────────────────────────────
 export const cx     = (re, im=0) => ({re, im});
 export const cadd   = (a, b)     => ({re: a.re+b.re, im: a.im+b.im});
@@ -53,6 +57,92 @@ export const cabs   = (a)        => Math.sqrt(cnorm2(a));
 
 const ZERO = cx(0,0), ONE = cx(1,0);
 const S2   = 1 / Math.sqrt(2);
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const PRECOMPUTED_DIR = path.resolve(__dirname, '../../precomputed');
+const MAX_EXACT_MERGED_QUBITS = 20;
+const MAX_FULL_STATEVECTOR_STATES = 100_000;
+const DEFAULT_STATEVECTOR_LIMIT = 4096;
+const DEFAULT_PROBABILITY_LIMIT = 4096;
+
+function loadPrecomputedJson(file) {
+  try {
+    const fp = path.join(PRECOMPUTED_DIR, file);
+    return JSON.parse(fs.readFileSync(fp, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+export const PRECOMPUTED = {
+  gateMatrices: loadPrecomputedJson('gate_matrices.json'),
+  circuitIdentities: loadPrecomputedJson('circuit_identities.json'),
+  pauliTable: loadPrecomputedJson('pauli_table.json'),
+  qftMatrices: loadPrecomputedJson('qft_matrices.json'),
+};
+
+const PRECOMPUTED_FLAGS = {
+  gate_matrices: !!PRECOMPUTED.gateMatrices?.gates,
+  rotation_samples: !!PRECOMPUTED.gateMatrices?.rotation_samples,
+  circuit_identities: !!PRECOMPUTED.circuitIdentities?.identities,
+  pauli_table: !!PRECOMPUTED.pauliTable?.single_qubit_multiplication,
+  qft_matrices: !!PRECOMPUTED.qftMatrices?.matrices,
+};
+
+function matrixFromLookup(name, fallback) {
+  return PRECOMPUTED.gateMatrices?.gates?.[name] || fallback;
+}
+
+const ROTATION_LABELS = [
+  ['0.125pi', Math.PI/8], ['0.25pi', Math.PI/4], ['0.333333pi', Math.PI/3],
+  ['0.5pi', Math.PI/2], ['0.666667pi', 2*Math.PI/3], ['0.75pi', 3*Math.PI/4],
+  ['1.0pi', Math.PI], ['1.25pi', 5*Math.PI/4], ['1.5pi', 3*Math.PI/2],
+  ['1.75pi', 7*Math.PI/4], ['2.0pi', 2*Math.PI],
+];
+
+function lookupRotation(name, theta) {
+  const samples = PRECOMPUTED.gateMatrices?.rotation_samples?.[name];
+  if (!samples || !Number.isFinite(theta)) return null;
+  const t = ((theta % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI);
+  for (const [label, value] of ROTATION_LABELS) {
+    if (Math.abs(t - value) < 1e-10 || Math.abs(t - 2*Math.PI - value) < 1e-10) {
+      return samples[label] || null;
+    }
+  }
+  return null;
+}
+
+function basisSize(nQ) {
+  if (!Number.isInteger(nQ) || nQ < 0) throw new Error(`Invalid shard qubit count: ${nQ}`);
+  if (nQ > MAX_EXACT_MERGED_QUBITS) {
+    throw new Error(`Exact merged shard limit is ${MAX_EXACT_MERGED_QUBITS} qubits; requested ${nQ}. Keep cross-shard entanglement in independent groups or use sampling/top-N summaries.`);
+  }
+  return 2 ** nQ;
+}
+
+function bitMask(localQubit) {
+  if (localQubit < 0 || localQubit >= 31) throw new Error(`Local bit operations support qubits 0..30; got ${localQubit}`);
+  return 1 << localQubit;
+}
+
+function localStateString(idx, nQ) {
+  return idx.toString(2).padStart(nQ, '0').split('').reverse().join('');
+}
+
+function idxFromLocalState(state) {
+  let idx = 0;
+  for (let i = 0; i < state.length; i++) if (state[i] === '1') idx |= bitMask(i);
+  return idx;
+}
+
+function estimateProductCount(shards) {
+  let est = 1;
+  for (const sh of shards) {
+    est *= Math.max(1, sh.amps.count);
+    if (est > Number.MAX_SAFE_INTEGER / 2) return Number.POSITIVE_INFINITY;
+  }
+  return est;
+}
 
 // ── Sparse amplitude container ─────────────────────────────────────────────
 /**
@@ -150,7 +240,7 @@ class Amps {
  * All phases are stored as full complex numbers — NEVER real-only.
  * A real-only Y or T gate gives wrong answers for any entangled circuit.
  */
-export const GATES = {
+const FALLBACK_GATES = {
   I:   [[ONE,         ZERO        ], [ZERO,        ONE         ]],
   X:   [[ZERO,        ONE         ], [ONE,         ZERO        ]],
   Y:   [[ZERO,        cx(0,-1)    ], [cx(0,1),     ZERO        ]],
@@ -163,15 +253,19 @@ export const GATES = {
   SX:  [[cx(.5,.5),   cx(.5,-.5)  ], [cx(.5,-.5),  cx(.5,.5)   ]],
 };
 
+export const GATES = Object.freeze(Object.fromEntries(
+  Object.entries(FALLBACK_GATES).map(([name, matrix]) => [name, matrixFromLookup(name, matrix)])
+));
+
 /** Parameterised gate generators — angle is continuous, cannot be pre-computed. */
 export const PGATES = {
-  Rx: (t) => [[cx( Math.cos(t/2), 0),        cx(0, -Math.sin(t/2))      ],
+  Rx: (t) => lookupRotation('Rx', t) || [[cx( Math.cos(t/2), 0),        cx(0, -Math.sin(t/2))      ],
                [cx(0, -Math.sin(t/2)),        cx( Math.cos(t/2), 0)      ]],
-  Ry: (t) => [[cx( Math.cos(t/2), 0),        cx(-Math.sin(t/2), 0)      ],
+  Ry: (t) => lookupRotation('Ry', t) || [[cx( Math.cos(t/2), 0),        cx(-Math.sin(t/2), 0)      ],
                [cx( Math.sin(t/2), 0),        cx( Math.cos(t/2), 0)      ]],
-  Rz: (t) => [[cphase(-t/2),                 ZERO                        ],
+  Rz: (t) => lookupRotation('Rz', t) || [[cphase(-t/2),                 ZERO                        ],
                [ZERO,                         cphase(t/2)                 ]],
-  P:  (t) => [[ONE,                           ZERO                        ],
+  P:  (t) => lookupRotation('P', t) || [[ONE,                           ZERO                        ],
                [ZERO,                         cphase(t)                   ]],
   U3: (t,p,l) => {
     const c=Math.cos(t/2), s=Math.sin(t/2);
@@ -184,7 +278,7 @@ export const PGATES = {
 class Shard {
   constructor(id, startQ, nQ) {
     this.id=id; this.startQ=startQ; this.nQ=nQ;
-    this.size = 1<<nQ;
+    this.size = basisSize(nQ);
     this.amps = new Amps(this.size);
     this.gc   = 0;
     this.amps.set(0, ONE);   // initialise to |0…0⟩
@@ -202,7 +296,7 @@ class Shard {
    * O(nonzero) — identical performance to the old code for typical states.
    */
   _apply1Q(lq, [[a,b],[c,d]]) {
-    const stride = 1<<lq;
+    const stride = bitMask(lq);
     const pairs = new Set();
     this.amps.each((idx) => { pairs.add(idx & ~stride); });
     for (const i0 of pairs) {
@@ -226,7 +320,7 @@ class Shard {
    * for all non-zero amplitudes that have ctrl=1.
    */
   cnot(ctrl, tgt) {
-    const cm=1<<ctrl, tm=1<<tgt;
+    const cm=bitMask(ctrl), tm=bitMask(tgt);
     const pairs = new Set();
     this.amps.each((idx) => { if (idx & cm) pairs.add(idx & ~tm); });
     for (const i0 of pairs) {
@@ -237,7 +331,7 @@ class Shard {
   }
 
   cz(qa, qb) {
-    const ma=1<<qa, mb=1<<qb;
+    const ma=bitMask(qa), mb=bitMask(qb);
     this.amps.each((idx,a) => { if ((idx&ma)&&(idx&mb)) this.amps.set(idx, cscale(a,-1)); });
     this.gc++;
   }
@@ -250,7 +344,7 @@ class Shard {
    * Fix: collect canonical i0=(qa=1,qb=0) from BOTH orientations.
    */
   swap(qa, qb) {
-    const ma=1<<qa, mb=1<<qb;
+    const ma=bitMask(qa), mb=bitMask(qb);
     const pairs = new Set();
     this.amps.each((idx) => {
       const hasA=!!(idx&ma), hasB=!!(idx&mb);
@@ -269,7 +363,7 @@ class Shard {
    * Fix: collect canonical i0=(c1=1,c2=1,t=0) from both t-states.
    */
   toffoli(c1, c2, t) {
-    const m1=1<<c1, m2=1<<c2, mt=1<<t;
+    const m1=bitMask(c1), m2=bitMask(c2), mt=bitMask(t);
     const pairs = new Set();
     this.amps.each((idx) => { if ((idx&m1)&&(idx&m2)) pairs.add(idx&~mt); });
     for (const i0 of pairs) {
@@ -284,7 +378,7 @@ class Shard {
    * ctrlBits = array of ALL local qubit indices that must be |1⟩.
    */
   nControlledZ(ctrlBits) {
-    const allMask = ctrlBits.reduce((acc,q) => acc|(1<<q), 0);
+    const allMask = ctrlBits.reduce((acc,q) => acc|bitMask(q), 0);
     this.amps.each((idx,a) => {
       if ((idx & allMask) === allMask) this.amps.set(idx, cscale(a,-1));
     });
@@ -292,7 +386,7 @@ class Shard {
   }
 
   measure(lq) {
-    const mask=1<<lq; let p1=0;
+    const mask=bitMask(lq); let p1=0;
     this.amps.each((idx,a) => { if (idx&mask) p1 += cnorm2(a); });
     const out   = Math.random() < p1 ? 1 : 0;
     const keep  = out ? mask : 0;
@@ -358,8 +452,11 @@ export class QuantumRegister {
     const [si1, si2] = siA < siB ? [siA, siB] : [siB, siA];
     const sA = this.shards[si1], sB = this.shards[si2];
     const nA = sA.nQ, nB = sB.nQ;
+    if (nA + nB > MAX_EXACT_MERGED_QUBITS) {
+      throw new Error(`Cross-shard merge would create a ${nA+nB}-qubit exact shard. Local exact sharding keeps merged entanglement groups at ${MAX_EXACT_MERGED_QUBITS} qubits or less.`);
+    }
     const combined = new Shard(-1, sA.startQ, nA + nB);
-    combined.size = 1 << (nA + nB);
+    combined.size = basisSize(nA + nB);
     combined.amps = new Amps(combined.size);
 
     sA.amps.each((idxA, ampA) => {
@@ -512,7 +609,7 @@ export class QuantumRegister {
   CP(c,t,theta) {
     const {ra,rb} = this._ensureSameShard(c,t);
     const ph = cphase(theta);
-    const mc=1<<ra.lq, mt=1<<rb.lq;
+    const mc=bitMask(ra.lq), mt=bitMask(rb.lq);
     ra.s.amps.each((idx,a) => {
       if ((idx&mc)&&(idx&mt)) ra.s.amps.set(idx, cmul(a,ph));
     });
@@ -558,6 +655,47 @@ export class QuantumRegister {
     this._log(`MEASURE[${q}]→${out}`); return out;
   }
 
+  _shardEntries(sh) {
+    const entries = [];
+    sh.amps.each((idx, a) => {
+      entries.push({
+        state: localStateString(idx, sh.nQ),
+        idx,
+        re: a.re,
+        im: a.im,
+        prob: cnorm2(a),
+      });
+    });
+    return entries
+      .filter(e => e.prob > 1e-14)
+      .sort((a, b) => b.prob - a.prob);
+  }
+
+  _sampleShardEntries(entries) {
+    let r = Math.random();
+    let acc = 0;
+    for (const e of entries) {
+      acc += e.prob;
+      if (r <= acc + 1e-12) return e.state;
+    }
+    return entries[entries.length - 1]?.state || '';
+  }
+
+  _combineStateEntries(left, right, limit) {
+    const out = [];
+    for (const a of left) {
+      for (const b of right) {
+        const re = a.re*b.re - a.im*b.im;
+        const im = a.re*b.im + a.im*b.re;
+        const prob = re*re + im*im;
+        if (!Number.isFinite(prob) || prob <= 0) continue;
+        out.push({ state: a.state + b.state, re, im, prob });
+      }
+    }
+    out.sort((a, b) => b.prob - a.prob);
+    return Number.isFinite(limit) ? out.slice(0, limit) : out;
+  }
+
   measureAll(shots=1) {
     const hist={};
     if (shots===1) {
@@ -565,20 +703,33 @@ export class QuantumRegister {
       for (let q=0; q<this.nQ; q++) bits.push(this.measureQubit(q));
       const k=bits.join(''); hist[k]=1; return {histogram:hist, bits};
     }
-    const dist=this._jointProbs();
-    const states=[...dist.keys()], probs=[...dist.values()];
-    const cum=[]; let s=0;
-    for (const p of probs) { s+=p; cum.push(s); }
+    const shardSamplers = this.shards.map(sh => this._shardEntries(sh));
     for (let i=0; i<shots; i++) {
-      const r=Math.random(); let lo=0, hi=cum.length-1;
-      while (lo<hi) { const mid=(lo+hi)>>1; cum[mid]<r ? lo=mid+1 : hi=mid; }
-      const k=states[lo]||states[states.length-1];
+      const k = shardSamplers.map(entries => this._sampleShardEntries(entries)).join('');
       hist[k]=(hist[k]||0)+1;
     }
-    this._log(`MEASURE_ALL shots=${shots}`); return {histogram:hist};
+    this._log(`MEASURE_ALL shots=${shots}`);
+    return {histogram:hist, shots, sampled_by_shard:true, n_shards:this.shards.length};
   }
 
-  probabilities() { return Object.fromEntries(this._jointProbs()); }
+  probabilities(limit=DEFAULT_PROBABILITY_LIMIT) {
+    const out = {};
+    for (const e of this.statevector(limit)) out[e.state] = (out[e.state] || 0) + e.prob;
+    return out;
+  }
+
+  probability(state) {
+    const bits = String(state || '').padEnd(this.nQ, '0').slice(0, this.nQ);
+    let p = 1;
+    let offset = 0;
+    for (const sh of this.shards) {
+      const local = bits.slice(offset, offset + sh.nQ);
+      p *= cnorm2(sh.amps.get(idxFromLocalState(local)));
+      offset += sh.nQ;
+      if (p === 0) break;
+    }
+    return p;
+  }
 
   /**
    * statevector() — returns full complex amplitudes.
@@ -591,7 +742,24 @@ export class QuantumRegister {
    * For a single shard: read {re,im} directly from Amps storage.
    * For product-state multi-shard: tensor-product amplitudes.
    */
-  statevector() {
+  statevector(limit=undefined) {
+    const estimatedStates = estimateProductCount(this.shards);
+    const requestedLimit = Number(limit);
+    const hardLimit = Number.isFinite(requestedLimit) && requestedLimit > 0
+      ? Math.floor(requestedLimit)
+      : (estimatedStates > MAX_FULL_STATEVECTOR_STATES ? DEFAULT_STATEVECTOR_LIMIT : Number.POSITIVE_INFINITY);
+
+    let compactEntries = [{ state:'', re:1, im:0, prob:1 }];
+    for (const shard of this.shards) {
+      let shardEntries = this._shardEntries(shard);
+      if (Number.isFinite(hardLimit)) shardEntries = shardEntries.slice(0, hardLimit);
+      compactEntries = this._combineStateEntries(compactEntries, shardEntries, hardLimit);
+    }
+    compactEntries.truncated = Number.isFinite(hardLimit) && estimatedStates > hardLimit;
+    compactEntries.estimatedStates = estimatedStates;
+    compactEntries.limit = Number.isFinite(hardLimit) ? hardLimit : compactEntries.length;
+    return compactEntries;
+
     let entries = [];
     this.shards[0].amps.each((idx, a) => {
       entries.push({ idx, re: a.re, im: a.im, nQ: this.shards[0].nQ });
@@ -644,6 +812,27 @@ export class QuantumRegister {
    * Uses a clone to preserve the original state.
    */
   expectation_val(pauliStr, shots=0) {
+    const paulis = String(pauliStr).toUpperCase().padEnd(this.nQ, 'I').slice(0, this.nQ);
+    const rotated = this._clone();
+    for (let i=0; i<paulis.length && i<rotated.nQ; i++) {
+      if (paulis[i]==='X') rotated.H(i);
+      else if (paulis[i]==='Y') { rotated.Sdg(i); rotated.H(i); }
+    }
+    let total = 1;
+    for (const shard of rotated.shards) {
+      const local = paulis.slice(shard.startQ, shard.startQ + shard.nQ);
+      let shardEv = 0;
+      shard.amps.each((idx, a) => {
+        let sign = 1;
+        for (let i=0; i<local.length; i++) {
+          if (local[i] !== 'I' && (idx & bitMask(i))) sign *= -1;
+        }
+        shardEv += sign * cnorm2(a);
+      });
+      total *= shardEv;
+    }
+    return total;
+
     const ps = String(pauliStr).toUpperCase();
     const clone = this._clone();
     for (let i=0; i<ps.length && i<clone.nQ; i++) {
@@ -702,8 +891,8 @@ export class QuantumRegister {
    * Joint probability distribution — works for both merged and product-state shards.
    * Calls statevector() which handles the tensor product correctly.
    */
-  _jointProbs() {
-    const sv = this.statevector();
+  _jointProbs(limit=DEFAULT_PROBABILITY_LIMIT) {
+    const sv = this.statevector(limit);
     const map = new Map();
     for (const e of sv) {
       map.set(e.state, (map.get(e.state)||0) + e.prob);
@@ -713,7 +902,12 @@ export class QuantumRegister {
 
   diag() {
     return {name:this.name, nQ:this.nQ, nShards:this.shards.length,
-            shards:this.shards.map(s=>s.info()), log:this.log.slice(-20)};
+            shards:this.shards.map(s=>s.info()),
+            stateEstimate:estimateProductCount(this.shards),
+            maxExactMergedQubits:MAX_EXACT_MERGED_QUBITS,
+            statevectorLimit:DEFAULT_STATEVECTOR_LIMIT,
+            precomputed:PRECOMPUTED_FLAGS,
+            log:this.log.slice(-20)};
   }
 }
 
