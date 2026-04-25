@@ -1,0 +1,665 @@
+{
+  "id": "genai_04",
+  "uid": "uid_genai_04",
+  "title": "GenAI & NLP Example 4",
+  "cat": "GenAI",
+  "diff": "Expert",
+  "desc": "Prompting, retrieval, summarisation, generation, and structured outputs for research assistants.",
+  "domain": "GenAI & NLP",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "genai_04_b01",
+      "type": "timer_block",
+      "x": 80,
+      "y": 180,
+      "params": {
+        "operation": "start",
+        "timer_id": "t1",
+        "output_var": "timer",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "genai_04_b02",
+      "type": "dimensionality_red",
+      "x": 240,
+      "y": 208,
+      "params": {
+        "X_var": "X",
+        "method": "pca",
+        "n_components": 3,
+        "output_var": "reduced",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b03",
+      "uid": "genai_04_b03",
+      "type": "transfer_learn",
+      "x": 400,
+      "y": 180,
+      "params": {
+        "pretrained_model": "resnet50",
+        "X_train": "X_train",
+        "y_train": "y_train",
+        "strategy": "LoRA",
+        "epochs": 20,
+        "lr": 0.0001,
+        "output_model": "ft_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b04",
+      "uid": "genai_04_b04",
+      "type": "meta_learning",
+      "x": 560,
+      "y": 208,
+      "params": {
+        "tasks_var": "tasks",
+        "algorithm": "MAML",
+        "n_shot": 5,
+        "n_way": 5,
+        "output_model": "meta_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b05",
+      "uid": "genai_04_b05",
+      "type": "federated_learn",
+      "x": 720,
+      "y": 180,
+      "params": {
+        "client_data": "[\"client_0\",\"client_1\",\"client_2\"]",
+        "algorithm": "FedAvg",
+        "rounds": 10,
+        "local_epochs": 5,
+        "output_model": "fl_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b06",
+      "uid": "genai_04_b06",
+      "type": "diffusion_model",
+      "x": 880,
+      "y": 208,
+      "params": {
+        "data_var": "data",
+        "architecture": "DDPM",
+        "timesteps": 1000,
+        "epochs": 500,
+        "output_model": "diffusion_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b07",
+      "uid": "genai_04_b07",
+      "type": "type_cast",
+      "x": 1040,
+      "y": 180,
+      "params": {
+        "input_var": "x",
+        "to_type": "float",
+        "output_var": "casted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b08",
+      "uid": "genai_04_b08",
+      "type": "progress_bar",
+      "x": 1200,
+      "y": 208,
+      "params": {
+        "iterable_var": "items",
+        "description": "Processing",
+        "leave": true,
+        "output_var": "item",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b09",
+      "uid": "genai_04_b09",
+      "type": "data_version",
+      "x": 1360,
+      "y": 180,
+      "params": {
+        "data_var": "data",
+        "system": "DVC",
+        "version_tag": "v1.0.0",
+        "message": "Add training data",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b10",
+      "uid": "genai_04_b10",
+      "type": "conditional_skip",
+      "x": 1520,
+      "y": 208,
+      "params": {
+        "condition": "env == \"prod\"",
+        "log_skip": true,
+        "skip_message": "Skipping: converged",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b11",
+      "uid": "genai_04_b11",
+      "type": "format_number",
+      "x": 1680,
+      "y": 180,
+      "params": {
+        "value_var": "value",
+        "format": "auto",
+        "precision": 4,
+        "output_var": "formatted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b12",
+      "uid": "genai_04_b12",
+      "type": "prompt_template",
+      "x": 1840,
+      "y": 208,
+      "params": {
+        "template": "Summarise the dataset",
+        "variables": "{\"role\":\"scientist\",\"question\":\"...\"}",
+        "output_var": "prompt",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b13",
+      "uid": "genai_04_b13",
+      "type": "structured_output",
+      "x": 2000,
+      "y": 180,
+      "params": {
+        "prompt_var": "prompt",
+        "schema": "{\"summary\":\"string\"}",
+        "model": "gpt-4o",
+        "output_var": "structured",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b14",
+      "uid": "genai_04_b14",
+      "type": "embeddings_block",
+      "x": 2160,
+      "y": 208,
+      "params": {
+        "text_var": "text",
+        "model": "text-embedding-3-small",
+        "output_var": "embeddings",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b15",
+      "uid": "genai_04_b15",
+      "type": "vector_store_block",
+      "x": 2320,
+      "y": 180,
+      "params": {
+        "documents_var": "docs",
+        "store": "ChromaDB",
+        "embedding_model": "text-embedding-3-small",
+        "collection": "papers",
+        "output_var": "vector_store",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b16",
+      "uid": "genai_04_b16",
+      "type": "memory_block",
+      "x": 2480,
+      "y": 208,
+      "params": {
+        "memory_type": "buffer",
+        "max_tokens": 4000,
+        "session_id": "session_001",
+        "output_var": "memory",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b17",
+      "uid": "genai_04_b17",
+      "type": "fine_tune_block",
+      "x": 2640,
+      "y": 180,
+      "params": {
+        "base_model": "meta-llama/Llama-3.1-8B",
+        "training_data_var": "train_data",
+        "method": "LoRA",
+        "epochs": 3,
+        "lr": 0.0002,
+        "output_model": "ft_llm",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b18",
+      "uid": "genai_04_b18",
+      "type": "code_gen_block",
+      "x": 2800,
+      "y": 208,
+      "params": {
+        "instruction_var": "instruction",
+        "language": "python",
+        "model": "claude-sonnet-4-6",
+        "output_var": "code",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b19",
+      "uid": "genai_04_b19",
+      "type": "synthetic_data_gen",
+      "x": 2960,
+      "y": 180,
+      "params": {
+        "schema_var": "schema",
+        "method": "self_instruct",
+        "n_samples": 1000,
+        "model": "gpt-4o",
+        "output_var": "synthetic",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b20",
+      "uid": "genai_04_b20",
+      "type": "ollama_block",
+      "x": 3120,
+      "y": 208,
+      "params": {
+        "model": "llama3.1",
+        "host": "http://localhost:11434",
+        "prompt": "",
+        "temperature": 0.7,
+        "max_tokens": 2048,
+        "stream": false,
+        "output_var": "ollama",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b21",
+      "uid": "genai_04_b21",
+      "type": "transformers_block",
+      "x": 3280,
+      "y": 180,
+      "params": {
+        "model_name": "bert-base-uncased",
+        "task": "text-classification",
+        "input_var": "text",
+        "output_var": "transformers",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b22",
+      "uid": "genai_04_b22",
+      "type": "summarize_block",
+      "x": 3440,
+      "y": 208,
+      "params": {
+        "text_var": "text",
+        "method": "abstractive",
+        "model": "BART",
+        "max_length": 200,
+        "output_var": "summary",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b23",
+      "uid": "genai_04_b23",
+      "type": "translation_block",
+      "x": 3600,
+      "y": 180,
+      "params": {
+        "text_var": "text",
+        "src_lang": "en",
+        "tgt_lang": "fr",
+        "model": "NLLB-200",
+        "output_var": "translation",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b24",
+      "uid": "genai_04_b24",
+      "type": "keyword_extract",
+      "x": 3760,
+      "y": 208,
+      "params": {
+        "text_var": "text",
+        "method": "KeyBERT",
+        "top_k": 10,
+        "output_var": "keywords",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b25",
+      "uid": "genai_04_b25",
+      "type": "heatmap_plot",
+      "x": 3920,
+      "y": 180,
+      "params": {
+        "matrix_var": "results",
+        "title": "GenAI Heatmap 4",
+        "colormap": "magma",
+        "annotate": false,
+        "cluster": true,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "elapsed_ms",
+      "toId": "b02",
+      "toPort": "X",
+      "fid": "b01",
+      "fp": "elapsed_ms",
+      "tid": "b02",
+      "tp": "X"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "embedding",
+      "toId": "b03",
+      "toPort": "data",
+      "fid": "b02",
+      "fp": "embedding",
+      "tid": "b03",
+      "tp": "data"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "model",
+      "toId": "b04",
+      "toPort": "tasks",
+      "fid": "b03",
+      "fp": "model",
+      "tid": "b04",
+      "tp": "tasks"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "model",
+      "toId": "b05",
+      "toPort": "clients",
+      "fid": "b04",
+      "fp": "model",
+      "tid": "b05",
+      "tp": "clients"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "model",
+      "toId": "b06",
+      "toPort": "data",
+      "fid": "b05",
+      "fp": "model",
+      "tid": "b06",
+      "tp": "data"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "model",
+      "toId": "b07",
+      "toPort": "ci",
+      "fid": "b06",
+      "fp": "model",
+      "tid": "b07",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "result",
+      "toId": "b08",
+      "toPort": "iterable",
+      "fid": "b07",
+      "fp": "result",
+      "tid": "b08",
+      "tp": "iterable"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "item",
+      "toId": "b09",
+      "toPort": "data",
+      "fid": "b08",
+      "fp": "item",
+      "tid": "b09",
+      "tp": "data"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "version_id",
+      "toId": "b10",
+      "toPort": "condition",
+      "fid": "b09",
+      "fp": "version_id",
+      "tid": "b10",
+      "tp": "condition"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "pass",
+      "toId": "b11",
+      "toPort": "value",
+      "fid": "b10",
+      "fp": "pass",
+      "tid": "b11",
+      "tp": "value"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "string",
+      "toId": "b12",
+      "toPort": "vars",
+      "fid": "b11",
+      "fp": "string",
+      "tid": "b12",
+      "tp": "vars"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "prompt",
+      "toId": "b13",
+      "toPort": "prompt",
+      "fid": "b12",
+      "fp": "prompt",
+      "tid": "b13",
+      "tp": "prompt"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "data",
+      "toId": "b14",
+      "toPort": "text",
+      "fid": "b13",
+      "fp": "data",
+      "tid": "b14",
+      "tp": "text"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "embeddings",
+      "toId": "b15",
+      "toPort": "docs",
+      "fid": "b14",
+      "fp": "embeddings",
+      "tid": "b15",
+      "tp": "docs"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "vector_store",
+      "toId": "b16",
+      "toPort": "conversation",
+      "fid": "b15",
+      "fp": "vector_store",
+      "tid": "b16",
+      "tp": "conversation"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "memory",
+      "toId": "b17",
+      "toPort": "data",
+      "fid": "b16",
+      "fp": "memory",
+      "tid": "b17",
+      "tp": "data"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "model",
+      "toId": "b18",
+      "toPort": "instruction",
+      "fid": "b17",
+      "fp": "model",
+      "tid": "b18",
+      "tp": "instruction"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "code",
+      "toId": "b19",
+      "toPort": "schema",
+      "fid": "b18",
+      "fp": "code",
+      "tid": "b19",
+      "tp": "schema"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "data",
+      "toId": "b20",
+      "toPort": "prompt",
+      "fid": "b19",
+      "fp": "data",
+      "tid": "b20",
+      "tp": "prompt"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "response",
+      "toId": "b21",
+      "toPort": "input",
+      "fid": "b20",
+      "fp": "response",
+      "tid": "b21",
+      "tp": "input"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "output",
+      "toId": "b22",
+      "toPort": "text",
+      "fid": "b21",
+      "fp": "output",
+      "tid": "b22",
+      "tp": "text"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "summary",
+      "toId": "b23",
+      "toPort": "text",
+      "fid": "b22",
+      "fp": "summary",
+      "tid": "b23",
+      "tp": "text"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "translation",
+      "toId": "b24",
+      "toPort": "text",
+      "fid": "b23",
+      "fp": "translation",
+      "tid": "b24",
+      "tp": "text"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "keywords",
+      "toId": "b25",
+      "toPort": "matrix",
+      "fid": "b24",
+      "fp": "keywords",
+      "tid": "b25",
+      "tp": "matrix"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

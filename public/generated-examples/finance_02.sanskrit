@@ -1,0 +1,652 @@
+{
+  "id": "finance_02",
+  "uid": "uid_finance_02",
+  "title": "Finance & Risk Example 2",
+  "cat": "Finance",
+  "diff": "Intermediate",
+  "desc": "Pricing, risk, backtesting, factor modelling, and market analytics.",
+  "domain": "Finance & Risk",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "finance_02_b01",
+      "type": "crypto_block",
+      "x": 80,
+      "y": 180,
+      "params": {
+        "chain": "ethereum",
+        "protocol": "uniswap_v3",
+        "analysis": "amm_price",
+        "output_var": "crypto_result",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "finance_02_b02",
+      "type": "quantum_ml_finance",
+      "x": 240,
+      "y": 208,
+      "params": {
+        "X_train": "X_train",
+        "y_train": "y_train",
+        "model": "QSVM",
+        "output_var": "qml_fin",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b03",
+      "uid": "finance_02_b03",
+      "type": "filter_block",
+      "x": 400,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "condition": "row.score > 0.5",
+        "output_var": "filtered",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b04",
+      "uid": "finance_02_b04",
+      "type": "map_transform",
+      "x": 560,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "transform_expr": "x * 1.05",
+        "output_var": "mapped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b05",
+      "uid": "finance_02_b05",
+      "type": "sort_block",
+      "x": 720,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "key_expr": "x",
+        "descending": false,
+        "output_var": "sorted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b06",
+      "uid": "finance_02_b06",
+      "type": "groupby_block",
+      "x": 880,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "key_fn": "x[\"category\"]",
+        "agg": "list",
+        "output_var": "grouped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b07",
+      "uid": "finance_02_b07",
+      "type": "pivot_block",
+      "x": 1040,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "index": "region",
+        "columns": "product",
+        "values": "revenue",
+        "aggfunc": "sum",
+        "output_var": "pivoted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b08",
+      "uid": "finance_02_b08",
+      "type": "window_transform",
+      "x": 1200,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "window_size": 7,
+        "agg": "mean",
+        "center": false,
+        "output_var": "windowed",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b09",
+      "uid": "finance_02_b09",
+      "type": "resample_block",
+      "x": 1360,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "freq": "1h",
+        "method": "mean",
+        "output_var": "resampled",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b10",
+      "uid": "finance_02_b10",
+      "type": "encode_features",
+      "x": 1520,
+      "y": 208,
+      "params": {
+        "X_var": "X",
+        "col": "category",
+        "method": "onehot",
+        "output_var": "encoded",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b11",
+      "uid": "finance_02_b11",
+      "type": "type_cast",
+      "x": 1680,
+      "y": 180,
+      "params": {
+        "input_var": "x",
+        "to_type": "float",
+        "output_var": "casted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b12",
+      "uid": "finance_02_b12",
+      "type": "feature_eng",
+      "x": 1840,
+      "y": 208,
+      "params": {
+        "X_var": "X",
+        "steps": "[{\"type\":\"StandardScaler\"},{\"type\":\"OneHotEncoder\"}]",
+        "output_var": "features",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b13",
+      "uid": "finance_02_b13",
+      "type": "dimensionality_red",
+      "x": 2000,
+      "y": 180,
+      "params": {
+        "X_var": "X",
+        "method": "pca",
+        "n_components": 3,
+        "output_var": "reduced",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b14",
+      "uid": "finance_02_b14",
+      "type": "risk_analysis",
+      "x": 2160,
+      "y": 208,
+      "params": {
+        "portfolio_var": "portfolio",
+        "confidence": 0.95,
+        "method": "QAE",
+        "horizon_days": 1,
+        "output_var": "risk",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b15",
+      "uid": "finance_02_b15",
+      "type": "markowitz_quantum",
+      "x": 2320,
+      "y": 180,
+      "params": {
+        "returns_var": "returns",
+        "cov_var": "cov",
+        "n_assets_select": 5,
+        "risk_aversion": 1,
+        "solver": "QAOA",
+        "output_var": "markowitz",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b16",
+      "uid": "finance_02_b16",
+      "type": "yield_curve",
+      "x": 2480,
+      "y": 208,
+      "params": {
+        "instruments_var": "market_data",
+        "interpolation": "cubic_spline",
+        "output_var": "yield_curve",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b17",
+      "uid": "finance_02_b17",
+      "type": "credit_risk",
+      "x": 2640,
+      "y": 180,
+      "params": {
+        "firm_var": "firm",
+        "model": "Merton",
+        "output_var": "credit_risk",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b18",
+      "uid": "finance_02_b18",
+      "type": "backtesting_block",
+      "x": 2800,
+      "y": 208,
+      "params": {
+        "strategy_fn": "strategy_fn",
+        "data_var": "price_data",
+        "initial_capital": 100000,
+        "output_var": "backtest",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b19",
+      "uid": "finance_02_b19",
+      "type": "factor_model",
+      "x": 2960,
+      "y": 180,
+      "params": {
+        "returns_var": "returns",
+        "model": "FF3",
+        "factor_data_var": "factors",
+        "output_var": "factors",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b20",
+      "uid": "finance_02_b20",
+      "type": "pairs_trading",
+      "x": 3120,
+      "y": 208,
+      "params": {
+        "asset_a_var": "price_a",
+        "asset_b_var": "price_b",
+        "z_entry": 2,
+        "z_exit": 0.5,
+        "output_var": "pairs",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b21",
+      "uid": "finance_02_b21",
+      "type": "sentiment_fin",
+      "x": 3280,
+      "y": 180,
+      "params": {
+        "text_var": "text",
+        "model": "FinBERT",
+        "output_var": "sentiment",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b22",
+      "uid": "finance_02_b22",
+      "type": "quantum_ml_finance",
+      "x": 3440,
+      "y": 208,
+      "params": {
+        "X_train": "X_train",
+        "y_train": "y_train",
+        "model": "QSVM",
+        "output_var": "qml_fin",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b23",
+      "uid": "finance_02_b23",
+      "type": "filter_block",
+      "x": 3600,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "condition": "row.score > 0.5",
+        "output_var": "filtered",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b24",
+      "uid": "finance_02_b24",
+      "type": "map_transform",
+      "x": 3760,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "transform_expr": "x * 1.05",
+        "output_var": "mapped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b25",
+      "uid": "finance_02_b25",
+      "type": "report_gen",
+      "x": 3920,
+      "y": 180,
+      "params": {
+        "title": "Finance Report 2",
+        "data_var": "results",
+        "format": "HTML",
+        "output_file": "report_finance_2.html",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "result",
+      "toId": "b02",
+      "toPort": "X",
+      "fid": "b01",
+      "fp": "result",
+      "tid": "b02",
+      "tp": "X"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "model",
+      "toId": "b03",
+      "toPort": "ai",
+      "fid": "b02",
+      "fp": "model",
+      "tid": "b03",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "filtered",
+      "toId": "b04",
+      "toPort": "ai",
+      "fid": "b03",
+      "fp": "filtered",
+      "tid": "b04",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "result",
+      "toId": "b05",
+      "toPort": "ai",
+      "fid": "b04",
+      "fp": "result",
+      "tid": "b05",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "sorted",
+      "toId": "b06",
+      "toPort": "ai",
+      "fid": "b05",
+      "fp": "sorted",
+      "tid": "b06",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "grouped",
+      "toId": "b07",
+      "toPort": "ai",
+      "fid": "b06",
+      "fp": "grouped",
+      "tid": "b07",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "pivot",
+      "toId": "b08",
+      "toPort": "data",
+      "fid": "b07",
+      "fp": "pivot",
+      "tid": "b08",
+      "tp": "data"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "result",
+      "toId": "b09",
+      "toPort": "data",
+      "fid": "b08",
+      "fp": "result",
+      "tid": "b09",
+      "tp": "data"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "result",
+      "toId": "b10",
+      "toPort": "X",
+      "fid": "b09",
+      "fp": "result",
+      "tid": "b10",
+      "tp": "X"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "X_encoded",
+      "toId": "b11",
+      "toPort": "ci",
+      "fid": "b10",
+      "fp": "X_encoded",
+      "tid": "b11",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "result",
+      "toId": "b12",
+      "toPort": "X",
+      "fid": "b11",
+      "fp": "result",
+      "tid": "b12",
+      "tp": "X"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "features",
+      "toId": "b13",
+      "toPort": "X",
+      "fid": "b12",
+      "fp": "features",
+      "tid": "b13",
+      "tp": "X"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "embedding",
+      "toId": "b14",
+      "toPort": "portfolio",
+      "fid": "b13",
+      "fp": "embedding",
+      "tid": "b14",
+      "tp": "portfolio"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "var",
+      "toId": "b15",
+      "toPort": "returns",
+      "fid": "b14",
+      "fp": "var",
+      "tid": "b15",
+      "tp": "returns"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "weights",
+      "toId": "b16",
+      "toPort": "data",
+      "fid": "b15",
+      "fp": "weights",
+      "tid": "b16",
+      "tp": "data"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "curve",
+      "toId": "b17",
+      "toPort": "firm",
+      "fid": "b16",
+      "fp": "curve",
+      "tid": "b17",
+      "tp": "firm"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "pd",
+      "toId": "b18",
+      "toPort": "data",
+      "fid": "b17",
+      "fp": "pd",
+      "tid": "b18",
+      "tp": "data"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "metrics",
+      "toId": "b19",
+      "toPort": "returns",
+      "fid": "b18",
+      "fp": "metrics",
+      "tid": "b19",
+      "tp": "returns"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "loadings",
+      "toId": "b20",
+      "toPort": "a",
+      "fid": "b19",
+      "fp": "loadings",
+      "tid": "b20",
+      "tp": "a"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "signals",
+      "toId": "b21",
+      "toPort": "text",
+      "fid": "b20",
+      "fp": "signals",
+      "tid": "b21",
+      "tp": "text"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "sentiment",
+      "toId": "b22",
+      "toPort": "X",
+      "fid": "b21",
+      "fp": "sentiment",
+      "tid": "b22",
+      "tp": "X"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "model",
+      "toId": "b23",
+      "toPort": "ai",
+      "fid": "b22",
+      "fp": "model",
+      "tid": "b23",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "filtered",
+      "toId": "b24",
+      "toPort": "ai",
+      "fid": "b23",
+      "fp": "filtered",
+      "tid": "b24",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "result",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "result",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

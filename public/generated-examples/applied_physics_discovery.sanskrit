@@ -1,0 +1,20 @@
+{
+  "id": "applied_physics_discovery",
+  "title": "Applied Physics Discovery",
+  "cat": "Applied Physics",
+  "diff": "Expert",
+  "desc": "Rank lattice QCD, many-body localization, fusion control, and gravitational wave inference designs.",
+  "blocks": [
+    {"id": "qcd", "type": "applied_lattice_quantum_chromodynamics", "x": 80, "y": 160, "params": {"method": "Hybrid Monte Carlo", "sample_size": 12}},
+    {"id": "mbl", "type": "applied_many_body_localization_studies", "x": 360, "y": 160, "params": {"method": "Exact diagonalization", "sample_size": 12}},
+    {"id": "fusion", "type": "applied_nuclear_fusion_plasma_control", "x": 640, "y": 160, "params": {"method": "RL plasma controller", "sample_size": 12}},
+    {"id": "gw", "type": "applied_gravitational_wave_signal_processing", "x": 920, "y": 160, "params": {"method": "Matched filtering", "sample_size": 12}},
+    {"id": "tbl", "type": "table_display", "x": 1200, "y": 160, "params": {"title": "Physics Experiment Plan Ranking", "page_size": 25}}
+  ],
+  "wires": [
+    {"fromId": "qcd", "fromPort": "dataset", "toId": "mbl", "toPort": "dataset"},
+    {"fromId": "mbl", "fromPort": "dataset", "toId": "fusion", "toPort": "dataset"},
+    {"fromId": "fusion", "fromPort": "dataset", "toId": "gw", "toPort": "dataset"},
+    {"fromId": "gw", "fromPort": "dataset", "toId": "tbl", "toPort": "dataset"}
+  ]
+}

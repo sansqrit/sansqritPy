@@ -1,0 +1,461 @@
+{
+  "id": "finance_03",
+  "uid": "finance_03_4c412904",
+  "title": "Algo backtest lane",
+  "cat": "Finance",
+  "diff": "A",
+  "desc": "Transactions, risk features, and stress signals are joined into a decision pipeline for portfolio monitoring.",
+  "domain": "finance",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "finance_03_b01",
+      "type": "db_connect",
+      "x": 60,
+      "y": 60,
+      "params": {
+        "db_type": "PostgreSQL",
+        "host": "localhost",
+        "port": 5432,
+        "database": "analytics"
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "finance_03_b02",
+      "type": "quantum_ml_finance",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "finance_03_b03",
+      "type": "cobyla_opt",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "finance_03_b04",
+      "type": "spsa_opt",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "finance_03_b05",
+      "type": "adam_opt",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "finance_03_b06",
+      "type": "genetic_algo",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "finance_03_b07",
+      "type": "simulated_annealing",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "finance_03_b08",
+      "type": "pso_opt",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "finance_03_b09",
+      "type": "lbfgs_opt",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "finance_03_b10",
+      "type": "bayesian_opt",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "finance_03_b11",
+      "type": "portfolio_opt",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "finance_03_b12",
+      "type": "linear_prog",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "finance_03_b13",
+      "type": "integer_prog",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "finance_03_b14",
+      "type": "qubo_block",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "finance_03_b15",
+      "type": "grid_search",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "finance_03_b16",
+      "type": "nelder_mead",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "finance_03_b17",
+      "type": "diff_evolution",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "finance_03_b18",
+      "type": "type_cast",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "finance_03_b19",
+      "type": "debug_break",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "finance_03_b20",
+      "type": "parallel_map",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "finance_03_b21",
+      "type": "cache_block",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "finance_03_b22",
+      "type": "progress_bar",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "finance_03_b23",
+      "type": "experiment_tracker",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "finance_03_b24",
+      "type": "data_version",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "finance_03_b25",
+      "type": "metric_block",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "label": "Algo backtest lane"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "connection",
+      "toId": "b02",
+      "toPort": "X",
+      "fid": "b01",
+      "fp": "connection",
+      "tid": "b02",
+      "tp": "X"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "model",
+      "toId": "b03",
+      "toPort": "fn",
+      "fid": "b02",
+      "fp": "model",
+      "tid": "b03",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "params",
+      "toId": "b04",
+      "toPort": "fn",
+      "fid": "b03",
+      "fp": "params",
+      "tid": "b04",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "params",
+      "toId": "b05",
+      "toPort": "fn",
+      "fid": "b04",
+      "fp": "params",
+      "tid": "b05",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "params",
+      "toId": "b06",
+      "toPort": "fn",
+      "fid": "b05",
+      "fp": "params",
+      "tid": "b06",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "solution",
+      "toId": "b07",
+      "toPort": "fn",
+      "fid": "b06",
+      "fp": "solution",
+      "tid": "b07",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "solution",
+      "toId": "b08",
+      "toPort": "fn",
+      "fid": "b07",
+      "fp": "solution",
+      "tid": "b08",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "solution",
+      "toId": "b09",
+      "toPort": "fn",
+      "fid": "b08",
+      "fp": "solution",
+      "tid": "b09",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "params",
+      "toId": "b10",
+      "toPort": "fn",
+      "fid": "b09",
+      "fp": "params",
+      "tid": "b10",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "params",
+      "toId": "b11",
+      "toPort": "returns",
+      "fid": "b10",
+      "fp": "params",
+      "tid": "b11",
+      "tp": "returns"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "weights",
+      "toId": "b12",
+      "toPort": "c",
+      "fid": "b11",
+      "fp": "weights",
+      "tid": "b12",
+      "tp": "c"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "x",
+      "toId": "b13",
+      "toPort": "problem",
+      "fid": "b12",
+      "fp": "x",
+      "tid": "b13",
+      "tp": "problem"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "solution",
+      "toId": "b14",
+      "toPort": "Q",
+      "fid": "b13",
+      "fp": "solution",
+      "tid": "b14",
+      "tp": "Q"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "x",
+      "toId": "b15",
+      "toPort": "model",
+      "fid": "b14",
+      "fp": "x",
+      "tid": "b15",
+      "tp": "model"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "best_params",
+      "toId": "b16",
+      "toPort": "fn",
+      "fid": "b15",
+      "fp": "best_params",
+      "tid": "b16",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "params",
+      "toId": "b17",
+      "toPort": "fn",
+      "fid": "b16",
+      "fp": "params",
+      "tid": "b17",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "solution",
+      "toId": "b18",
+      "toPort": "ci",
+      "fid": "b17",
+      "fp": "solution",
+      "tid": "b18",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "result",
+      "toId": "b19",
+      "toPort": "ai",
+      "fid": "b18",
+      "fp": "result",
+      "tid": "b19",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "ao",
+      "toId": "b20",
+      "toPort": "fn",
+      "fid": "b19",
+      "fp": "ao",
+      "tid": "b20",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "results",
+      "toId": "b21",
+      "toPort": "fn",
+      "fid": "b20",
+      "fp": "results",
+      "tid": "b21",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "result",
+      "toId": "b22",
+      "toPort": "iterable",
+      "fid": "b21",
+      "fp": "result",
+      "tid": "b22",
+      "tp": "iterable"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "item",
+      "toId": "b23",
+      "toPort": "data",
+      "fid": "b22",
+      "fp": "item",
+      "tid": "b23",
+      "tp": "data"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "run_id",
+      "toId": "b24",
+      "toPort": "data",
+      "fid": "b23",
+      "fp": "run_id",
+      "tid": "b24",
+      "tp": "data"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "version_id",
+      "toId": "b25",
+      "toPort": "value",
+      "fid": "b24",
+      "fp": "version_id",
+      "tid": "b25",
+      "tp": "value"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

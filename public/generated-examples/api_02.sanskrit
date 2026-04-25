@@ -1,0 +1,650 @@
+{
+  "id": "api_02",
+  "uid": "uid_api_02",
+  "title": "API & Platform Integration Example 2",
+  "cat": "API",
+  "diff": "Intermediate",
+  "desc": "Data ingestion, messaging, notifications, and platform interoperability.",
+  "domain": "API & Platform Integration",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "api_02_b01",
+      "type": "graphql_block",
+      "x": 80,
+      "y": 180,
+      "params": {
+        "endpoint": "https://api.example.com/graphql",
+        "query": "query { user { id name } }",
+        "variables": "{}",
+        "output_var": "gql_result",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "api_02_b02",
+      "type": "progress_bar",
+      "x": 240,
+      "y": 208,
+      "params": {
+        "iterable_var": "items",
+        "description": "Processing",
+        "leave": true,
+        "output_var": "item",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b03",
+      "uid": "api_02_b03",
+      "type": "data_version",
+      "x": 400,
+      "y": 180,
+      "params": {
+        "data_var": "data",
+        "system": "DVC",
+        "version_tag": "v1.0.0",
+        "message": "Add training data",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b04",
+      "uid": "api_02_b04",
+      "type": "conditional_skip",
+      "x": 560,
+      "y": 208,
+      "params": {
+        "condition": "env == \"prod\"",
+        "log_skip": true,
+        "skip_message": "Skipping: converged",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b05",
+      "uid": "api_02_b05",
+      "type": "format_number",
+      "x": 720,
+      "y": 180,
+      "params": {
+        "value_var": "value",
+        "format": "auto",
+        "precision": 4,
+        "output_var": "formatted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b06",
+      "uid": "api_02_b06",
+      "type": "timer_block",
+      "x": 880,
+      "y": 208,
+      "params": {
+        "operation": "start",
+        "timer_id": "t1",
+        "output_var": "timer",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b07",
+      "uid": "api_02_b07",
+      "type": "uuid_block",
+      "x": 1040,
+      "y": 180,
+      "params": {
+        "type": "v4",
+        "output_var": "uuid",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b08",
+      "uid": "api_02_b08",
+      "type": "config_load",
+      "x": 1200,
+      "y": 208,
+      "params": {
+        "config_file": "config_38.json",
+        "format": "yaml",
+        "defaults": "{}",
+        "output_var": "config",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b09",
+      "uid": "api_02_b09",
+      "type": "version_block",
+      "x": 1360,
+      "y": 180,
+      "params": {
+        "log_to_panel": true,
+        "output_var": "version",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b10",
+      "uid": "api_02_b10",
+      "type": "env_detect",
+      "x": 1520,
+      "y": 208,
+      "params": {
+        "output_var": "env",
+        "log_details": true,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b11",
+      "uid": "api_02_b11",
+      "type": "filter_block",
+      "x": 1680,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "condition": "row.score > 0.5",
+        "output_var": "filtered",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b12",
+      "uid": "api_02_b12",
+      "type": "map_transform",
+      "x": 1840,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "transform_expr": "x * 1.05",
+        "output_var": "mapped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b13",
+      "uid": "api_02_b13",
+      "type": "sort_block",
+      "x": 2000,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "key_expr": "x",
+        "descending": false,
+        "output_var": "sorted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b14",
+      "uid": "api_02_b14",
+      "type": "groupby_block",
+      "x": 2160,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "key_fn": "x[\"category\"]",
+        "agg": "list",
+        "output_var": "grouped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b15",
+      "uid": "api_02_b15",
+      "type": "pivot_block",
+      "x": 2320,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "index": "region",
+        "columns": "product",
+        "values": "revenue",
+        "aggfunc": "sum",
+        "output_var": "pivoted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b16",
+      "uid": "api_02_b16",
+      "type": "window_transform",
+      "x": 2480,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "window_size": 7,
+        "agg": "mean",
+        "center": false,
+        "output_var": "windowed",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b17",
+      "uid": "api_02_b17",
+      "type": "resample_block",
+      "x": 2640,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "freq": "1h",
+        "method": "mean",
+        "output_var": "resampled",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b18",
+      "uid": "api_02_b18",
+      "type": "encode_features",
+      "x": 2800,
+      "y": 208,
+      "params": {
+        "X_var": "X",
+        "col": "category",
+        "method": "onehot",
+        "output_var": "encoded",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b19",
+      "uid": "api_02_b19",
+      "type": "webhook_block",
+      "x": 2960,
+      "y": 180,
+      "params": {
+        "webhook_url": "",
+        "payload_var": "message",
+        "platform": "Slack",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b20",
+      "uid": "api_02_b20",
+      "type": "kafka_block",
+      "x": 3120,
+      "y": 208,
+      "params": {
+        "broker": "localhost:9092",
+        "topic": "events",
+        "operation": "produce",
+        "message_var": "msg",
+        "output_var": "kafka",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b21",
+      "uid": "api_02_b21",
+      "type": "email_block",
+      "x": 3280,
+      "y": 180,
+      "params": {
+        "to": "ops@example.com",
+        "subject": "Alert",
+        "body_var": "email_body",
+        "html": true,
+        "smtp_host_var": "SMTP_HOST",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b22",
+      "uid": "api_02_b22",
+      "type": "grpc_block",
+      "x": 3440,
+      "y": 208,
+      "params": {
+        "endpoint": "localhost:50051",
+        "service": "MyService",
+        "method": "GetData",
+        "request_var": "request",
+        "output_var": "grpc",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b23",
+      "uid": "api_02_b23",
+      "type": "mqtt_block",
+      "x": 3600,
+      "y": 180,
+      "params": {
+        "broker": "localhost",
+        "topic": "telemetry",
+        "operation": "publish",
+        "payload_var": "message",
+        "output_var": "mqtt",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b24",
+      "uid": "api_02_b24",
+      "type": "websocket_client",
+      "x": 3760,
+      "y": 208,
+      "params": {
+        "url": "wss://example.com",
+        "message_var": "msg",
+        "timeout_ms": 30000,
+        "output_var": "ws",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b25",
+      "uid": "api_02_b25",
+      "type": "table_block",
+      "x": 3920,
+      "y": 180,
+      "params": {
+        "data_var": "results",
+        "max_rows": 100,
+        "sortable": true,
+        "filterable": true,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "result",
+      "toId": "b02",
+      "toPort": "iterable",
+      "fid": "b01",
+      "fp": "result",
+      "tid": "b02",
+      "tp": "iterable"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "item",
+      "toId": "b03",
+      "toPort": "data",
+      "fid": "b02",
+      "fp": "item",
+      "tid": "b03",
+      "tp": "data"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "version_id",
+      "toId": "b04",
+      "toPort": "condition",
+      "fid": "b03",
+      "fp": "version_id",
+      "tid": "b04",
+      "tp": "condition"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "pass",
+      "toId": "b05",
+      "toPort": "value",
+      "fid": "b04",
+      "fp": "pass",
+      "tid": "b05",
+      "tp": "value"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "string",
+      "toId": "b06",
+      "toPort": "in",
+      "fid": "b05",
+      "fp": "string",
+      "tid": "b06",
+      "tp": "in"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "elapsed_ms",
+      "toId": "b07",
+      "toPort": "in",
+      "fid": "b06",
+      "fp": "elapsed_ms",
+      "tid": "b07",
+      "tp": "in"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "id",
+      "toId": "b08",
+      "toPort": "in",
+      "fid": "b07",
+      "fp": "id",
+      "tid": "b08",
+      "tp": "in"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "config",
+      "toId": "b09",
+      "toPort": "in",
+      "fid": "b08",
+      "fp": "config",
+      "tid": "b09",
+      "tp": "in"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "version",
+      "toId": "b10",
+      "toPort": "in",
+      "fid": "b09",
+      "fp": "version",
+      "tid": "b10",
+      "tp": "in"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "env_info",
+      "toId": "b11",
+      "toPort": "ai",
+      "fid": "b10",
+      "fp": "env_info",
+      "tid": "b11",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "filtered",
+      "toId": "b12",
+      "toPort": "ai",
+      "fid": "b11",
+      "fp": "filtered",
+      "tid": "b12",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "result",
+      "toId": "b13",
+      "toPort": "ai",
+      "fid": "b12",
+      "fp": "result",
+      "tid": "b13",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "sorted",
+      "toId": "b14",
+      "toPort": "ai",
+      "fid": "b13",
+      "fp": "sorted",
+      "tid": "b14",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "grouped",
+      "toId": "b15",
+      "toPort": "ai",
+      "fid": "b14",
+      "fp": "grouped",
+      "tid": "b15",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "pivot",
+      "toId": "b16",
+      "toPort": "data",
+      "fid": "b15",
+      "fp": "pivot",
+      "tid": "b16",
+      "tp": "data"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "result",
+      "toId": "b17",
+      "toPort": "data",
+      "fid": "b16",
+      "fp": "result",
+      "tid": "b17",
+      "tp": "data"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "result",
+      "toId": "b18",
+      "toPort": "X",
+      "fid": "b17",
+      "fp": "result",
+      "tid": "b18",
+      "tp": "X"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "X_encoded",
+      "toId": "b19",
+      "toPort": "payload",
+      "fid": "b18",
+      "fp": "X_encoded",
+      "tid": "b19",
+      "tp": "payload"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "status",
+      "toId": "b20",
+      "toPort": "message",
+      "fid": "b19",
+      "fp": "status",
+      "tid": "b20",
+      "tp": "message"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "result",
+      "toId": "b21",
+      "toPort": "body",
+      "fid": "b20",
+      "fp": "result",
+      "tid": "b21",
+      "tp": "body"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "sent",
+      "toId": "b22",
+      "toPort": "request",
+      "fid": "b21",
+      "fp": "sent",
+      "tid": "b22",
+      "tp": "request"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "response",
+      "toId": "b23",
+      "toPort": "payload",
+      "fid": "b22",
+      "fp": "response",
+      "tid": "b23",
+      "tp": "payload"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "message",
+      "toId": "b24",
+      "toPort": "message",
+      "fid": "b23",
+      "fp": "message",
+      "tid": "b24",
+      "tp": "message"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "response",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "response",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

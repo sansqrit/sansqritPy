@@ -1,0 +1,660 @@
+{
+  "id": "data_01",
+  "uid": "uid_data_01",
+  "title": "Enterprise Data Engineering Example 1",
+  "cat": "ETL",
+  "diff": "Beginner",
+  "desc": "Local file ingestion, cleansing, feature prep, and reporting for tabular operational data.",
+  "domain": "Enterprise Data Engineering",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "data_01_b01",
+      "type": "csv_reader",
+      "x": 80,
+      "y": 180,
+      "params": {
+        "file_path": "local/customer_ops_1.csv",
+        "separator": ",",
+        "header": true,
+        "auto_types": true,
+        "encoding": "utf-8",
+        "output_var": "df",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "data_01_b02",
+      "type": "filter_block",
+      "x": 240,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "condition": "row.score > 0.5",
+        "output_var": "filtered",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b03",
+      "uid": "data_01_b03",
+      "type": "map_transform",
+      "x": 400,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "transform_expr": "x * 1.05",
+        "output_var": "mapped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b04",
+      "uid": "data_01_b04",
+      "type": "sort_block",
+      "x": 560,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "key_expr": "x",
+        "descending": false,
+        "output_var": "sorted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b05",
+      "uid": "data_01_b05",
+      "type": "groupby_block",
+      "x": 720,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "key_fn": "x[\"category\"]",
+        "agg": "list",
+        "output_var": "grouped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b06",
+      "uid": "data_01_b06",
+      "type": "pivot_block",
+      "x": 880,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "index": "region",
+        "columns": "product",
+        "values": "revenue",
+        "aggfunc": "sum",
+        "output_var": "pivoted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b07",
+      "uid": "data_01_b07",
+      "type": "window_transform",
+      "x": 1040,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "window_size": 7,
+        "agg": "mean",
+        "center": false,
+        "output_var": "windowed",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b08",
+      "uid": "data_01_b08",
+      "type": "resample_block",
+      "x": 1200,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "freq": "1h",
+        "method": "mean",
+        "output_var": "resampled",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b09",
+      "uid": "data_01_b09",
+      "type": "encode_features",
+      "x": 1360,
+      "y": 180,
+      "params": {
+        "X_var": "X",
+        "col": "category",
+        "method": "onehot",
+        "output_var": "encoded",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b10",
+      "uid": "data_01_b10",
+      "type": "missing_impute",
+      "x": 1520,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "strategy": "median",
+        "fill_value": "0",
+        "output_var": "imputed",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b11",
+      "uid": "data_01_b11",
+      "type": "normalize_block",
+      "x": 1680,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "scaler": "StandardScaler",
+        "output_var": "normalised",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b12",
+      "uid": "data_01_b12",
+      "type": "explode_block",
+      "x": 1840,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "column": "tags",
+        "flatten_json": false,
+        "output_var": "exploded",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b13",
+      "uid": "data_01_b13",
+      "type": "binning_block",
+      "x": 2000,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "column": "age",
+        "strategy": "quantile",
+        "n_bins": 5,
+        "output_var": "binned",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b14",
+      "uid": "data_01_b14",
+      "type": "type_cast",
+      "x": 2160,
+      "y": 208,
+      "params": {
+        "input_var": "x",
+        "to_type": "float",
+        "output_var": "casted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b15",
+      "uid": "data_01_b15",
+      "type": "progress_bar",
+      "x": 2320,
+      "y": 180,
+      "params": {
+        "iterable_var": "items",
+        "description": "Processing",
+        "leave": true,
+        "output_var": "item",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b16",
+      "uid": "data_01_b16",
+      "type": "data_version",
+      "x": 2480,
+      "y": 208,
+      "params": {
+        "data_var": "data",
+        "system": "DVC",
+        "version_tag": "v1.0.0",
+        "message": "Add training data",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b17",
+      "uid": "data_01_b17",
+      "type": "conditional_skip",
+      "x": 2640,
+      "y": 180,
+      "params": {
+        "condition": "env == \"prod\"",
+        "log_skip": true,
+        "skip_message": "Skipping: converged",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b18",
+      "uid": "data_01_b18",
+      "type": "format_number",
+      "x": 2800,
+      "y": 208,
+      "params": {
+        "value_var": "value",
+        "format": "auto",
+        "precision": 4,
+        "output_var": "formatted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b19",
+      "uid": "data_01_b19",
+      "type": "feature_eng",
+      "x": 2960,
+      "y": 180,
+      "params": {
+        "X_var": "X",
+        "steps": "[{\"type\":\"StandardScaler\"},{\"type\":\"OneHotEncoder\"}]",
+        "output_var": "features",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b20",
+      "uid": "data_01_b20",
+      "type": "dimensionality_red",
+      "x": 3120,
+      "y": 208,
+      "params": {
+        "X_var": "X",
+        "method": "pca",
+        "n_components": 3,
+        "output_var": "reduced",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b21",
+      "uid": "data_01_b21",
+      "type": "transfer_learn",
+      "x": 3280,
+      "y": 180,
+      "params": {
+        "pretrained_model": "resnet50",
+        "X_train": "X_train",
+        "y_train": "y_train",
+        "strategy": "LoRA",
+        "epochs": 20,
+        "lr": 0.0001,
+        "output_model": "ft_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b22",
+      "uid": "data_01_b22",
+      "type": "meta_learning",
+      "x": 3440,
+      "y": 208,
+      "params": {
+        "tasks_var": "tasks",
+        "algorithm": "MAML",
+        "n_shot": 5,
+        "n_way": 5,
+        "output_model": "meta_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b23",
+      "uid": "data_01_b23",
+      "type": "federated_learn",
+      "x": 3600,
+      "y": 180,
+      "params": {
+        "client_data": "[\"client_0\",\"client_1\",\"client_2\"]",
+        "algorithm": "FedAvg",
+        "rounds": 10,
+        "local_epochs": 5,
+        "output_model": "fl_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b24",
+      "uid": "data_01_b24",
+      "type": "diffusion_model",
+      "x": 3760,
+      "y": 208,
+      "params": {
+        "data_var": "data",
+        "architecture": "DDPM",
+        "timesteps": 1000,
+        "epochs": 500,
+        "output_model": "diffusion_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b25",
+      "uid": "data_01_b25",
+      "type": "table_block",
+      "x": 3920,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "max_rows": 100,
+        "sortable": true,
+        "filterable": true,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "dataframe",
+      "toId": "b02",
+      "toPort": "ai",
+      "fid": "b01",
+      "fp": "dataframe",
+      "tid": "b02",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "filtered",
+      "toId": "b03",
+      "toPort": "ai",
+      "fid": "b02",
+      "fp": "filtered",
+      "tid": "b03",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "result",
+      "toId": "b04",
+      "toPort": "ai",
+      "fid": "b03",
+      "fp": "result",
+      "tid": "b04",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "sorted",
+      "toId": "b05",
+      "toPort": "ai",
+      "fid": "b04",
+      "fp": "sorted",
+      "tid": "b05",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "grouped",
+      "toId": "b06",
+      "toPort": "ai",
+      "fid": "b05",
+      "fp": "grouped",
+      "tid": "b06",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "pivot",
+      "toId": "b07",
+      "toPort": "data",
+      "fid": "b06",
+      "fp": "pivot",
+      "tid": "b07",
+      "tp": "data"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "result",
+      "toId": "b08",
+      "toPort": "data",
+      "fid": "b07",
+      "fp": "result",
+      "tid": "b08",
+      "tp": "data"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "result",
+      "toId": "b09",
+      "toPort": "X",
+      "fid": "b08",
+      "fp": "result",
+      "tid": "b09",
+      "tp": "X"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "X_encoded",
+      "toId": "b10",
+      "toPort": "data",
+      "fid": "b09",
+      "fp": "X_encoded",
+      "tid": "b10",
+      "tp": "data"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "imputed",
+      "toId": "b11",
+      "toPort": "X",
+      "fid": "b10",
+      "fp": "imputed",
+      "tid": "b11",
+      "tp": "X"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "scaled",
+      "toId": "b12",
+      "toPort": "data",
+      "fid": "b11",
+      "fp": "scaled",
+      "tid": "b12",
+      "tp": "data"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "result",
+      "toId": "b13",
+      "toPort": "data",
+      "fid": "b12",
+      "fp": "result",
+      "tid": "b13",
+      "tp": "data"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "binned",
+      "toId": "b14",
+      "toPort": "ci",
+      "fid": "b13",
+      "fp": "binned",
+      "tid": "b14",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "result",
+      "toId": "b15",
+      "toPort": "iterable",
+      "fid": "b14",
+      "fp": "result",
+      "tid": "b15",
+      "tp": "iterable"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "item",
+      "toId": "b16",
+      "toPort": "data",
+      "fid": "b15",
+      "fp": "item",
+      "tid": "b16",
+      "tp": "data"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "version_id",
+      "toId": "b17",
+      "toPort": "condition",
+      "fid": "b16",
+      "fp": "version_id",
+      "tid": "b17",
+      "tp": "condition"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "pass",
+      "toId": "b18",
+      "toPort": "value",
+      "fid": "b17",
+      "fp": "pass",
+      "tid": "b18",
+      "tp": "value"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "string",
+      "toId": "b19",
+      "toPort": "X",
+      "fid": "b18",
+      "fp": "string",
+      "tid": "b19",
+      "tp": "X"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "features",
+      "toId": "b20",
+      "toPort": "X",
+      "fid": "b19",
+      "fp": "features",
+      "tid": "b20",
+      "tp": "X"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "embedding",
+      "toId": "b21",
+      "toPort": "data",
+      "fid": "b20",
+      "fp": "embedding",
+      "tid": "b21",
+      "tp": "data"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "model",
+      "toId": "b22",
+      "toPort": "tasks",
+      "fid": "b21",
+      "fp": "model",
+      "tid": "b22",
+      "tp": "tasks"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "model",
+      "toId": "b23",
+      "toPort": "clients",
+      "fid": "b22",
+      "fp": "model",
+      "tid": "b23",
+      "tp": "clients"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "model",
+      "toId": "b24",
+      "toPort": "data",
+      "fid": "b23",
+      "fp": "model",
+      "tid": "b24",
+      "tp": "data"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "model",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "model",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

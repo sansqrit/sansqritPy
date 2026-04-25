@@ -1,0 +1,32 @@
+{
+  "sessionId": "autosave_2026-04-25T10-34-57",
+  "savedAt": "2026-04-25T10:36:43.039Z",
+  "activeTab": "t1777113340555",
+  "tabCount": 3,
+  "tabs": [
+    {
+      "id": "t0",
+      "label": "Canvas 1",
+      "active": false,
+      "file": "01_t0_Canvas_1.json",
+      "blocks": 24,
+      "wires": 21
+    },
+    {
+      "id": "_example",
+      "label": "📋 Example",
+      "active": false,
+      "file": "02__example____Example.json",
+      "blocks": 24,
+      "wires": 21
+    },
+    {
+      "id": "t1777113340555",
+      "label": "Applied Precision Medicine",
+      "active": true,
+      "file": "03_t1777113340555_Applied_Precision_Medicine.json",
+      "blocks": 5,
+      "wires": 4
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "version": "3.2",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "applied_molecular_docking",
+      "x": 1,
+      "y": 2,
+      "params": {}
+    }
+  ],
+  "wires": [],
+  "name": "Canvas 1",
+  "tabId": "t1",
+  "active": true,
+  "savedAt": "2026-04-25T09:53:54.650Z"
+}

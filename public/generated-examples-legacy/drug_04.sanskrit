@@ -1,0 +1,456 @@
+{
+  "id": "drug_04",
+  "uid": "drug_04_b6661e8c",
+  "title": "Lead optimization loop",
+  "cat": "Chemistry",
+  "diff": "I",
+  "desc": "Cheminformatics, docking, ADMET, and lead optimization blocks model a realistic discovery funnel.",
+  "domain": "drug",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "drug_04_b01",
+      "type": "pdb_reader",
+      "x": 60,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b02",
+      "uid": "drug_04_b02",
+      "type": "vibrational_modes",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "drug_04_b03",
+      "type": "solvation_block",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "drug_04_b04",
+      "type": "nbo_analysis",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "drug_04_b05",
+      "type": "td_dft",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "drug_04_b06",
+      "type": "gfn_xtb",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "drug_04_b07",
+      "type": "fp_similarity_screen",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "drug_04_b08",
+      "type": "scaffold_decomp",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "drug_04_b09",
+      "type": "retrosynthesis",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "drug_04_b10",
+      "type": "pharmacophore",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "drug_04_b11",
+      "type": "mmpdb_block",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "drug_04_b12",
+      "type": "solubility_pred",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "drug_04_b13",
+      "type": "molecular_docking",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "drug_04_b14",
+      "type": "admet_block",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "drug_04_b15",
+      "type": "virtual_screen",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "drug_04_b16",
+      "type": "qsar_model",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "drug_04_b17",
+      "type": "lead_opt",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "drug_04_b18",
+      "type": "de_novo_design",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "drug_04_b19",
+      "type": "toxicity_block",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "drug_04_b20",
+      "type": "binding_free_energy",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "drug_04_b21",
+      "type": "monte_carlo",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "drug_04_b22",
+      "type": "molecular_dynamics",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "drug_04_b23",
+      "type": "fluid_dynamics",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "drug_04_b24",
+      "type": "finite_element",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "drug_04_b25",
+      "type": "histogram_plot",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "title": "Lead optimization loop"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "structure",
+      "toId": "b02",
+      "toPort": "mol",
+      "fid": "b01",
+      "fp": "structure",
+      "tid": "b02",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "frequencies",
+      "toId": "b03",
+      "toPort": "mol",
+      "fid": "b02",
+      "fp": "frequencies",
+      "tid": "b03",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "solvation_energy",
+      "toId": "b04",
+      "toPort": "mol",
+      "fid": "b03",
+      "fp": "solvation_energy",
+      "tid": "b04",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "charges",
+      "toId": "b05",
+      "toPort": "mol",
+      "fid": "b04",
+      "fp": "charges",
+      "tid": "b05",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "spectrum",
+      "toId": "b06",
+      "toPort": "mol",
+      "fid": "b05",
+      "fp": "spectrum",
+      "tid": "b06",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "energy",
+      "toId": "b07",
+      "toPort": "query",
+      "fid": "b06",
+      "fp": "energy",
+      "tid": "b07",
+      "tp": "query"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "hits",
+      "toId": "b08",
+      "toPort": "mol",
+      "fid": "b07",
+      "fp": "hits",
+      "tid": "b08",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "scaffold",
+      "toId": "b09",
+      "toPort": "target",
+      "fid": "b08",
+      "fp": "scaffold",
+      "tid": "b09",
+      "tp": "target"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "routes",
+      "toId": "b10",
+      "toPort": "actives",
+      "fid": "b09",
+      "fp": "routes",
+      "tid": "b10",
+      "tp": "actives"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "model",
+      "toId": "b11",
+      "toPort": "series",
+      "fid": "b10",
+      "fp": "model",
+      "tid": "b11",
+      "tp": "series"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "transforms",
+      "toId": "b12",
+      "toPort": "mol",
+      "fid": "b11",
+      "fp": "transforms",
+      "tid": "b12",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "logS",
+      "toId": "b13",
+      "toPort": "ligand",
+      "fid": "b12",
+      "fp": "logS",
+      "tid": "b13",
+      "tp": "ligand"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "poses",
+      "toId": "b14",
+      "toPort": "mol",
+      "fid": "b13",
+      "fp": "poses",
+      "tid": "b14",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "admet",
+      "toId": "b15",
+      "toPort": "target",
+      "fid": "b14",
+      "fp": "admet",
+      "tid": "b15",
+      "tp": "target"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "hits",
+      "toId": "b16",
+      "toPort": "data",
+      "fid": "b15",
+      "fp": "hits",
+      "tid": "b16",
+      "tp": "data"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "model",
+      "toId": "b17",
+      "toPort": "scaffold",
+      "fid": "b16",
+      "fp": "model",
+      "tid": "b17",
+      "tp": "scaffold"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "leads",
+      "toId": "b18",
+      "toPort": "target",
+      "fid": "b17",
+      "fp": "leads",
+      "tid": "b18",
+      "tp": "target"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "molecules",
+      "toId": "b19",
+      "toPort": "mol",
+      "fid": "b18",
+      "fp": "molecules",
+      "tid": "b19",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "toxicity",
+      "toId": "b20",
+      "toPort": "protein",
+      "fid": "b19",
+      "fp": "toxicity",
+      "tid": "b20",
+      "tp": "protein"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "delta_g",
+      "toId": "b21",
+      "toPort": "hamiltonian",
+      "fid": "b20",
+      "fp": "delta_g",
+      "tid": "b21",
+      "tp": "hamiltonian"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "observable",
+      "toId": "b22",
+      "toPort": "system",
+      "fid": "b21",
+      "fp": "observable",
+      "tid": "b22",
+      "tp": "system"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "trajectory",
+      "toId": "b23",
+      "toPort": "geometry",
+      "fid": "b22",
+      "fp": "trajectory",
+      "tid": "b23",
+      "tp": "geometry"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "velocity",
+      "toId": "b24",
+      "toPort": "mesh",
+      "fid": "b23",
+      "fp": "velocity",
+      "tid": "b24",
+      "tp": "mesh"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "displacement",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "displacement",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

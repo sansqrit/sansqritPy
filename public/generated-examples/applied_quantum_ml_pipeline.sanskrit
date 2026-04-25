@@ -1,0 +1,20 @@
+{
+  "id": "applied_quantum_ml_pipeline",
+  "title": "Applied Quantum ML Pipeline",
+  "cat": "Applied Quantum",
+  "diff": "Expert",
+  "desc": "Run QSVM, QNN, QPCA, quantum clustering, and QGAN design as a reusable ML stack.",
+  "blocks": [
+    {"id": "qsvm", "type": "applied_quantum_support_vector_machines", "x": 80, "y": 160, "params": {"method": "QSVM kernel", "sample_size": 16}},
+    {"id": "qnn", "type": "applied_quantum_neural_networks", "x": 360, "y": 160, "params": {"method": "Quantum natural gradient", "sample_size": 16}},
+    {"id": "qpca", "type": "applied_quantum_principal_component_analysis", "x": 640, "y": 160, "params": {"method": "Quantum-inspired SVD", "sample_size": 16}},
+    {"id": "qgan", "type": "applied_quantum_gans", "x": 920, "y": 160, "params": {"method": "Born machine", "sample_size": 16}},
+    {"id": "tbl", "type": "table_display", "x": 1200, "y": 160, "params": {"title": "Quantum ML Model Candidates", "page_size": 25}}
+  ],
+  "wires": [
+    {"fromId": "qsvm", "fromPort": "dataset", "toId": "qnn", "toPort": "dataset"},
+    {"fromId": "qnn", "fromPort": "dataset", "toId": "qpca", "toPort": "dataset"},
+    {"fromId": "qpca", "fromPort": "dataset", "toId": "qgan", "toPort": "dataset"},
+    {"fromId": "qgan", "fromPort": "dataset", "toId": "tbl", "toPort": "dataset"}
+  ]
+}

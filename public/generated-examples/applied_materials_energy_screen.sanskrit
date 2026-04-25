@@ -1,0 +1,20 @@
+{
+  "id": "applied_materials_energy_screen",
+  "title": "Applied Materials and Energy Screen",
+  "cat": "Applied Science",
+  "diff": "Advanced",
+  "desc": "Rank catalysts, carbon capture materials, superconductors, and photovoltaic candidates.",
+  "blocks": [
+    {"id": "n2", "type": "applied_catalyst_design_for_nitrogen_fixation", "x": 80, "y": 180, "params": {"method": "DFT descriptor screen", "sample_size": 16}},
+    {"id": "co2", "type": "applied_carbon_capture_materials", "x": 360, "y": 180, "params": {"method": "Multi-objective screening", "sample_size": 16}},
+    {"id": "sc", "type": "applied_high_temperature_superconductors", "x": 640, "y": 180, "params": {"method": "Bayesian composition search", "sample_size": 16}},
+    {"id": "pv", "type": "applied_photovoltaic_efficiency_optimization", "x": 920, "y": 180, "params": {"method": "Perovskite screen", "sample_size": 16}},
+    {"id": "tbl", "type": "table_display", "x": 1200, "y": 180, "params": {"title": "Materials Pareto Candidates", "page_size": 25}}
+  ],
+  "wires": [
+    {"fromId": "n2", "fromPort": "dataset", "toId": "co2", "toPort": "dataset"},
+    {"fromId": "co2", "fromPort": "dataset", "toId": "sc", "toPort": "dataset"},
+    {"fromId": "sc", "fromPort": "dataset", "toId": "pv", "toPort": "dataset"},
+    {"fromId": "pv", "fromPort": "dataset", "toId": "tbl", "toPort": "dataset"}
+  ]
+}

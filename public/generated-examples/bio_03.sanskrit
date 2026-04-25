@@ -1,0 +1,652 @@
+{
+  "id": "bio_03",
+  "uid": "uid_bio_03",
+  "title": "Biology & Genomics Example 3",
+  "cat": "Biology",
+  "diff": "Advanced",
+  "desc": "Genomics, proteomics, transcriptomics, and translational biology workflows.",
+  "domain": "Biology & Genomics",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "bio_03_b01",
+      "type": "haplotype_block",
+      "x": 80,
+      "y": 180,
+      "params": {
+        "vcf_var": "variants.vcf",
+        "method": "SHAPEIT4",
+        "output_var": "haplotypes",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "bio_03_b02",
+      "type": "snp_analysis",
+      "x": 240,
+      "y": 208,
+      "params": {
+        "vcf_file": "variants.vcf",
+        "reference_var": "hg38",
+        "analysis": "GWAS",
+        "phenotype_var": "phenotype",
+        "output_var": "snps",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b03",
+      "uid": "bio_03_b03",
+      "type": "metabolomics_block",
+      "x": 400,
+      "y": 180,
+      "params": {
+        "ms_data_var": "ms_data",
+        "pipeline": "XCMS",
+        "reference_db": "HMDB",
+        "output_var": "metabolites",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b04",
+      "uid": "bio_03_b04",
+      "type": "epigenomics_block",
+      "x": 560,
+      "y": 208,
+      "params": {
+        "bam_file": "sample.bam",
+        "assay": "ChIP-seq",
+        "peak_caller": "MACS2",
+        "output_var": "epigenomics",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b05",
+      "uid": "bio_03_b05",
+      "type": "network_biology",
+      "x": 720,
+      "y": 180,
+      "params": {
+        "network_var": "ppi_network",
+        "analysis": "centrality",
+        "output_var": "network",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b06",
+      "uid": "bio_03_b06",
+      "type": "metagenomics_block",
+      "x": 880,
+      "y": 208,
+      "params": {
+        "reads_file": "reads.fastq",
+        "tool": "MetaPhlAn4",
+        "analysis": "taxonomy",
+        "output_var": "metagenomics",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b07",
+      "uid": "bio_03_b07",
+      "type": "flow_cytometry",
+      "x": 1040,
+      "y": 180,
+      "params": {
+        "fcs_file": "sample.fcs",
+        "method": "FlowSOM",
+        "output_var": "flow",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b08",
+      "uid": "bio_03_b08",
+      "type": "cryo_em_block",
+      "x": 1200,
+      "y": 208,
+      "params": {
+        "micrographs_dir": "./micrographs/",
+        "software": "cryoSPARC",
+        "target_resolution": 3,
+        "output_var": "cryo",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b09",
+      "uid": "bio_03_b09",
+      "type": "gene_ontology",
+      "x": 1360,
+      "y": 180,
+      "params": {
+        "gene_list_var": "gene_list",
+        "background_var": "background",
+        "database": "GO_BP",
+        "fdr_threshold": 0.05,
+        "output_var": "go",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b10",
+      "uid": "bio_03_b10",
+      "type": "protein_design",
+      "x": 1520,
+      "y": 208,
+      "params": {
+        "target_structure": "pdb_file",
+        "method": "ProteinMPNN",
+        "n_sequences": 100,
+        "output_var": "protein_design",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b11",
+      "uid": "bio_03_b11",
+      "type": "genome_assembly",
+      "x": 1680,
+      "y": 180,
+      "params": {
+        "reads_var": "reads.fastq",
+        "assembler": "SPAdes",
+        "read_type": "illumina",
+        "output_var": "assembly",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b12",
+      "uid": "bio_03_b12",
+      "type": "haplotype_block",
+      "x": 1840,
+      "y": 208,
+      "params": {
+        "vcf_var": "variants.vcf",
+        "method": "SHAPEIT4",
+        "output_var": "haplotypes",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b13",
+      "uid": "bio_03_b13",
+      "type": "structural_variation",
+      "x": 2000,
+      "y": 180,
+      "params": {
+        "bam_var": "sample.bam",
+        "reference": "hg38",
+        "caller": "Manta",
+        "output_var": "sv",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b14",
+      "uid": "bio_03_b14",
+      "type": "proteomics_block",
+      "x": 2160,
+      "y": 208,
+      "params": {
+        "spectra_file": "spectra.mzML",
+        "method": "database_search",
+        "protein_db": "UniProt",
+        "output_var": "protein_quant",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b15",
+      "uid": "bio_03_b15",
+      "type": "filter_block",
+      "x": 2320,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "condition": "row.score > 0.5",
+        "output_var": "filtered",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b16",
+      "uid": "bio_03_b16",
+      "type": "map_transform",
+      "x": 2480,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "transform_expr": "x * 1.05",
+        "output_var": "mapped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b17",
+      "uid": "bio_03_b17",
+      "type": "sort_block",
+      "x": 2640,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "key_expr": "x",
+        "descending": false,
+        "output_var": "sorted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b18",
+      "uid": "bio_03_b18",
+      "type": "groupby_block",
+      "x": 2800,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "key_fn": "x[\"category\"]",
+        "agg": "list",
+        "output_var": "grouped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b19",
+      "uid": "bio_03_b19",
+      "type": "pivot_block",
+      "x": 2960,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "index": "region",
+        "columns": "product",
+        "values": "revenue",
+        "aggfunc": "sum",
+        "output_var": "pivoted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b20",
+      "uid": "bio_03_b20",
+      "type": "window_transform",
+      "x": 3120,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "window_size": 7,
+        "agg": "mean",
+        "center": false,
+        "output_var": "windowed",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b21",
+      "uid": "bio_03_b21",
+      "type": "resample_block",
+      "x": 3280,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "freq": "1h",
+        "method": "mean",
+        "output_var": "resampled",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b22",
+      "uid": "bio_03_b22",
+      "type": "protein_fold",
+      "x": 3440,
+      "y": 208,
+      "params": {
+        "sequence": "MKTAYIAKQRQISFVKSHFSRQ",
+        "method": "AlphaFold2",
+        "use_templates": true,
+        "output_var": "fold",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b23",
+      "uid": "bio_03_b23",
+      "type": "blast_block",
+      "x": 3600,
+      "y": 180,
+      "params": {
+        "query_seq": "",
+        "blast_type": "blastp",
+        "database": "nr",
+        "e_value_threshold": 1e-10,
+        "output_var": "blast",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b24",
+      "uid": "bio_03_b24",
+      "type": "rna_fold",
+      "x": 3760,
+      "y": 208,
+      "params": {
+        "rna_sequence": "AUGCAUGCAUGC",
+        "method": "Vienna_RNAfold",
+        "output_var": "rna_fold",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b25",
+      "uid": "bio_03_b25",
+      "type": "console_log_block",
+      "x": 3920,
+      "y": 180,
+      "params": {
+        "value_var": "results",
+        "format": "json",
+        "prefix": "BIO::",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "haplotypes",
+      "toId": "b02",
+      "toPort": "in",
+      "fid": "b01",
+      "fp": "haplotypes",
+      "tid": "b02",
+      "tp": "in"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "results",
+      "toId": "b03",
+      "toPort": "ms_data",
+      "fid": "b02",
+      "fp": "results",
+      "tid": "b03",
+      "tp": "ms_data"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "metabolites",
+      "toId": "b04",
+      "toPort": "in",
+      "fid": "b03",
+      "fp": "metabolites",
+      "tid": "b04",
+      "tp": "in"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "peaks",
+      "toId": "b05",
+      "toPort": "network",
+      "fid": "b04",
+      "fp": "peaks",
+      "tid": "b05",
+      "tp": "network"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "hubs",
+      "toId": "b06",
+      "toPort": "in",
+      "fid": "b05",
+      "fp": "hubs",
+      "tid": "b06",
+      "tp": "in"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "taxonomy",
+      "toId": "b07",
+      "toPort": "in",
+      "fid": "b06",
+      "fp": "taxonomy",
+      "tid": "b07",
+      "tp": "in"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "populations",
+      "toId": "b08",
+      "toPort": "in",
+      "fid": "b07",
+      "fp": "populations",
+      "tid": "b08",
+      "tp": "in"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "3d_map",
+      "toId": "b09",
+      "toPort": "genes",
+      "fid": "b08",
+      "fp": "3d_map",
+      "tid": "b09",
+      "tp": "genes"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "enriched_terms",
+      "toId": "b10",
+      "toPort": "target",
+      "fid": "b09",
+      "fp": "enriched_terms",
+      "tid": "b10",
+      "tp": "target"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "sequences",
+      "toId": "b11",
+      "toPort": "in",
+      "fid": "b10",
+      "fp": "sequences",
+      "tid": "b11",
+      "tp": "in"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "contigs",
+      "toId": "b12",
+      "toPort": "in",
+      "fid": "b11",
+      "fp": "contigs",
+      "tid": "b12",
+      "tp": "in"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "haplotypes",
+      "toId": "b13",
+      "toPort": "in",
+      "fid": "b12",
+      "fp": "haplotypes",
+      "tid": "b13",
+      "tp": "in"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "sv_calls",
+      "toId": "b14",
+      "toPort": "in",
+      "fid": "b13",
+      "fp": "sv_calls",
+      "tid": "b14",
+      "tp": "in"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "protein_quant",
+      "toId": "b15",
+      "toPort": "ai",
+      "fid": "b14",
+      "fp": "protein_quant",
+      "tid": "b15",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "filtered",
+      "toId": "b16",
+      "toPort": "ai",
+      "fid": "b15",
+      "fp": "filtered",
+      "tid": "b16",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "result",
+      "toId": "b17",
+      "toPort": "ai",
+      "fid": "b16",
+      "fp": "result",
+      "tid": "b17",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "sorted",
+      "toId": "b18",
+      "toPort": "ai",
+      "fid": "b17",
+      "fp": "sorted",
+      "tid": "b18",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "grouped",
+      "toId": "b19",
+      "toPort": "ai",
+      "fid": "b18",
+      "fp": "grouped",
+      "tid": "b19",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "pivot",
+      "toId": "b20",
+      "toPort": "data",
+      "fid": "b19",
+      "fp": "pivot",
+      "tid": "b20",
+      "tp": "data"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "result",
+      "toId": "b21",
+      "toPort": "data",
+      "fid": "b20",
+      "fp": "result",
+      "tid": "b21",
+      "tp": "data"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "result",
+      "toId": "b22",
+      "toPort": "seq",
+      "fid": "b21",
+      "fp": "result",
+      "tid": "b22",
+      "tp": "seq"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "structure",
+      "toId": "b23",
+      "toPort": "seq",
+      "fid": "b22",
+      "fp": "structure",
+      "tid": "b23",
+      "tp": "seq"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "hits",
+      "toId": "b24",
+      "toPort": "seq",
+      "fid": "b23",
+      "fp": "hits",
+      "tid": "b24",
+      "tp": "seq"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "structure",
+      "toId": "b25",
+      "toPort": "value",
+      "fid": "b24",
+      "fp": "structure",
+      "tid": "b25",
+      "tp": "value"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

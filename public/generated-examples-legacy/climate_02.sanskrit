@@ -1,0 +1,460 @@
+{
+  "id": "climate_02",
+  "uid": "climate_02_cde0f6a7",
+  "title": "Flood readiness plan",
+  "cat": "Climate",
+  "diff": "I",
+  "desc": "Weather, emissions, and hydrology inputs are transformed into actionable climate risk summaries.",
+  "domain": "climate",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "climate_02_b01",
+      "type": "json_reader",
+      "x": 60,
+      "y": 60,
+      "params": {
+        "file_path": "data.json",
+        "jsonl_mode": false,
+        "output_var": "data"
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "climate_02_b02",
+      "type": "biodiversity_block",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "climate_02_b03",
+      "type": "carbon_offset",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "climate_02_b04",
+      "type": "life_cycle_assess",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "climate_02_b05",
+      "type": "monte_carlo",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "climate_02_b06",
+      "type": "molecular_dynamics",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "climate_02_b07",
+      "type": "fluid_dynamics",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "climate_02_b08",
+      "type": "finite_element",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "climate_02_b09",
+      "type": "em_field_sim",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "climate_02_b10",
+      "type": "optics_sim",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "climate_02_b11",
+      "type": "tensor_network",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "climate_02_b12",
+      "type": "topological_phase",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "climate_02_b13",
+      "type": "dft_plus_u",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "climate_02_b14",
+      "type": "cobyla_opt",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "climate_02_b15",
+      "type": "spsa_opt",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "climate_02_b16",
+      "type": "adam_opt",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "climate_02_b17",
+      "type": "genetic_algo",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "climate_02_b18",
+      "type": "simulated_annealing",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "climate_02_b19",
+      "type": "pso_opt",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "climate_02_b20",
+      "type": "lbfgs_opt",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "climate_02_b21",
+      "type": "bayesian_opt",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "climate_02_b22",
+      "type": "portfolio_opt",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "climate_02_b23",
+      "type": "linear_prog",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "climate_02_b24",
+      "type": "integer_prog",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "climate_02_b25",
+      "type": "heatmap_plot",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "title": "Flood readiness plan"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "data",
+      "toId": "b02",
+      "toPort": "occurrences",
+      "fid": "b01",
+      "fp": "data",
+      "tid": "b02",
+      "tp": "occurrences"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "habitat_map",
+      "toId": "b03",
+      "toPort": "activity",
+      "fid": "b02",
+      "fp": "habitat_map",
+      "tid": "b03",
+      "tp": "activity"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "co2_tons",
+      "toId": "b04",
+      "toPort": "product",
+      "fid": "b03",
+      "fp": "co2_tons",
+      "tid": "b04",
+      "tp": "product"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "impact_categories",
+      "toId": "b05",
+      "toPort": "hamiltonian",
+      "fid": "b04",
+      "fp": "impact_categories",
+      "tid": "b05",
+      "tp": "hamiltonian"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "observable",
+      "toId": "b06",
+      "toPort": "system",
+      "fid": "b05",
+      "fp": "observable",
+      "tid": "b06",
+      "tp": "system"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "trajectory",
+      "toId": "b07",
+      "toPort": "geometry",
+      "fid": "b06",
+      "fp": "trajectory",
+      "tid": "b07",
+      "tp": "geometry"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "velocity",
+      "toId": "b08",
+      "toPort": "mesh",
+      "fid": "b07",
+      "fp": "velocity",
+      "tid": "b08",
+      "tp": "mesh"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "displacement",
+      "toId": "b09",
+      "toPort": "geometry",
+      "fid": "b08",
+      "fp": "displacement",
+      "tid": "b09",
+      "tp": "geometry"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "E_field",
+      "toId": "b10",
+      "toPort": "system",
+      "fid": "b09",
+      "fp": "E_field",
+      "tid": "b10",
+      "tp": "system"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "intensity",
+      "toId": "b11",
+      "toPort": "H",
+      "fid": "b10",
+      "fp": "intensity",
+      "tid": "b11",
+      "tp": "H"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "energy",
+      "toId": "b12",
+      "toPort": "H",
+      "fid": "b11",
+      "fp": "energy",
+      "tid": "b12",
+      "tp": "H"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "invariant",
+      "toId": "b13",
+      "toPort": "crystal",
+      "fid": "b12",
+      "fp": "invariant",
+      "tid": "b13",
+      "tp": "crystal"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "band_gap",
+      "toId": "b14",
+      "toPort": "fn",
+      "fid": "b13",
+      "fp": "band_gap",
+      "tid": "b14",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "params",
+      "toId": "b15",
+      "toPort": "fn",
+      "fid": "b14",
+      "fp": "params",
+      "tid": "b15",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "params",
+      "toId": "b16",
+      "toPort": "fn",
+      "fid": "b15",
+      "fp": "params",
+      "tid": "b16",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "params",
+      "toId": "b17",
+      "toPort": "fn",
+      "fid": "b16",
+      "fp": "params",
+      "tid": "b17",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "solution",
+      "toId": "b18",
+      "toPort": "fn",
+      "fid": "b17",
+      "fp": "solution",
+      "tid": "b18",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "solution",
+      "toId": "b19",
+      "toPort": "fn",
+      "fid": "b18",
+      "fp": "solution",
+      "tid": "b19",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "solution",
+      "toId": "b20",
+      "toPort": "fn",
+      "fid": "b19",
+      "fp": "solution",
+      "tid": "b20",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "params",
+      "toId": "b21",
+      "toPort": "fn",
+      "fid": "b20",
+      "fp": "params",
+      "tid": "b21",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "params",
+      "toId": "b22",
+      "toPort": "returns",
+      "fid": "b21",
+      "fp": "params",
+      "tid": "b22",
+      "tp": "returns"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "weights",
+      "toId": "b23",
+      "toPort": "c",
+      "fid": "b22",
+      "fp": "weights",
+      "tid": "b23",
+      "tp": "c"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "x",
+      "toId": "b24",
+      "toPort": "problem",
+      "fid": "b23",
+      "fp": "x",
+      "tid": "b24",
+      "tp": "problem"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "solution",
+      "toId": "b25",
+      "toPort": "matrix",
+      "fid": "b24",
+      "fp": "solution",
+      "tid": "b25",
+      "tp": "matrix"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

@@ -1,0 +1,460 @@
+{
+  "id": "bio_03",
+  "uid": "bio_03_84cedb30",
+  "title": "Protein fold review",
+  "cat": "Biology",
+  "diff": "A",
+  "desc": "Sequencing, expression, folding, and annotation blocks are combined into a practical bioinformatics workflow.",
+  "domain": "bio",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "bio_03_b01",
+      "type": "json_reader",
+      "x": 60,
+      "y": 60,
+      "params": {
+        "file_path": "data.json",
+        "jsonl_mode": false,
+        "output_var": "data"
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "bio_03_b02",
+      "type": "gene_ontology",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "bio_03_b03",
+      "type": "protein_design",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "bio_03_b04",
+      "type": "img_segment",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "bio_03_b05",
+      "type": "radio_classify",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "bio_03_b06",
+      "type": "filter_block",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "bio_03_b07",
+      "type": "map_transform",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "bio_03_b08",
+      "type": "sort_block",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "bio_03_b09",
+      "type": "groupby_block",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "bio_03_b10",
+      "type": "join_block",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "bio_03_b11",
+      "type": "pivot_block",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "bio_03_b12",
+      "type": "schema_validate",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "bio_03_b13",
+      "type": "window_transform",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "bio_03_b14",
+      "type": "resample_block",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "bio_03_b15",
+      "type": "encode_features",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "bio_03_b16",
+      "type": "missing_impute",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "bio_03_b17",
+      "type": "normalize_block",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "bio_03_b18",
+      "type": "explode_block",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "bio_03_b19",
+      "type": "dedup_block",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "bio_03_b20",
+      "type": "binning_block",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "bio_03_b21",
+      "type": "type_cast",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "bio_03_b22",
+      "type": "debug_break",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "bio_03_b23",
+      "type": "parallel_map",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "bio_03_b24",
+      "type": "cache_block",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "bio_03_b25",
+      "type": "structured_log",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "label": "Protein fold review"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "data",
+      "toId": "b02",
+      "toPort": "genes",
+      "fid": "b01",
+      "fp": "data",
+      "tid": "b02",
+      "tp": "genes"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "enriched_terms",
+      "toId": "b03",
+      "toPort": "target",
+      "fid": "b02",
+      "fp": "enriched_terms",
+      "tid": "b03",
+      "tp": "target"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "sequences",
+      "toId": "b04",
+      "toPort": "scan",
+      "fid": "b03",
+      "fp": "sequences",
+      "tid": "b04",
+      "tp": "scan"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "masks",
+      "toId": "b05",
+      "toPort": "scan",
+      "fid": "b04",
+      "fp": "masks",
+      "tid": "b05",
+      "tp": "scan"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "diagnosis",
+      "toId": "b06",
+      "toPort": "ai",
+      "fid": "b05",
+      "fp": "diagnosis",
+      "tid": "b06",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "filtered",
+      "toId": "b07",
+      "toPort": "ai",
+      "fid": "b06",
+      "fp": "filtered",
+      "tid": "b07",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "result",
+      "toId": "b08",
+      "toPort": "ai",
+      "fid": "b07",
+      "fp": "result",
+      "tid": "b08",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "sorted",
+      "toId": "b09",
+      "toPort": "ai",
+      "fid": "b08",
+      "fp": "sorted",
+      "tid": "b09",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "grouped",
+      "toId": "b10",
+      "toPort": "left",
+      "fid": "b09",
+      "fp": "grouped",
+      "tid": "b10",
+      "tp": "left"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "merged",
+      "toId": "b11",
+      "toPort": "ai",
+      "fid": "b10",
+      "fp": "merged",
+      "tid": "b11",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "pivot",
+      "toId": "b12",
+      "toPort": "ai",
+      "fid": "b11",
+      "fp": "pivot",
+      "tid": "b12",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "valid",
+      "toId": "b13",
+      "toPort": "data",
+      "fid": "b12",
+      "fp": "valid",
+      "tid": "b13",
+      "tp": "data"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "result",
+      "toId": "b14",
+      "toPort": "data",
+      "fid": "b13",
+      "fp": "result",
+      "tid": "b14",
+      "tp": "data"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "result",
+      "toId": "b15",
+      "toPort": "X",
+      "fid": "b14",
+      "fp": "result",
+      "tid": "b15",
+      "tp": "X"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "X_encoded",
+      "toId": "b16",
+      "toPort": "data",
+      "fid": "b15",
+      "fp": "X_encoded",
+      "tid": "b16",
+      "tp": "data"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "imputed",
+      "toId": "b17",
+      "toPort": "X",
+      "fid": "b16",
+      "fp": "imputed",
+      "tid": "b17",
+      "tp": "X"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "scaled",
+      "toId": "b18",
+      "toPort": "data",
+      "fid": "b17",
+      "fp": "scaled",
+      "tid": "b18",
+      "tp": "data"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "result",
+      "toId": "b19",
+      "toPort": "data",
+      "fid": "b18",
+      "fp": "result",
+      "tid": "b19",
+      "tp": "data"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "deduped",
+      "toId": "b20",
+      "toPort": "data",
+      "fid": "b19",
+      "fp": "deduped",
+      "tid": "b20",
+      "tp": "data"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "binned",
+      "toId": "b21",
+      "toPort": "ci",
+      "fid": "b20",
+      "fp": "binned",
+      "tid": "b21",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "result",
+      "toId": "b22",
+      "toPort": "ai",
+      "fid": "b21",
+      "fp": "result",
+      "tid": "b22",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "ao",
+      "toId": "b23",
+      "toPort": "fn",
+      "fid": "b22",
+      "fp": "ao",
+      "tid": "b23",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "results",
+      "toId": "b24",
+      "toPort": "fn",
+      "fid": "b23",
+      "fp": "results",
+      "tid": "b24",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "result",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "result",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

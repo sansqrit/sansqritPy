@@ -1,0 +1,456 @@
+{
+  "id": "physics_02",
+  "uid": "physics_02_c9ff30f0",
+  "title": "Molecular dynamics prep",
+  "cat": "Physics",
+  "diff": "I",
+  "desc": "Simulation, approximation, and analysis blocks support a classical-to-quantum physics workflow.",
+  "domain": "physics",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "physics_02_b01",
+      "type": "ising_model",
+      "x": 60,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b02",
+      "uid": "physics_02_b02",
+      "type": "em_field_sim",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "physics_02_b03",
+      "type": "optics_sim",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "physics_02_b04",
+      "type": "tensor_network",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "physics_02_b05",
+      "type": "topological_phase",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "physics_02_b06",
+      "type": "dft_plus_u",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "physics_02_b07",
+      "type": "math_ops",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "physics_02_b08",
+      "type": "matrix_ops",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "physics_02_b09",
+      "type": "fft_block",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "physics_02_b10",
+      "type": "stats_block",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "physics_02_b11",
+      "type": "complex_ops",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "physics_02_b12",
+      "type": "bit_ops",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "physics_02_b13",
+      "type": "symbolic_math",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "physics_02_b14",
+      "type": "interpolation_block",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "physics_02_b15",
+      "type": "eigenvalue_block",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "physics_02_b16",
+      "type": "graph_theory",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "physics_02_b17",
+      "type": "information_theory",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "physics_02_b18",
+      "type": "type_cast",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "physics_02_b19",
+      "type": "debug_break",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "physics_02_b20",
+      "type": "parallel_map",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "physics_02_b21",
+      "type": "cache_block",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "physics_02_b22",
+      "type": "progress_bar",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "physics_02_b23",
+      "type": "experiment_tracker",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "physics_02_b24",
+      "type": "data_version",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "physics_02_b25",
+      "type": "table_block",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "title": "Molecular dynamics prep"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "energy",
+      "toId": "b02",
+      "toPort": "geometry",
+      "fid": "b01",
+      "fp": "energy",
+      "tid": "b02",
+      "tp": "geometry"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "E_field",
+      "toId": "b03",
+      "toPort": "system",
+      "fid": "b02",
+      "fp": "E_field",
+      "tid": "b03",
+      "tp": "system"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "intensity",
+      "toId": "b04",
+      "toPort": "H",
+      "fid": "b03",
+      "fp": "intensity",
+      "tid": "b04",
+      "tp": "H"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "energy",
+      "toId": "b05",
+      "toPort": "H",
+      "fid": "b04",
+      "fp": "energy",
+      "tid": "b05",
+      "tp": "H"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "invariant",
+      "toId": "b06",
+      "toPort": "crystal",
+      "fid": "b05",
+      "fp": "invariant",
+      "tid": "b06",
+      "tp": "crystal"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "band_gap",
+      "toId": "b07",
+      "toPort": "a",
+      "fid": "b06",
+      "fp": "band_gap",
+      "tid": "b07",
+      "tp": "a"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "result",
+      "toId": "b08",
+      "toPort": "A",
+      "fid": "b07",
+      "fp": "result",
+      "tid": "b08",
+      "tp": "A"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "result",
+      "toId": "b09",
+      "toPort": "ci",
+      "fid": "b08",
+      "fp": "result",
+      "tid": "b09",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "spectrum",
+      "toId": "b10",
+      "toPort": "ci",
+      "fid": "b09",
+      "fp": "spectrum",
+      "tid": "b10",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "result",
+      "toId": "b11",
+      "toPort": "a",
+      "fid": "b10",
+      "fp": "result",
+      "tid": "b11",
+      "tp": "a"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "result",
+      "toId": "b12",
+      "toPort": "a",
+      "fid": "b11",
+      "fp": "result",
+      "tid": "b12",
+      "tp": "a"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "result",
+      "toId": "b13",
+      "toPort": "expr",
+      "fid": "b12",
+      "fp": "result",
+      "tid": "b13",
+      "tp": "expr"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "result",
+      "toId": "b14",
+      "toPort": "x",
+      "fid": "b13",
+      "fp": "result",
+      "tid": "b14",
+      "tp": "x"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "y_new",
+      "toId": "b15",
+      "toPort": "A",
+      "fid": "b14",
+      "fp": "y_new",
+      "tid": "b15",
+      "tp": "A"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "eigenvalues",
+      "toId": "b16",
+      "toPort": "G",
+      "fid": "b15",
+      "fp": "eigenvalues",
+      "tid": "b16",
+      "tp": "G"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "result",
+      "toId": "b17",
+      "toPort": "p",
+      "fid": "b16",
+      "fp": "result",
+      "tid": "b17",
+      "tp": "p"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "result",
+      "toId": "b18",
+      "toPort": "ci",
+      "fid": "b17",
+      "fp": "result",
+      "tid": "b18",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "result",
+      "toId": "b19",
+      "toPort": "ai",
+      "fid": "b18",
+      "fp": "result",
+      "tid": "b19",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "ao",
+      "toId": "b20",
+      "toPort": "fn",
+      "fid": "b19",
+      "fp": "ao",
+      "tid": "b20",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "results",
+      "toId": "b21",
+      "toPort": "fn",
+      "fid": "b20",
+      "fp": "results",
+      "tid": "b21",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "result",
+      "toId": "b22",
+      "toPort": "iterable",
+      "fid": "b21",
+      "fp": "result",
+      "tid": "b22",
+      "tp": "iterable"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "item",
+      "toId": "b23",
+      "toPort": "data",
+      "fid": "b22",
+      "fp": "item",
+      "tid": "b23",
+      "tp": "data"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "run_id",
+      "toId": "b24",
+      "toPort": "data",
+      "fid": "b23",
+      "fp": "run_id",
+      "tid": "b24",
+      "tp": "data"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "version_id",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "version_id",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

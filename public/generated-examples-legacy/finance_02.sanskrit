@@ -1,0 +1,460 @@
+{
+  "id": "finance_02",
+  "uid": "finance_02_ccbe98cb",
+  "title": "Portfolio stress test",
+  "cat": "Finance",
+  "diff": "I",
+  "desc": "Transactions, risk features, and stress signals are joined into a decision pipeline for portfolio monitoring.",
+  "domain": "finance",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "finance_02_b01",
+      "type": "json_reader",
+      "x": 60,
+      "y": 60,
+      "params": {
+        "file_path": "data.json",
+        "jsonl_mode": false,
+        "output_var": "data"
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "finance_02_b02",
+      "type": "backtesting_block",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "finance_02_b03",
+      "type": "factor_model",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "finance_02_b04",
+      "type": "pairs_trading",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "finance_02_b05",
+      "type": "sentiment_fin",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "finance_02_b06",
+      "type": "quantum_ml_finance",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "finance_02_b07",
+      "type": "cobyla_opt",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "finance_02_b08",
+      "type": "spsa_opt",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "finance_02_b09",
+      "type": "adam_opt",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "finance_02_b10",
+      "type": "genetic_algo",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "finance_02_b11",
+      "type": "simulated_annealing",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "finance_02_b12",
+      "type": "pso_opt",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "finance_02_b13",
+      "type": "lbfgs_opt",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "finance_02_b14",
+      "type": "bayesian_opt",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "finance_02_b15",
+      "type": "portfolio_opt",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "finance_02_b16",
+      "type": "linear_prog",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "finance_02_b17",
+      "type": "integer_prog",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "finance_02_b18",
+      "type": "qubo_block",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "finance_02_b19",
+      "type": "grid_search",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "finance_02_b20",
+      "type": "nelder_mead",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "finance_02_b21",
+      "type": "diff_evolution",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "finance_02_b22",
+      "type": "type_cast",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "finance_02_b23",
+      "type": "debug_break",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "finance_02_b24",
+      "type": "parallel_map",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "finance_02_b25",
+      "type": "logger_block",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "label": "Portfolio stress test"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "data",
+      "toId": "b02",
+      "toPort": "data",
+      "fid": "b01",
+      "fp": "data",
+      "tid": "b02",
+      "tp": "data"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "metrics",
+      "toId": "b03",
+      "toPort": "returns",
+      "fid": "b02",
+      "fp": "metrics",
+      "tid": "b03",
+      "tp": "returns"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "loadings",
+      "toId": "b04",
+      "toPort": "a",
+      "fid": "b03",
+      "fp": "loadings",
+      "tid": "b04",
+      "tp": "a"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "signals",
+      "toId": "b05",
+      "toPort": "text",
+      "fid": "b04",
+      "fp": "signals",
+      "tid": "b05",
+      "tp": "text"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "sentiment",
+      "toId": "b06",
+      "toPort": "X",
+      "fid": "b05",
+      "fp": "sentiment",
+      "tid": "b06",
+      "tp": "X"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "model",
+      "toId": "b07",
+      "toPort": "fn",
+      "fid": "b06",
+      "fp": "model",
+      "tid": "b07",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "params",
+      "toId": "b08",
+      "toPort": "fn",
+      "fid": "b07",
+      "fp": "params",
+      "tid": "b08",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "params",
+      "toId": "b09",
+      "toPort": "fn",
+      "fid": "b08",
+      "fp": "params",
+      "tid": "b09",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "params",
+      "toId": "b10",
+      "toPort": "fn",
+      "fid": "b09",
+      "fp": "params",
+      "tid": "b10",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "solution",
+      "toId": "b11",
+      "toPort": "fn",
+      "fid": "b10",
+      "fp": "solution",
+      "tid": "b11",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "solution",
+      "toId": "b12",
+      "toPort": "fn",
+      "fid": "b11",
+      "fp": "solution",
+      "tid": "b12",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "solution",
+      "toId": "b13",
+      "toPort": "fn",
+      "fid": "b12",
+      "fp": "solution",
+      "tid": "b13",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "params",
+      "toId": "b14",
+      "toPort": "fn",
+      "fid": "b13",
+      "fp": "params",
+      "tid": "b14",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "params",
+      "toId": "b15",
+      "toPort": "returns",
+      "fid": "b14",
+      "fp": "params",
+      "tid": "b15",
+      "tp": "returns"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "weights",
+      "toId": "b16",
+      "toPort": "c",
+      "fid": "b15",
+      "fp": "weights",
+      "tid": "b16",
+      "tp": "c"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "x",
+      "toId": "b17",
+      "toPort": "problem",
+      "fid": "b16",
+      "fp": "x",
+      "tid": "b17",
+      "tp": "problem"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "solution",
+      "toId": "b18",
+      "toPort": "Q",
+      "fid": "b17",
+      "fp": "solution",
+      "tid": "b18",
+      "tp": "Q"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "x",
+      "toId": "b19",
+      "toPort": "model",
+      "fid": "b18",
+      "fp": "x",
+      "tid": "b19",
+      "tp": "model"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "best_params",
+      "toId": "b20",
+      "toPort": "fn",
+      "fid": "b19",
+      "fp": "best_params",
+      "tid": "b20",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "params",
+      "toId": "b21",
+      "toPort": "fn",
+      "fid": "b20",
+      "fp": "params",
+      "tid": "b21",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "solution",
+      "toId": "b22",
+      "toPort": "ci",
+      "fid": "b21",
+      "fp": "solution",
+      "tid": "b22",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "result",
+      "toId": "b23",
+      "toPort": "ai",
+      "fid": "b22",
+      "fp": "result",
+      "tid": "b23",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "ao",
+      "toId": "b24",
+      "toPort": "fn",
+      "fid": "b23",
+      "fp": "ao",
+      "tid": "b24",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "results",
+      "toId": "b25",
+      "toPort": "value",
+      "fid": "b24",
+      "fp": "results",
+      "tid": "b25",
+      "tp": "value"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

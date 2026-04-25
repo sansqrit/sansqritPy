@@ -1,0 +1,456 @@
+{
+  "id": "climate_05",
+  "uid": "climate_05_086c862e",
+  "title": "Air quality outlook",
+  "cat": "Climate",
+  "diff": "B",
+  "desc": "Weather, emissions, and hydrology inputs are transformed into actionable climate risk summaries.",
+  "domain": "climate",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "climate_05_b01",
+      "type": "ocean_model",
+      "x": 60,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b02",
+      "uid": "climate_05_b02",
+      "type": "cobyla_opt",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "climate_05_b03",
+      "type": "spsa_opt",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "climate_05_b04",
+      "type": "adam_opt",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "climate_05_b05",
+      "type": "genetic_algo",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "climate_05_b06",
+      "type": "simulated_annealing",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "climate_05_b07",
+      "type": "pso_opt",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "climate_05_b08",
+      "type": "lbfgs_opt",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "climate_05_b09",
+      "type": "bayesian_opt",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "climate_05_b10",
+      "type": "portfolio_opt",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "climate_05_b11",
+      "type": "linear_prog",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "climate_05_b12",
+      "type": "integer_prog",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "climate_05_b13",
+      "type": "qubo_block",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "climate_05_b14",
+      "type": "grid_search",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "climate_05_b15",
+      "type": "nelder_mead",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "climate_05_b16",
+      "type": "diff_evolution",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "climate_05_b17",
+      "type": "type_cast",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "climate_05_b18",
+      "type": "debug_break",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "climate_05_b19",
+      "type": "parallel_map",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "climate_05_b20",
+      "type": "cache_block",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "climate_05_b21",
+      "type": "progress_bar",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "climate_05_b22",
+      "type": "experiment_tracker",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "climate_05_b23",
+      "type": "data_version",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "climate_05_b24",
+      "type": "conditional_skip",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "climate_05_b25",
+      "type": "logger_block",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "label": "Air quality outlook"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "sst",
+      "toId": "b02",
+      "toPort": "fn",
+      "fid": "b01",
+      "fp": "sst",
+      "tid": "b02",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "params",
+      "toId": "b03",
+      "toPort": "fn",
+      "fid": "b02",
+      "fp": "params",
+      "tid": "b03",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "params",
+      "toId": "b04",
+      "toPort": "fn",
+      "fid": "b03",
+      "fp": "params",
+      "tid": "b04",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "params",
+      "toId": "b05",
+      "toPort": "fn",
+      "fid": "b04",
+      "fp": "params",
+      "tid": "b05",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "solution",
+      "toId": "b06",
+      "toPort": "fn",
+      "fid": "b05",
+      "fp": "solution",
+      "tid": "b06",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "solution",
+      "toId": "b07",
+      "toPort": "fn",
+      "fid": "b06",
+      "fp": "solution",
+      "tid": "b07",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "solution",
+      "toId": "b08",
+      "toPort": "fn",
+      "fid": "b07",
+      "fp": "solution",
+      "tid": "b08",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "params",
+      "toId": "b09",
+      "toPort": "fn",
+      "fid": "b08",
+      "fp": "params",
+      "tid": "b09",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "params",
+      "toId": "b10",
+      "toPort": "returns",
+      "fid": "b09",
+      "fp": "params",
+      "tid": "b10",
+      "tp": "returns"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "weights",
+      "toId": "b11",
+      "toPort": "c",
+      "fid": "b10",
+      "fp": "weights",
+      "tid": "b11",
+      "tp": "c"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "x",
+      "toId": "b12",
+      "toPort": "problem",
+      "fid": "b11",
+      "fp": "x",
+      "tid": "b12",
+      "tp": "problem"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "solution",
+      "toId": "b13",
+      "toPort": "Q",
+      "fid": "b12",
+      "fp": "solution",
+      "tid": "b13",
+      "tp": "Q"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "x",
+      "toId": "b14",
+      "toPort": "model",
+      "fid": "b13",
+      "fp": "x",
+      "tid": "b14",
+      "tp": "model"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "best_params",
+      "toId": "b15",
+      "toPort": "fn",
+      "fid": "b14",
+      "fp": "best_params",
+      "tid": "b15",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "params",
+      "toId": "b16",
+      "toPort": "fn",
+      "fid": "b15",
+      "fp": "params",
+      "tid": "b16",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "solution",
+      "toId": "b17",
+      "toPort": "ci",
+      "fid": "b16",
+      "fp": "solution",
+      "tid": "b17",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "result",
+      "toId": "b18",
+      "toPort": "ai",
+      "fid": "b17",
+      "fp": "result",
+      "tid": "b18",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "ao",
+      "toId": "b19",
+      "toPort": "fn",
+      "fid": "b18",
+      "fp": "ao",
+      "tid": "b19",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "results",
+      "toId": "b20",
+      "toPort": "fn",
+      "fid": "b19",
+      "fp": "results",
+      "tid": "b20",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "result",
+      "toId": "b21",
+      "toPort": "iterable",
+      "fid": "b20",
+      "fp": "result",
+      "tid": "b21",
+      "tp": "iterable"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "item",
+      "toId": "b22",
+      "toPort": "data",
+      "fid": "b21",
+      "fp": "item",
+      "tid": "b22",
+      "tp": "data"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "run_id",
+      "toId": "b23",
+      "toPort": "data",
+      "fid": "b22",
+      "fp": "run_id",
+      "tid": "b23",
+      "tp": "data"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "version_id",
+      "toId": "b24",
+      "toPort": "condition",
+      "fid": "b23",
+      "fp": "version_id",
+      "tid": "b24",
+      "tp": "condition"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "pass",
+      "toId": "b25",
+      "toPort": "value",
+      "fid": "b24",
+      "fp": "pass",
+      "tid": "b25",
+      "tp": "value"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

@@ -1,0 +1,456 @@
+{
+  "id": "api_02",
+  "uid": "api_02_9cb9a639",
+  "title": "Event stream health",
+  "cat": "Platform",
+  "diff": "I",
+  "desc": "HTTP, streaming, storage, and observability blocks demonstrate operational data flows and governance.",
+  "domain": "api",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "api_02_b01",
+      "type": "graphql_block",
+      "x": 60,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b02",
+      "uid": "api_02_b02",
+      "type": "slack_message",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "api_02_b03",
+      "type": "discord_block",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "api_02_b04",
+      "type": "type_cast",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "api_02_b05",
+      "type": "debug_break",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "api_02_b06",
+      "type": "parallel_map",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "api_02_b07",
+      "type": "cache_block",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "api_02_b08",
+      "type": "progress_bar",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "api_02_b09",
+      "type": "experiment_tracker",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "api_02_b10",
+      "type": "data_version",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "api_02_b11",
+      "type": "conditional_skip",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "api_02_b12",
+      "type": "format_number",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "api_02_b13",
+      "type": "filter_block",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "api_02_b14",
+      "type": "map_transform",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "api_02_b15",
+      "type": "sort_block",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "api_02_b16",
+      "type": "groupby_block",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "api_02_b17",
+      "type": "join_block",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "api_02_b18",
+      "type": "pivot_block",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "api_02_b19",
+      "type": "schema_validate",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "api_02_b20",
+      "type": "window_transform",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "api_02_b21",
+      "type": "resample_block",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "api_02_b22",
+      "type": "encode_features",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "api_02_b23",
+      "type": "missing_impute",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "api_02_b24",
+      "type": "normalize_block",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "api_02_b25",
+      "type": "structured_log",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "label": "Event stream health"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "result",
+      "toId": "b02",
+      "toPort": "message",
+      "fid": "b01",
+      "fp": "result",
+      "tid": "b02",
+      "tp": "message"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "ts",
+      "toId": "b03",
+      "toPort": "message",
+      "fid": "b02",
+      "fp": "ts",
+      "tid": "b03",
+      "tp": "message"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "status",
+      "toId": "b04",
+      "toPort": "ci",
+      "fid": "b03",
+      "fp": "status",
+      "tid": "b04",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "result",
+      "toId": "b05",
+      "toPort": "ai",
+      "fid": "b04",
+      "fp": "result",
+      "tid": "b05",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "ao",
+      "toId": "b06",
+      "toPort": "fn",
+      "fid": "b05",
+      "fp": "ao",
+      "tid": "b06",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "results",
+      "toId": "b07",
+      "toPort": "fn",
+      "fid": "b06",
+      "fp": "results",
+      "tid": "b07",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "result",
+      "toId": "b08",
+      "toPort": "iterable",
+      "fid": "b07",
+      "fp": "result",
+      "tid": "b08",
+      "tp": "iterable"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "item",
+      "toId": "b09",
+      "toPort": "data",
+      "fid": "b08",
+      "fp": "item",
+      "tid": "b09",
+      "tp": "data"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "run_id",
+      "toId": "b10",
+      "toPort": "data",
+      "fid": "b09",
+      "fp": "run_id",
+      "tid": "b10",
+      "tp": "data"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "version_id",
+      "toId": "b11",
+      "toPort": "condition",
+      "fid": "b10",
+      "fp": "version_id",
+      "tid": "b11",
+      "tp": "condition"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "pass",
+      "toId": "b12",
+      "toPort": "value",
+      "fid": "b11",
+      "fp": "pass",
+      "tid": "b12",
+      "tp": "value"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "string",
+      "toId": "b13",
+      "toPort": "ai",
+      "fid": "b12",
+      "fp": "string",
+      "tid": "b13",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "filtered",
+      "toId": "b14",
+      "toPort": "ai",
+      "fid": "b13",
+      "fp": "filtered",
+      "tid": "b14",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "result",
+      "toId": "b15",
+      "toPort": "ai",
+      "fid": "b14",
+      "fp": "result",
+      "tid": "b15",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "sorted",
+      "toId": "b16",
+      "toPort": "ai",
+      "fid": "b15",
+      "fp": "sorted",
+      "tid": "b16",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "grouped",
+      "toId": "b17",
+      "toPort": "left",
+      "fid": "b16",
+      "fp": "grouped",
+      "tid": "b17",
+      "tp": "left"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "merged",
+      "toId": "b18",
+      "toPort": "ai",
+      "fid": "b17",
+      "fp": "merged",
+      "tid": "b18",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "pivot",
+      "toId": "b19",
+      "toPort": "ai",
+      "fid": "b18",
+      "fp": "pivot",
+      "tid": "b19",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "valid",
+      "toId": "b20",
+      "toPort": "data",
+      "fid": "b19",
+      "fp": "valid",
+      "tid": "b20",
+      "tp": "data"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "result",
+      "toId": "b21",
+      "toPort": "data",
+      "fid": "b20",
+      "fp": "result",
+      "tid": "b21",
+      "tp": "data"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "result",
+      "toId": "b22",
+      "toPort": "X",
+      "fid": "b21",
+      "fp": "result",
+      "tid": "b22",
+      "tp": "X"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "X_encoded",
+      "toId": "b23",
+      "toPort": "data",
+      "fid": "b22",
+      "fp": "X_encoded",
+      "tid": "b23",
+      "tp": "data"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "imputed",
+      "toId": "b24",
+      "toPort": "X",
+      "fid": "b23",
+      "fp": "imputed",
+      "tid": "b24",
+      "tp": "X"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "scaled",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "scaled",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

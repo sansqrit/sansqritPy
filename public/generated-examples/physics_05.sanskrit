@@ -1,0 +1,654 @@
+{
+  "id": "physics_05",
+  "uid": "uid_physics_05",
+  "title": "Physics Simulation Example 5",
+  "cat": "Physics",
+  "diff": "Research",
+  "desc": "Classical and quantum-inspired physics workflows for simulation, optimisation, and analysis.",
+  "domain": "Physics Simulation",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "physics_05_b01",
+      "type": "hamiltonian_block",
+      "x": 80,
+      "y": 180,
+      "params": {
+        "pauli_string": "0.5*Z0*Z1 + 0.3*X0",
+        "format": "pauli_string",
+        "compute_ground_state": false,
+        "output_var": "ham",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "physics_05_b02",
+      "type": "qite_block",
+      "x": 240,
+      "y": 208,
+      "params": {
+        "hamiltonian": "H",
+        "register": "q",
+        "beta": 1,
+        "db": 0.05,
+        "output_var": "qite",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b03",
+      "uid": "physics_05_b03",
+      "type": "variational_gibbs",
+      "x": 400,
+      "y": 180,
+      "params": {
+        "hamiltonian": "H",
+        "beta": 1,
+        "method": "variational",
+        "output_var": "vgibbs",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b04",
+      "uid": "physics_05_b04",
+      "type": "mbl_sim",
+      "x": 560,
+      "y": 208,
+      "params": {
+        "n_spins": 10,
+        "disorder_W": 2.5,
+        "J_coupling": 1,
+        "n_time_steps": 100,
+        "output_var": "mbl",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b05",
+      "uid": "physics_05_b05",
+      "type": "vqls_block",
+      "x": 720,
+      "y": 180,
+      "params": {
+        "A_var": "A_pauli",
+        "b_state_var": "b_circuit",
+        "ansatz": "EfficientSU2",
+        "shots": 1000,
+        "output_var": "vqls",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b06",
+      "uid": "physics_05_b06",
+      "type": "h_gate",
+      "x": 880,
+      "y": 208,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b07",
+      "uid": "physics_05_b07",
+      "type": "x_gate",
+      "x": 1040,
+      "y": 180,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b08",
+      "uid": "physics_05_b08",
+      "type": "y_gate",
+      "x": 1200,
+      "y": 208,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b09",
+      "uid": "physics_05_b09",
+      "type": "z_gate",
+      "x": 1360,
+      "y": 180,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b10",
+      "uid": "physics_05_b10",
+      "type": "s_gate",
+      "x": 1520,
+      "y": 208,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b11",
+      "uid": "physics_05_b11",
+      "type": "sdg_gate",
+      "x": 1680,
+      "y": 180,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b12",
+      "uid": "physics_05_b12",
+      "type": "t_gate",
+      "x": 1840,
+      "y": 208,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b13",
+      "uid": "physics_05_b13",
+      "type": "tdg_gate",
+      "x": 2000,
+      "y": 180,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b14",
+      "uid": "physics_05_b14",
+      "type": "filter_block",
+      "x": 2160,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "condition": "row.score > 0.5",
+        "output_var": "filtered",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b15",
+      "uid": "physics_05_b15",
+      "type": "map_transform",
+      "x": 2320,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "transform_expr": "x * 1.05",
+        "output_var": "mapped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b16",
+      "uid": "physics_05_b16",
+      "type": "sort_block",
+      "x": 2480,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "key_expr": "x",
+        "descending": false,
+        "output_var": "sorted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b17",
+      "uid": "physics_05_b17",
+      "type": "groupby_block",
+      "x": 2640,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "key_fn": "x[\"category\"]",
+        "agg": "list",
+        "output_var": "grouped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b18",
+      "uid": "physics_05_b18",
+      "type": "monte_carlo",
+      "x": 2800,
+      "y": 208,
+      "params": {
+        "n_samples": 10000,
+        "n_burnin": 1000,
+        "temperature": 1,
+        "algorithm": "Metropolis",
+        "output_var": "mc",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b19",
+      "uid": "physics_05_b19",
+      "type": "molecular_dynamics",
+      "x": 2960,
+      "y": 180,
+      "params": {
+        "system_var": "molecule",
+        "force_field": "AMBER",
+        "n_steps": 100000,
+        "timestep_fs": 2,
+        "temperature_K": 300,
+        "output_var": "md",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b20",
+      "uid": "physics_05_b20",
+      "type": "topological_phase",
+      "x": 3120,
+      "y": 208,
+      "params": {
+        "hamiltonian_var": "H_k",
+        "invariant": "Chern_number",
+        "n_k_points": 100,
+        "output_var": "topo",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b21",
+      "uid": "physics_05_b21",
+      "type": "fluid_dynamics",
+      "x": 3280,
+      "y": 180,
+      "params": {
+        "geometry_var": "domain",
+        "solver": "OpenFOAM",
+        "reynolds": 1000,
+        "n_iter": 1000,
+        "output_var": "fluid",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b22",
+      "uid": "physics_05_b22",
+      "type": "finite_element",
+      "x": 3440,
+      "y": 208,
+      "params": {
+        "mesh_var": "mesh",
+        "physics": "structural",
+        "solver": "FEniCS",
+        "boundary_conditions_var": "bcs",
+        "output_var": "fea",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b23",
+      "uid": "physics_05_b23",
+      "type": "em_field_sim",
+      "x": 3600,
+      "y": 180,
+      "params": {
+        "geometry_var": "geometry",
+        "method": "FDTD",
+        "frequency_ghz": 10,
+        "excitation_var": "source",
+        "output_var": "em",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b24",
+      "uid": "physics_05_b24",
+      "type": "optics_sim",
+      "x": 3760,
+      "y": 208,
+      "params": {
+        "optical_system_var": "optics",
+        "simulation": "ray_tracing",
+        "source_var": "laser",
+        "output_var": "optics",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b25",
+      "uid": "physics_05_b25",
+      "type": "heatmap_plot",
+      "x": 3920,
+      "y": 180,
+      "params": {
+        "matrix_var": "results",
+        "title": "Physics Heatmap 5",
+        "colormap": "plasma",
+        "annotate": false,
+        "cluster": false,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "hamiltonian",
+      "toId": "b02",
+      "toPort": "ri",
+      "fid": "b01",
+      "fp": "hamiltonian",
+      "tid": "b02",
+      "tp": "ri"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "ro",
+      "toId": "b03",
+      "toPort": "in",
+      "fid": "b02",
+      "fp": "ro",
+      "tid": "b03",
+      "tp": "in"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "state",
+      "toId": "b04",
+      "toPort": "in",
+      "fid": "b03",
+      "fp": "state",
+      "tid": "b04",
+      "tp": "in"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "entropy",
+      "toId": "b05",
+      "toPort": "A",
+      "fid": "b04",
+      "fp": "entropy",
+      "tid": "b05",
+      "tp": "A"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "x_state",
+      "toId": "b06",
+      "toPort": "qi",
+      "fid": "b05",
+      "fp": "x_state",
+      "tid": "b06",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "qo",
+      "toId": "b07",
+      "toPort": "qi",
+      "fid": "b06",
+      "fp": "qo",
+      "tid": "b07",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "qo",
+      "toId": "b08",
+      "toPort": "qi",
+      "fid": "b07",
+      "fp": "qo",
+      "tid": "b08",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "qo",
+      "toId": "b09",
+      "toPort": "qi",
+      "fid": "b08",
+      "fp": "qo",
+      "tid": "b09",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "qo",
+      "toId": "b10",
+      "toPort": "qi",
+      "fid": "b09",
+      "fp": "qo",
+      "tid": "b10",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "qo",
+      "toId": "b11",
+      "toPort": "qi",
+      "fid": "b10",
+      "fp": "qo",
+      "tid": "b11",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "qo",
+      "toId": "b12",
+      "toPort": "qi",
+      "fid": "b11",
+      "fp": "qo",
+      "tid": "b12",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "qo",
+      "toId": "b13",
+      "toPort": "qi",
+      "fid": "b12",
+      "fp": "qo",
+      "tid": "b13",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "qo",
+      "toId": "b14",
+      "toPort": "ai",
+      "fid": "b13",
+      "fp": "qo",
+      "tid": "b14",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "filtered",
+      "toId": "b15",
+      "toPort": "ai",
+      "fid": "b14",
+      "fp": "filtered",
+      "tid": "b15",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "result",
+      "toId": "b16",
+      "toPort": "ai",
+      "fid": "b15",
+      "fp": "result",
+      "tid": "b16",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "sorted",
+      "toId": "b17",
+      "toPort": "ai",
+      "fid": "b16",
+      "fp": "sorted",
+      "tid": "b17",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "grouped",
+      "toId": "b18",
+      "toPort": "hamiltonian",
+      "fid": "b17",
+      "fp": "grouped",
+      "tid": "b18",
+      "tp": "hamiltonian"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "observable",
+      "toId": "b19",
+      "toPort": "system",
+      "fid": "b18",
+      "fp": "observable",
+      "tid": "b19",
+      "tp": "system"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "trajectory",
+      "toId": "b20",
+      "toPort": "H",
+      "fid": "b19",
+      "fp": "trajectory",
+      "tid": "b20",
+      "tp": "H"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "invariant",
+      "toId": "b21",
+      "toPort": "geometry",
+      "fid": "b20",
+      "fp": "invariant",
+      "tid": "b21",
+      "tp": "geometry"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "velocity",
+      "toId": "b22",
+      "toPort": "mesh",
+      "fid": "b21",
+      "fp": "velocity",
+      "tid": "b22",
+      "tp": "mesh"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "displacement",
+      "toId": "b23",
+      "toPort": "geometry",
+      "fid": "b22",
+      "fp": "displacement",
+      "tid": "b23",
+      "tp": "geometry"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "E_field",
+      "toId": "b24",
+      "toPort": "system",
+      "fid": "b23",
+      "fp": "E_field",
+      "tid": "b24",
+      "tp": "system"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "intensity",
+      "toId": "b25",
+      "toPort": "matrix",
+      "fid": "b24",
+      "fp": "intensity",
+      "tid": "b25",
+      "tp": "matrix"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

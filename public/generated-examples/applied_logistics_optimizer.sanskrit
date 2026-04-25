@@ -1,0 +1,20 @@
+{
+  "id": "applied_logistics_optimizer",
+  "title": "Applied Logistics Optimizer",
+  "cat": "Applied Optimization",
+  "diff": "Intermediate",
+  "desc": "Solve TSP, job-shop scheduling, last-mile delivery, and warehouse throughput as one ranked optimization workflow.",
+  "blocks": [
+    {"id": "tsp", "type": "applied_traveling_salesman_problem", "x": 80, "y": 160, "params": {"method": "QAOA", "sample_size": 14}},
+    {"id": "job", "type": "applied_job_shop_scheduling", "x": 360, "y": 160, "params": {"method": "CP-SAT", "sample_size": 14}},
+    {"id": "last", "type": "applied_last_mile_delivery_logistics", "x": 640, "y": 160, "params": {"method": "VRPTW", "sample_size": 14}},
+    {"id": "wh", "type": "applied_warehouse_layout_design", "x": 920, "y": 160, "params": {"method": "Facility layout optimizer", "sample_size": 14}},
+    {"id": "tbl", "type": "table_display", "x": 1200, "y": 160, "params": {"title": "Logistics Ranked Plans", "page_size": 25}}
+  ],
+  "wires": [
+    {"fromId": "tsp", "fromPort": "dataset", "toId": "job", "toPort": "dataset"},
+    {"fromId": "job", "fromPort": "dataset", "toId": "last", "toPort": "dataset"},
+    {"fromId": "last", "fromPort": "dataset", "toId": "wh", "toPort": "dataset"},
+    {"fromId": "wh", "fromPort": "dataset", "toId": "tbl", "toPort": "dataset"}
+  ]
+}

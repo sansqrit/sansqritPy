@@ -1454,6 +1454,13 @@ export const BLOCKS = [
     toSq: p=>`let ${p.output_var} = json_read("${p.file_path}")`,
   },
   {
+    id:'xml_reader', label:'XML Reader', cat:'file_src', color:'#0EA5E9', icon:'🧾',
+    info:'Read XML files and flatten repeated elements into a table.',
+    params:[ps('file_path','File path','data.xml'), ps('row_selector','Row selector','//item'), ps('output_var','Output variable','dataframe'), ...BYPASS],
+    inputs:[], outputs:[cOut('dataframe')],
+    toSq: p=>`# XML reader for ${p.file_path} → ${p.output_var}`,
+  },
+  {
     id:'parquet_reader', label:'Parquet Reader', cat:'file_src', color:'#0EA5E9', icon:'📦',
     info:'Read columnar Parquet files. Efficient for large datasets.',
     params:[ps('file_path','File path','data.parquet'), ps('columns','Columns (blank=all)',''), ps('output_var','Output variable','df'), ...BYPASS],

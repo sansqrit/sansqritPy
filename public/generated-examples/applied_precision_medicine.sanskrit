@@ -1,0 +1,20 @@
+{
+  "id": "applied_precision_medicine",
+  "title": "Applied Precision Medicine",
+  "cat": "Applied Biomedical",
+  "diff": "Advanced",
+  "desc": "Use genomics, PPI networks, immunotherapy targeting, and CRISPR optimization to prioritize interventions.",
+  "blocks": [
+    {"id": "geno", "type": "applied_personalized_genomic_sequencing", "x": 80, "y": 160, "params": {"method": "Variant annotation", "sample_size": 20}},
+    {"id": "ppi", "type": "applied_protein_protein_interaction_networks", "x": 360, "y": 160, "params": {"method": "GNN link prediction", "sample_size": 20}},
+    {"id": "immune", "type": "applied_cancer_immunotherapy_targeting", "x": 640, "y": 160, "params": {"method": "Neoantigen ranking", "sample_size": 20}},
+    {"id": "crispr", "type": "applied_crispr_cas9_target_optimization", "x": 920, "y": 160, "params": {"method": "DeepCRISPR", "sample_size": 20}},
+    {"id": "tbl", "type": "table_display", "x": 1200, "y": 160, "params": {"title": "Prioritized Personalized Targets", "page_size": 25}}
+  ],
+  "wires": [
+    {"fromId": "geno", "fromPort": "dataset", "toId": "ppi", "toPort": "dataset"},
+    {"fromId": "ppi", "fromPort": "dataset", "toId": "immune", "toPort": "dataset"},
+    {"fromId": "immune", "fromPort": "dataset", "toId": "crispr", "toPort": "dataset"},
+    {"fromId": "crispr", "fromPort": "dataset", "toId": "tbl", "toPort": "dataset"}
+  ]
+}

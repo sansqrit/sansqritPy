@@ -1,0 +1,538 @@
+{
+  "version": "3.2",
+  "title": "Sanskrit Canvas",
+  "created": "2026-04-25T10:02:36.773Z",
+  "blocks": [
+    {
+      "id": "qr1",
+      "uid": "qr1",
+      "type": "quantum_register",
+      "x": 60,
+      "y": 40,
+      "params": {
+        "n_qubits": 2,
+        "name": "q"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "qh1",
+      "uid": "qh1",
+      "type": "h_gate",
+      "x": 310,
+      "y": 40,
+      "params": {
+        "qubit": 0
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "qc1",
+      "uid": "qc1",
+      "type": "cnot_gate",
+      "x": 560,
+      "y": 40,
+      "params": {
+        "control": 0,
+        "target": 1
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "qm1",
+      "uid": "qm1",
+      "type": "measure_all",
+      "x": 810,
+      "y": 40,
+      "params": {
+        "shots": 1024
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "qv1",
+      "uid": "qv1",
+      "type": "histogram_chart",
+      "x": 1060,
+      "y": 40,
+      "params": {
+        "title": "Bell State: 00 or 11",
+        "color": "purple"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "ql1",
+      "uid": "ql1",
+      "type": "log_block",
+      "x": 1310,
+      "y": 40,
+      "params": {
+        "label": "Quantum entanglement confirmed!"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "gr1",
+      "uid": "gr1",
+      "type": "quantum_register",
+      "x": 60,
+      "y": 320,
+      "params": {
+        "n_qubits": 3,
+        "name": "ghz"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "gh1",
+      "uid": "gh1",
+      "type": "h_gate",
+      "x": 310,
+      "y": 320,
+      "params": {
+        "qubit": 0
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "gc1",
+      "uid": "gc1",
+      "type": "cnot_gate",
+      "x": 560,
+      "y": 260,
+      "params": {
+        "control": 0,
+        "target": 1
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "gc2",
+      "uid": "gc2",
+      "type": "cnot_gate",
+      "x": 560,
+      "y": 380,
+      "params": {
+        "control": 0,
+        "target": 2
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "gm1",
+      "uid": "gm1",
+      "type": "measure_all",
+      "x": 810,
+      "y": 320,
+      "params": {
+        "shots": 512
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "gpc",
+      "uid": "gpc",
+      "type": "pie_chart",
+      "x": 1060,
+      "y": 320,
+      "params": {
+        "title": "GHZ: Only 000 or 111"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "ed1",
+      "uid": "ed1",
+      "type": "inline_data",
+      "x": 60,
+      "y": 620,
+      "params": {
+        "data": "[{\"date\":\"2024-01-15\",\"region\":\"North\",\"product\":\"Widget A\",\"units\":120,\"price\":25.5,\"revenue\":3060,\"cost\":1800},{\"date\":\"2024-01-16\",\"region\":\"South\",\"product\":\"Widget B\",\"units\":85,\"price\":42,\"revenue\":3570,\"cost\":2100},{\"date\":\"2024-01-17\",\"region\":\"East\",\"product\":\"Widget A\",\"units\":200,\"price\":25.5,\"revenue\":5100,\"cost\":3000},{\"date\":\"2024-01-18\",\"region\":\"West\",\"product\":\"Widget C\",\"units\":60,\"price\":78,\"revenue\":4680,\"cost\":2800},{\"date\":\"2024-01-19\",\"region\":\"North\",\"product\":\"Widget B\",\"units\":145,\"price\":42,\"revenue\":6090,\"cost\":3600},{\"date\":\"2024-01-20\",\"region\":\"South\",\"product\":\"Widget C\",\"units\":30,\"price\":78,\"revenue\":2340,\"cost\":1400},{\"date\":\"2024-01-21\",\"region\":\"East\",\"product\":\"Widget B\",\"units\":95,\"price\":42,\"revenue\":3990,\"cost\":2350},{\"date\":\"2024-01-22\",\"region\":\"West\",\"product\":\"Widget A\",\"units\":180,\"price\":25.5,\"revenue\":4590,\"cost\":2700},{\"date\":\"2024-01-23\",\"region\":\"North\",\"product\":\"Widget C\",\"units\":70,\"price\":78,\"revenue\":5460,\"cost\":3270},{\"date\":\"2024-01-24\",\"region\":\"South\",\"product\":\"Widget A\",\"units\":210,\"price\":25.5,\"revenue\":5355,\"cost\":3150}]"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "ect",
+      "uid": "ect",
+      "type": "cast_types",
+      "x": 320,
+      "y": 620,
+      "params": {
+        "mapping": "{\"units\":\"integer\",\"revenue\":\"float\",\"cost\":\"float\",\"price\":\"float\"}"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "eac",
+      "uid": "eac",
+      "type": "add_column",
+      "x": 580,
+      "y": 620,
+      "params": {
+        "name": "profit",
+        "formula": "row[\"revenue\"] - row[\"cost\"]"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "efr",
+      "uid": "efr",
+      "type": "filter_rows",
+      "x": 840,
+      "y": 620,
+      "params": {
+        "column": "revenue",
+        "operator": ">",
+        "value": "3000",
+        "limit": 0
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "egb",
+      "uid": "egb",
+      "type": "group_by",
+      "x": 1100,
+      "y": 620,
+      "params": {
+        "group_by": "region",
+        "aggregations": "[{\"col\":\"revenue\",\"fn\":\"sum\",\"as\":\"total_rev\"},{\"col\":\"profit\",\"fn\":\"sum\",\"as\":\"total_profit\"},{\"col\":\"units\",\"fn\":\"sum\",\"as\":\"total_units\"}]"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "esr",
+      "uid": "esr",
+      "type": "sort_rows",
+      "x": 1360,
+      "y": 620,
+      "params": {
+        "column": "total_rev",
+        "order": "desc"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "etb",
+      "uid": "etb",
+      "type": "table_display",
+      "x": 1620,
+      "y": 560,
+      "params": {
+        "title": "Revenue by Region",
+        "page_size": 25,
+        "show_bars": "true"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "ebc",
+      "uid": "ebc",
+      "type": "bar_chart",
+      "x": 1620,
+      "y": 820,
+      "params": {
+        "title": "Regional Revenue Chart",
+        "orientation": "vertical"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "ep1",
+      "uid": "ep1",
+      "type": "profile",
+      "x": 840,
+      "y": 880,
+      "params": {},
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "epd",
+      "uid": "epd",
+      "type": "profile_display",
+      "x": 1100,
+      "y": 880,
+      "params": {
+        "title": "Sales Data Profile"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "esc",
+      "uid": "esc",
+      "type": "scatter_chart",
+      "x": 1360,
+      "y": 880,
+      "params": {
+        "title": "Units vs Revenue",
+        "x_col": "units",
+        "y_col": "revenue"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "elg",
+      "uid": "elg",
+      "type": "log_block",
+      "x": 1620,
+      "y": 1060,
+      "params": {
+        "label": "ETL complete - see Tables and Charts tabs!"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fid": "dock",
+      "fp": "dataset",
+      "tid": "aff",
+      "tp": "dataset"
+    },
+    {
+      "fid": "aff",
+      "fp": "dataset",
+      "tid": "tox",
+      "tp": "dataset"
+    },
+    {
+      "fid": "tox",
+      "fp": "dataset",
+      "tid": "bbb",
+      "tp": "dataset"
+    },
+    {
+      "fid": "bbb",
+      "fp": "dataset",
+      "tid": "tbl",
+      "tp": "dataset"
+    },
+    {
+      "fid": "qr1",
+      "fp": "out",
+      "tid": "qh1",
+      "tp": "in"
+    },
+    {
+      "fid": "qh1",
+      "fp": "out",
+      "tid": "qc1",
+      "tp": "in"
+    },
+    {
+      "fid": "qc1",
+      "fp": "out",
+      "tid": "qm1",
+      "tp": "in"
+    },
+    {
+      "fid": "qm1",
+      "fp": "result",
+      "tid": "qv1",
+      "tp": "data"
+    },
+    {
+      "fid": "qm1",
+      "fp": "result",
+      "tid": "ql1",
+      "tp": "in"
+    },
+    {
+      "fid": "gr1",
+      "fp": "out",
+      "tid": "gh1",
+      "tp": "in"
+    },
+    {
+      "fid": "gh1",
+      "fp": "out",
+      "tid": "gc1",
+      "tp": "in"
+    },
+    {
+      "fid": "gc1",
+      "fp": "out",
+      "tid": "gc2",
+      "tp": "in"
+    },
+    {
+      "fid": "gc2",
+      "fp": "out",
+      "tid": "gm1",
+      "tp": "in"
+    },
+    {
+      "fid": "gm1",
+      "fp": "result",
+      "tid": "gpc",
+      "tp": "data"
+    },
+    {
+      "fid": "ed1",
+      "fp": "dataset",
+      "tid": "ect",
+      "tp": "dataset"
+    },
+    {
+      "fid": "ect",
+      "fp": "dataset",
+      "tid": "eac",
+      "tp": "dataset"
+    },
+    {
+      "fid": "eac",
+      "fp": "dataset",
+      "tid": "efr",
+      "tp": "dataset"
+    },
+    {
+      "fid": "efr",
+      "fp": "dataset",
+      "tid": "egb",
+      "tp": "dataset"
+    },
+    {
+      "fid": "egb",
+      "fp": "dataset",
+      "tid": "esr",
+      "tp": "dataset"
+    },
+    {
+      "fid": "esr",
+      "fp": "dataset",
+      "tid": "etb",
+      "tp": "dataset"
+    },
+    {
+      "fid": "esr",
+      "fp": "dataset",
+      "tid": "ebc",
+      "tp": "dataset"
+    },
+    {
+      "fid": "efr",
+      "fp": "dataset",
+      "tid": "ep1",
+      "tp": "dataset"
+    },
+    {
+      "fid": "ep1",
+      "fp": "profile",
+      "tid": "epd",
+      "tp": "profile"
+    },
+    {
+      "fid": "efr",
+      "fp": "dataset",
+      "tid": "esc",
+      "tp": "data"
+    },
+    {
+      "fid": "esr",
+      "fp": "dataset",
+      "tid": "elg",
+      "tp": "in"
+    }
+  ],
+  "name": "Canvas 1",
+  "tabId": "t0",
+  "active": true,
+  "savedAt": "2026-04-25T10:02:36.780Z"
+}

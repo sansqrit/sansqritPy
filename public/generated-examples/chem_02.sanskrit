@@ -1,0 +1,654 @@
+{
+  "id": "chem_02",
+  "uid": "uid_chem_02",
+  "title": "Chemistry & Drug Discovery Example 2",
+  "cat": "Chemistry",
+  "diff": "Intermediate",
+  "desc": "Molecular modelling, property prediction, reaction pathway evaluation, and lead optimisation.",
+  "domain": "Chemistry & Drug Discovery",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "chem_02_b01",
+      "type": "molecule_init",
+      "x": 80,
+      "y": 180,
+      "params": {
+        "molecule_name": "Lead_2",
+        "smiles": "[H][H]",
+        "charge": 0,
+        "multiplicity": 1,
+        "basis_set": "STO-3G",
+        "output_var": "mol",
+        "log_properties": true,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "chem_02_b02",
+      "type": "spectroscopy_block",
+      "x": 240,
+      "y": 208,
+      "params": {
+        "molecule_var": "mol",
+        "type": "IR",
+        "plot_spectrum": true,
+        "output_var": "spectrum",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b03",
+      "uid": "chem_02_b03",
+      "type": "pka_block",
+      "x": 400,
+      "y": 180,
+      "params": {
+        "molecule_var": "mol",
+        "method": "Epik",
+        "output_var": "pka",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b04",
+      "uid": "chem_02_b04",
+      "type": "logp_block",
+      "x": 560,
+      "y": 208,
+      "params": {
+        "molecule_var": "mol",
+        "method": "ALOGPS",
+        "output_var": "logp",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b05",
+      "uid": "chem_02_b05",
+      "type": "excited_state_vqe",
+      "x": 720,
+      "y": 180,
+      "params": {
+        "mol_var": "mol",
+        "n_states": 3,
+        "method": "MC-VQE",
+        "output_var": "excited_vqe",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b06",
+      "uid": "chem_02_b06",
+      "type": "conformer_gen",
+      "x": 880,
+      "y": 208,
+      "params": {
+        "smiles_var": "mol",
+        "n_conformers": 100,
+        "method": "ETKDGv3",
+        "rmsd_threshold": 0.5,
+        "output_var": "conformers",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b07",
+      "uid": "chem_02_b07",
+      "type": "retrosynthesis",
+      "x": 1040,
+      "y": 180,
+      "params": {
+        "target_smiles": "",
+        "engine": "AiZynthFinder",
+        "max_steps": 5,
+        "output_var": "routes",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b08",
+      "uid": "chem_02_b08",
+      "type": "pharmacophore",
+      "x": 1200,
+      "y": 208,
+      "params": {
+        "actives_var": "actives",
+        "method": "LigandScout",
+        "n_features": 5,
+        "output_var": "pharmacophore",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b09",
+      "uid": "chem_02_b09",
+      "type": "solubility_pred",
+      "x": 1360,
+      "y": 180,
+      "params": {
+        "mol_var": "mol",
+        "model": "ESOL",
+        "output_var": "solubility",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b10",
+      "uid": "chem_02_b10",
+      "type": "tanimoto_block",
+      "x": 1520,
+      "y": 208,
+      "params": {
+        "mol_a": "mol_a",
+        "mol_b": "mol_b",
+        "fingerprint": "Morgan",
+        "output_var": "similarity",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b11",
+      "uid": "chem_02_b11",
+      "type": "fp_similarity_screen",
+      "x": 1680,
+      "y": 180,
+      "params": {
+        "query_mol": "query",
+        "library_var": "library",
+        "fingerprint": "ECFP4",
+        "similarity_threshold": 0.7,
+        "output_var": "screen",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b12",
+      "uid": "chem_02_b12",
+      "type": "scaffold_decomp",
+      "x": 1840,
+      "y": 208,
+      "params": {
+        "mol_var": "mol",
+        "generic_scaffold": false,
+        "output_var": "scaffolds",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b13",
+      "uid": "chem_02_b13",
+      "type": "mmpdb_block",
+      "x": 2000,
+      "y": 180,
+      "params": {
+        "series_var": "series",
+        "property": "pIC50",
+        "output_var": "mmp",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b14",
+      "uid": "chem_02_b14",
+      "type": "active_space",
+      "x": 2160,
+      "y": 208,
+      "params": {
+        "mol_var": "mol",
+        "n_electrons": 2,
+        "n_orbitals": 6,
+        "method": "CASSCF",
+        "output_var": "active_space",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b15",
+      "uid": "chem_02_b15",
+      "type": "vibrational_modes",
+      "x": 2320,
+      "y": 180,
+      "params": {
+        "mol_var": "mol",
+        "hessian_method": "DFT",
+        "compute_thermo": true,
+        "temperature_K": 298.15,
+        "output_var": "modes",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b16",
+      "uid": "chem_02_b16",
+      "type": "solvation_block",
+      "x": 2480,
+      "y": 208,
+      "params": {
+        "mol_var": "mol",
+        "model": "SMD",
+        "solvent": "water",
+        "output_var": "solvation",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b17",
+      "uid": "chem_02_b17",
+      "type": "nbo_analysis",
+      "x": 2640,
+      "y": 180,
+      "params": {
+        "mol_var": "mol",
+        "compute_wiberg": true,
+        "output_var": "nbo",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b18",
+      "uid": "chem_02_b18",
+      "type": "td_dft",
+      "x": 2800,
+      "y": 208,
+      "params": {
+        "mol_var": "mol",
+        "n_states": 10,
+        "functional": "CAM-B3LYP",
+        "output_var": "td_dft",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b19",
+      "uid": "chem_02_b19",
+      "type": "gfn_xtb",
+      "x": 2960,
+      "y": 180,
+      "params": {
+        "mol_var": "mol",
+        "method": "GFN2-xTB",
+        "task": "optimize",
+        "output_var": "xtb",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b20",
+      "uid": "chem_02_b20",
+      "type": "feature_eng",
+      "x": 3120,
+      "y": 208,
+      "params": {
+        "X_var": "X",
+        "steps": "[{\"type\":\"StandardScaler\"},{\"type\":\"OneHotEncoder\"}]",
+        "output_var": "features",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b21",
+      "uid": "chem_02_b21",
+      "type": "normalize_block",
+      "x": 3280,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "scaler": "StandardScaler",
+        "output_var": "normalised",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b22",
+      "uid": "chem_02_b22",
+      "type": "type_cast",
+      "x": 3440,
+      "y": 208,
+      "params": {
+        "input_var": "x",
+        "to_type": "float",
+        "output_var": "casted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b23",
+      "uid": "chem_02_b23",
+      "type": "data_version",
+      "x": 3600,
+      "y": 180,
+      "params": {
+        "data_var": "data",
+        "system": "DVC",
+        "version_tag": "v1.0.0",
+        "message": "Add training data",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b24",
+      "uid": "chem_02_b24",
+      "type": "vqe_chemistry",
+      "x": 3760,
+      "y": 208,
+      "params": {
+        "molecule_var": "mol",
+        "qubit_mapping": "Jordan-Wigner",
+        "ansatz": "UCCSD",
+        "optimizer": "COBYLA",
+        "shots": 1000,
+        "output_var": "vqe_energy",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b25",
+      "uid": "chem_02_b25",
+      "type": "report_gen",
+      "x": 3920,
+      "y": 180,
+      "params": {
+        "title": "Chemistry Report 2",
+        "data_var": "results",
+        "format": "HTML",
+        "output_file": "report_chem_2.html",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "mol",
+      "toId": "b02",
+      "toPort": "mol",
+      "fid": "b01",
+      "fp": "mol",
+      "tid": "b02",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "spectrum",
+      "toId": "b03",
+      "toPort": "mol",
+      "fid": "b02",
+      "fp": "spectrum",
+      "tid": "b03",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "pka",
+      "toId": "b04",
+      "toPort": "mol",
+      "fid": "b03",
+      "fp": "pka",
+      "tid": "b04",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "logp",
+      "toId": "b05",
+      "toPort": "mol",
+      "fid": "b04",
+      "fp": "logp",
+      "tid": "b05",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "energies",
+      "toId": "b06",
+      "toPort": "mol",
+      "fid": "b05",
+      "fp": "energies",
+      "tid": "b06",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "conformers",
+      "toId": "b07",
+      "toPort": "target",
+      "fid": "b06",
+      "fp": "conformers",
+      "tid": "b07",
+      "tp": "target"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "routes",
+      "toId": "b08",
+      "toPort": "actives",
+      "fid": "b07",
+      "fp": "routes",
+      "tid": "b08",
+      "tp": "actives"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "model",
+      "toId": "b09",
+      "toPort": "mol",
+      "fid": "b08",
+      "fp": "model",
+      "tid": "b09",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "logS",
+      "toId": "b10",
+      "toPort": "a",
+      "fid": "b09",
+      "fp": "logS",
+      "tid": "b10",
+      "tp": "a"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "score",
+      "toId": "b11",
+      "toPort": "query",
+      "fid": "b10",
+      "fp": "score",
+      "tid": "b11",
+      "tp": "query"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "hits",
+      "toId": "b12",
+      "toPort": "mol",
+      "fid": "b11",
+      "fp": "hits",
+      "tid": "b12",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "scaffold",
+      "toId": "b13",
+      "toPort": "series",
+      "fid": "b12",
+      "fp": "scaffold",
+      "tid": "b13",
+      "tp": "series"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "transforms",
+      "toId": "b14",
+      "toPort": "mol",
+      "fid": "b13",
+      "fp": "transforms",
+      "tid": "b14",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "energy",
+      "toId": "b15",
+      "toPort": "mol",
+      "fid": "b14",
+      "fp": "energy",
+      "tid": "b15",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "frequencies",
+      "toId": "b16",
+      "toPort": "mol",
+      "fid": "b15",
+      "fp": "frequencies",
+      "tid": "b16",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "solvation_energy",
+      "toId": "b17",
+      "toPort": "mol",
+      "fid": "b16",
+      "fp": "solvation_energy",
+      "tid": "b17",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "charges",
+      "toId": "b18",
+      "toPort": "mol",
+      "fid": "b17",
+      "fp": "charges",
+      "tid": "b18",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "spectrum",
+      "toId": "b19",
+      "toPort": "mol",
+      "fid": "b18",
+      "fp": "spectrum",
+      "tid": "b19",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "energy",
+      "toId": "b20",
+      "toPort": "X",
+      "fid": "b19",
+      "fp": "energy",
+      "tid": "b20",
+      "tp": "X"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "features",
+      "toId": "b21",
+      "toPort": "X",
+      "fid": "b20",
+      "fp": "features",
+      "tid": "b21",
+      "tp": "X"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "scaled",
+      "toId": "b22",
+      "toPort": "ci",
+      "fid": "b21",
+      "fp": "scaled",
+      "tid": "b22",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "result",
+      "toId": "b23",
+      "toPort": "data",
+      "fid": "b22",
+      "fp": "result",
+      "tid": "b23",
+      "tp": "data"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "version_id",
+      "toId": "b24",
+      "toPort": "mol",
+      "fid": "b23",
+      "fp": "version_id",
+      "tid": "b24",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "energy",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "energy",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

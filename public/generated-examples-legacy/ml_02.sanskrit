@@ -1,0 +1,460 @@
+{
+  "id": "ml_02",
+  "uid": "ml_02_7b61fe03",
+  "title": "RAG assistant",
+  "cat": "Machine Learning",
+  "diff": "I",
+  "desc": "Feature engineering, training, explainability, and RAG-style tooling are arranged as an end-to-end pipeline.",
+  "domain": "ml",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "ml_02_b01",
+      "type": "json_reader",
+      "x": 60,
+      "y": 60,
+      "params": {
+        "file_path": "data.json",
+        "jsonl_mode": false,
+        "output_var": "data"
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "ml_02_b02",
+      "type": "dimensionality_red",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "ml_02_b03",
+      "type": "feature_eng",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "ml_02_b04",
+      "type": "model_eval",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "ml_02_b05",
+      "type": "transformers_block",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "ml_02_b06",
+      "type": "automl_block",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "ml_02_b07",
+      "type": "xgboost_block",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "ml_02_b08",
+      "type": "time_series_forecast",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "ml_02_b09",
+      "type": "anomaly_ml",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "ml_02_b10",
+      "type": "graph_nn",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "ml_02_b11",
+      "type": "contrastive_learn",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "ml_02_b12",
+      "type": "meta_learning",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "ml_02_b13",
+      "type": "knowledge_distill",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "ml_02_b14",
+      "type": "federated_learn",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "ml_02_b15",
+      "type": "diffusion_model",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "ml_02_b16",
+      "type": "causal_inference",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "ml_02_b17",
+      "type": "survival_analysis",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "ml_02_b18",
+      "type": "shap_explain",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "ml_02_b19",
+      "type": "gp_regression",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "ml_02_b20",
+      "type": "transfer_learn",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "ml_02_b21",
+      "type": "normalizing_flow",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "ml_02_b22",
+      "type": "active_learning_block",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "ml_02_b23",
+      "type": "model_compression",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "ml_02_b24",
+      "type": "openai_block",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "ml_02_b25",
+      "type": "console_log_block",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "label": "RAG assistant"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "data",
+      "toId": "b02",
+      "toPort": "X",
+      "fid": "b01",
+      "fp": "data",
+      "tid": "b02",
+      "tp": "X"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "embedding",
+      "toId": "b03",
+      "toPort": "X",
+      "fid": "b02",
+      "fp": "embedding",
+      "tid": "b03",
+      "tp": "X"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "features",
+      "toId": "b04",
+      "toPort": "model",
+      "fid": "b03",
+      "fp": "features",
+      "tid": "b04",
+      "tp": "model"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "metrics",
+      "toId": "b05",
+      "toPort": "input",
+      "fid": "b04",
+      "fp": "metrics",
+      "tid": "b05",
+      "tp": "input"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "output",
+      "toId": "b06",
+      "toPort": "X",
+      "fid": "b05",
+      "fp": "output",
+      "tid": "b06",
+      "tp": "X"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "model",
+      "toId": "b07",
+      "toPort": "X",
+      "fid": "b06",
+      "fp": "model",
+      "tid": "b07",
+      "tp": "X"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "model",
+      "toId": "b08",
+      "toPort": "series",
+      "fid": "b07",
+      "fp": "model",
+      "tid": "b08",
+      "tp": "series"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "forecast",
+      "toId": "b09",
+      "toPort": "X",
+      "fid": "b08",
+      "fp": "forecast",
+      "tid": "b09",
+      "tp": "X"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "labels",
+      "toId": "b10",
+      "toPort": "graph",
+      "fid": "b09",
+      "fp": "labels",
+      "tid": "b10",
+      "tp": "graph"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "model",
+      "toId": "b11",
+      "toPort": "data",
+      "fid": "b10",
+      "fp": "model",
+      "tid": "b11",
+      "tp": "data"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "encoder",
+      "toId": "b12",
+      "toPort": "tasks",
+      "fid": "b11",
+      "fp": "encoder",
+      "tid": "b12",
+      "tp": "tasks"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "model",
+      "toId": "b13",
+      "toPort": "teacher",
+      "fid": "b12",
+      "fp": "model",
+      "tid": "b13",
+      "tp": "teacher"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "model",
+      "toId": "b14",
+      "toPort": "clients",
+      "fid": "b13",
+      "fp": "model",
+      "tid": "b14",
+      "tp": "clients"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "model",
+      "toId": "b15",
+      "toPort": "data",
+      "fid": "b14",
+      "fp": "model",
+      "tid": "b15",
+      "tp": "data"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "model",
+      "toId": "b16",
+      "toPort": "data",
+      "fid": "b15",
+      "fp": "model",
+      "tid": "b16",
+      "tp": "data"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "ate",
+      "toId": "b17",
+      "toPort": "data",
+      "fid": "b16",
+      "fp": "ate",
+      "tid": "b17",
+      "tp": "data"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "survival_curve",
+      "toId": "b18",
+      "toPort": "model",
+      "fid": "b17",
+      "fp": "survival_curve",
+      "tid": "b18",
+      "tp": "model"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "shap_values",
+      "toId": "b19",
+      "toPort": "X",
+      "fid": "b18",
+      "fp": "shap_values",
+      "tid": "b19",
+      "tp": "X"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "model",
+      "toId": "b20",
+      "toPort": "data",
+      "fid": "b19",
+      "fp": "model",
+      "tid": "b20",
+      "tp": "data"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "model",
+      "toId": "b21",
+      "toPort": "data",
+      "fid": "b20",
+      "fp": "model",
+      "tid": "b21",
+      "tp": "data"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "model",
+      "toId": "b22",
+      "toPort": "pool",
+      "fid": "b21",
+      "fp": "model",
+      "tid": "b22",
+      "tp": "pool"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "labelled_X",
+      "toId": "b23",
+      "toPort": "model",
+      "fid": "b22",
+      "fp": "labelled_X",
+      "tid": "b23",
+      "tp": "model"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "model",
+      "toId": "b24",
+      "toPort": "prompt",
+      "fid": "b23",
+      "fp": "model",
+      "tid": "b24",
+      "tp": "prompt"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "response",
+      "toId": "b25",
+      "toPort": "value",
+      "fid": "b24",
+      "fp": "response",
+      "tid": "b25",
+      "tp": "value"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

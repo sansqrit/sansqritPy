@@ -1,0 +1,648 @@
+{
+  "id": "api_01",
+  "uid": "uid_api_01",
+  "title": "API & Platform Integration Example 1",
+  "cat": "API",
+  "diff": "Beginner",
+  "desc": "Data ingestion, messaging, notifications, and platform interoperability.",
+  "domain": "API & Platform Integration",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "api_01_b01",
+      "type": "http_get",
+      "x": 80,
+      "y": 180,
+      "params": {
+        "url": "https://api.example.com/data/1",
+        "headers": "{}",
+        "params": "{}",
+        "timeout_ms": 30000,
+        "retries": 3,
+        "output_var": "response",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "api_01_b02",
+      "type": "slack_message",
+      "x": 240,
+      "y": 208,
+      "params": {
+        "channel": "#alerts",
+        "message_var": "msg",
+        "use_blocks": false,
+        "webhook_var": "SLACK_WEBHOOK",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b03",
+      "uid": "api_01_b03",
+      "type": "discord_block",
+      "x": 400,
+      "y": 180,
+      "params": {
+        "webhook_var": "DISCORD_WEBHOOK",
+        "content_var": "msg",
+        "username": "Sanskrit Bot",
+        "tts": false,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b04",
+      "uid": "api_01_b04",
+      "type": "type_cast",
+      "x": 560,
+      "y": 208,
+      "params": {
+        "input_var": "x",
+        "to_type": "float",
+        "output_var": "casted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b05",
+      "uid": "api_01_b05",
+      "type": "progress_bar",
+      "x": 720,
+      "y": 180,
+      "params": {
+        "iterable_var": "items",
+        "description": "Processing",
+        "leave": true,
+        "output_var": "item",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b06",
+      "uid": "api_01_b06",
+      "type": "data_version",
+      "x": 880,
+      "y": 208,
+      "params": {
+        "data_var": "data",
+        "system": "DVC",
+        "version_tag": "v1.0.0",
+        "message": "Add training data",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b07",
+      "uid": "api_01_b07",
+      "type": "conditional_skip",
+      "x": 1040,
+      "y": 180,
+      "params": {
+        "condition": "env == \"prod\"",
+        "log_skip": true,
+        "skip_message": "Skipping: converged",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b08",
+      "uid": "api_01_b08",
+      "type": "format_number",
+      "x": 1200,
+      "y": 208,
+      "params": {
+        "value_var": "value",
+        "format": "auto",
+        "precision": 4,
+        "output_var": "formatted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b09",
+      "uid": "api_01_b09",
+      "type": "timer_block",
+      "x": 1360,
+      "y": 180,
+      "params": {
+        "operation": "start",
+        "timer_id": "t1",
+        "output_var": "timer",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b10",
+      "uid": "api_01_b10",
+      "type": "uuid_block",
+      "x": 1520,
+      "y": 208,
+      "params": {
+        "type": "v4",
+        "output_var": "uuid",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b11",
+      "uid": "api_01_b11",
+      "type": "config_load",
+      "x": 1680,
+      "y": 180,
+      "params": {
+        "config_file": "config_37.json",
+        "format": "yaml",
+        "defaults": "{}",
+        "output_var": "config",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b12",
+      "uid": "api_01_b12",
+      "type": "version_block",
+      "x": 1840,
+      "y": 208,
+      "params": {
+        "log_to_panel": true,
+        "output_var": "version",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b13",
+      "uid": "api_01_b13",
+      "type": "env_detect",
+      "x": 2000,
+      "y": 180,
+      "params": {
+        "output_var": "env",
+        "log_details": true,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b14",
+      "uid": "api_01_b14",
+      "type": "filter_block",
+      "x": 2160,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "condition": "row.score > 0.5",
+        "output_var": "filtered",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b15",
+      "uid": "api_01_b15",
+      "type": "map_transform",
+      "x": 2320,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "transform_expr": "x * 1.05",
+        "output_var": "mapped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b16",
+      "uid": "api_01_b16",
+      "type": "sort_block",
+      "x": 2480,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "key_expr": "x",
+        "descending": false,
+        "output_var": "sorted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b17",
+      "uid": "api_01_b17",
+      "type": "groupby_block",
+      "x": 2640,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "key_fn": "x[\"category\"]",
+        "agg": "list",
+        "output_var": "grouped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b18",
+      "uid": "api_01_b18",
+      "type": "pivot_block",
+      "x": 2800,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "index": "region",
+        "columns": "product",
+        "values": "revenue",
+        "aggfunc": "sum",
+        "output_var": "pivoted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b19",
+      "uid": "api_01_b19",
+      "type": "window_transform",
+      "x": 2960,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "window_size": 7,
+        "agg": "mean",
+        "center": false,
+        "output_var": "windowed",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b20",
+      "uid": "api_01_b20",
+      "type": "resample_block",
+      "x": 3120,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "freq": "1h",
+        "method": "mean",
+        "output_var": "resampled",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b21",
+      "uid": "api_01_b21",
+      "type": "encode_features",
+      "x": 3280,
+      "y": 180,
+      "params": {
+        "X_var": "X",
+        "col": "category",
+        "method": "onehot",
+        "output_var": "encoded",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b22",
+      "uid": "api_01_b22",
+      "type": "webhook_block",
+      "x": 3440,
+      "y": 208,
+      "params": {
+        "webhook_url": "",
+        "payload_var": "message",
+        "platform": "Slack",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b23",
+      "uid": "api_01_b23",
+      "type": "kafka_block",
+      "x": 3600,
+      "y": 180,
+      "params": {
+        "broker": "localhost:9092",
+        "topic": "events",
+        "operation": "produce",
+        "message_var": "msg",
+        "output_var": "kafka",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b24",
+      "uid": "api_01_b24",
+      "type": "email_block",
+      "x": 3760,
+      "y": 208,
+      "params": {
+        "to": "ops@example.com",
+        "subject": "Alert",
+        "body_var": "email_body",
+        "html": true,
+        "smtp_host_var": "SMTP_HOST",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b25",
+      "uid": "api_01_b25",
+      "type": "console_log_block",
+      "x": 3920,
+      "y": 180,
+      "params": {
+        "value_var": "results",
+        "format": "json",
+        "prefix": "API::",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "response",
+      "toId": "b02",
+      "toPort": "message",
+      "fid": "b01",
+      "fp": "response",
+      "tid": "b02",
+      "tp": "message"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "ts",
+      "toId": "b03",
+      "toPort": "message",
+      "fid": "b02",
+      "fp": "ts",
+      "tid": "b03",
+      "tp": "message"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "status",
+      "toId": "b04",
+      "toPort": "ci",
+      "fid": "b03",
+      "fp": "status",
+      "tid": "b04",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "result",
+      "toId": "b05",
+      "toPort": "iterable",
+      "fid": "b04",
+      "fp": "result",
+      "tid": "b05",
+      "tp": "iterable"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "item",
+      "toId": "b06",
+      "toPort": "data",
+      "fid": "b05",
+      "fp": "item",
+      "tid": "b06",
+      "tp": "data"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "version_id",
+      "toId": "b07",
+      "toPort": "condition",
+      "fid": "b06",
+      "fp": "version_id",
+      "tid": "b07",
+      "tp": "condition"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "pass",
+      "toId": "b08",
+      "toPort": "value",
+      "fid": "b07",
+      "fp": "pass",
+      "tid": "b08",
+      "tp": "value"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "string",
+      "toId": "b09",
+      "toPort": "in",
+      "fid": "b08",
+      "fp": "string",
+      "tid": "b09",
+      "tp": "in"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "elapsed_ms",
+      "toId": "b10",
+      "toPort": "in",
+      "fid": "b09",
+      "fp": "elapsed_ms",
+      "tid": "b10",
+      "tp": "in"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "id",
+      "toId": "b11",
+      "toPort": "in",
+      "fid": "b10",
+      "fp": "id",
+      "tid": "b11",
+      "tp": "in"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "config",
+      "toId": "b12",
+      "toPort": "in",
+      "fid": "b11",
+      "fp": "config",
+      "tid": "b12",
+      "tp": "in"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "version",
+      "toId": "b13",
+      "toPort": "in",
+      "fid": "b12",
+      "fp": "version",
+      "tid": "b13",
+      "tp": "in"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "env_info",
+      "toId": "b14",
+      "toPort": "ai",
+      "fid": "b13",
+      "fp": "env_info",
+      "tid": "b14",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "filtered",
+      "toId": "b15",
+      "toPort": "ai",
+      "fid": "b14",
+      "fp": "filtered",
+      "tid": "b15",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "result",
+      "toId": "b16",
+      "toPort": "ai",
+      "fid": "b15",
+      "fp": "result",
+      "tid": "b16",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "sorted",
+      "toId": "b17",
+      "toPort": "ai",
+      "fid": "b16",
+      "fp": "sorted",
+      "tid": "b17",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "grouped",
+      "toId": "b18",
+      "toPort": "ai",
+      "fid": "b17",
+      "fp": "grouped",
+      "tid": "b18",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "pivot",
+      "toId": "b19",
+      "toPort": "data",
+      "fid": "b18",
+      "fp": "pivot",
+      "tid": "b19",
+      "tp": "data"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "result",
+      "toId": "b20",
+      "toPort": "data",
+      "fid": "b19",
+      "fp": "result",
+      "tid": "b20",
+      "tp": "data"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "result",
+      "toId": "b21",
+      "toPort": "X",
+      "fid": "b20",
+      "fp": "result",
+      "tid": "b21",
+      "tp": "X"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "X_encoded",
+      "toId": "b22",
+      "toPort": "payload",
+      "fid": "b21",
+      "fp": "X_encoded",
+      "tid": "b22",
+      "tp": "payload"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "status",
+      "toId": "b23",
+      "toPort": "message",
+      "fid": "b22",
+      "fp": "status",
+      "tid": "b23",
+      "tp": "message"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "result",
+      "toId": "b24",
+      "toPort": "body",
+      "fid": "b23",
+      "fp": "result",
+      "tid": "b24",
+      "tp": "body"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "sent",
+      "toId": "b25",
+      "toPort": "value",
+      "fid": "b24",
+      "fp": "sent",
+      "tid": "b25",
+      "tp": "value"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

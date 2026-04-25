@@ -1,0 +1,463 @@
+{
+  "id": "climate_01",
+  "uid": "climate_01_56f2e3e4",
+  "title": "Carbon budget review",
+  "cat": "Climate",
+  "diff": "B",
+  "desc": "Weather, emissions, and hydrology inputs are transformed into actionable climate risk summaries.",
+  "domain": "climate",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "climate_01_b01",
+      "type": "csv_reader",
+      "x": 60,
+      "y": 60,
+      "params": {
+        "file_path": "sales.csv",
+        "separator": ",",
+        "header": true,
+        "auto_types": true,
+        "encoding": "utf-8",
+        "output_var": "df"
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "climate_01_b02",
+      "type": "renewable_opt",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "climate_01_b03",
+      "type": "wildfire_predict",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "climate_01_b04",
+      "type": "air_quality",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "climate_01_b05",
+      "type": "hydrology_block",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "climate_01_b06",
+      "type": "biodiversity_block",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "climate_01_b07",
+      "type": "carbon_offset",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "climate_01_b08",
+      "type": "life_cycle_assess",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "climate_01_b09",
+      "type": "monte_carlo",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "climate_01_b10",
+      "type": "molecular_dynamics",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "climate_01_b11",
+      "type": "fluid_dynamics",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "climate_01_b12",
+      "type": "finite_element",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "climate_01_b13",
+      "type": "em_field_sim",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "climate_01_b14",
+      "type": "optics_sim",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "climate_01_b15",
+      "type": "tensor_network",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "climate_01_b16",
+      "type": "topological_phase",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "climate_01_b17",
+      "type": "dft_plus_u",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "climate_01_b18",
+      "type": "cobyla_opt",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "climate_01_b19",
+      "type": "spsa_opt",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "climate_01_b20",
+      "type": "adam_opt",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "climate_01_b21",
+      "type": "genetic_algo",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "climate_01_b22",
+      "type": "simulated_annealing",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "climate_01_b23",
+      "type": "pso_opt",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "climate_01_b24",
+      "type": "lbfgs_opt",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "climate_01_b25",
+      "type": "table_block",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "title": "Carbon budget review"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "dataframe",
+      "toId": "b02",
+      "toPort": "demand",
+      "fid": "b01",
+      "fp": "dataframe",
+      "tid": "b02",
+      "tp": "demand"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "capacity_mix",
+      "toId": "b03",
+      "toPort": "weather",
+      "fid": "b02",
+      "fp": "capacity_mix",
+      "tid": "b03",
+      "tp": "weather"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "risk_map",
+      "toId": "b04",
+      "toPort": "emissions",
+      "fid": "b03",
+      "fp": "risk_map",
+      "tid": "b04",
+      "tp": "emissions"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "pm25",
+      "toId": "b05",
+      "toPort": "precipitation",
+      "fid": "b04",
+      "fp": "pm25",
+      "tid": "b05",
+      "tp": "precipitation"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "streamflow",
+      "toId": "b06",
+      "toPort": "occurrences",
+      "fid": "b05",
+      "fp": "streamflow",
+      "tid": "b06",
+      "tp": "occurrences"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "habitat_map",
+      "toId": "b07",
+      "toPort": "activity",
+      "fid": "b06",
+      "fp": "habitat_map",
+      "tid": "b07",
+      "tp": "activity"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "co2_tons",
+      "toId": "b08",
+      "toPort": "product",
+      "fid": "b07",
+      "fp": "co2_tons",
+      "tid": "b08",
+      "tp": "product"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "impact_categories",
+      "toId": "b09",
+      "toPort": "hamiltonian",
+      "fid": "b08",
+      "fp": "impact_categories",
+      "tid": "b09",
+      "tp": "hamiltonian"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "observable",
+      "toId": "b10",
+      "toPort": "system",
+      "fid": "b09",
+      "fp": "observable",
+      "tid": "b10",
+      "tp": "system"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "trajectory",
+      "toId": "b11",
+      "toPort": "geometry",
+      "fid": "b10",
+      "fp": "trajectory",
+      "tid": "b11",
+      "tp": "geometry"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "velocity",
+      "toId": "b12",
+      "toPort": "mesh",
+      "fid": "b11",
+      "fp": "velocity",
+      "tid": "b12",
+      "tp": "mesh"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "displacement",
+      "toId": "b13",
+      "toPort": "geometry",
+      "fid": "b12",
+      "fp": "displacement",
+      "tid": "b13",
+      "tp": "geometry"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "E_field",
+      "toId": "b14",
+      "toPort": "system",
+      "fid": "b13",
+      "fp": "E_field",
+      "tid": "b14",
+      "tp": "system"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "intensity",
+      "toId": "b15",
+      "toPort": "H",
+      "fid": "b14",
+      "fp": "intensity",
+      "tid": "b15",
+      "tp": "H"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "energy",
+      "toId": "b16",
+      "toPort": "H",
+      "fid": "b15",
+      "fp": "energy",
+      "tid": "b16",
+      "tp": "H"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "invariant",
+      "toId": "b17",
+      "toPort": "crystal",
+      "fid": "b16",
+      "fp": "invariant",
+      "tid": "b17",
+      "tp": "crystal"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "band_gap",
+      "toId": "b18",
+      "toPort": "fn",
+      "fid": "b17",
+      "fp": "band_gap",
+      "tid": "b18",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "params",
+      "toId": "b19",
+      "toPort": "fn",
+      "fid": "b18",
+      "fp": "params",
+      "tid": "b19",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "params",
+      "toId": "b20",
+      "toPort": "fn",
+      "fid": "b19",
+      "fp": "params",
+      "tid": "b20",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "params",
+      "toId": "b21",
+      "toPort": "fn",
+      "fid": "b20",
+      "fp": "params",
+      "tid": "b21",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "solution",
+      "toId": "b22",
+      "toPort": "fn",
+      "fid": "b21",
+      "fp": "solution",
+      "tid": "b22",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "solution",
+      "toId": "b23",
+      "toPort": "fn",
+      "fid": "b22",
+      "fp": "solution",
+      "tid": "b23",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "solution",
+      "toId": "b24",
+      "toPort": "fn",
+      "fid": "b23",
+      "fp": "solution",
+      "tid": "b24",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "params",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "params",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

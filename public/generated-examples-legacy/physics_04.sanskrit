@@ -1,0 +1,456 @@
+{
+  "id": "physics_04",
+  "uid": "physics_04_767cb702",
+  "title": "Optics interference study",
+  "cat": "Physics",
+  "diff": "I",
+  "desc": "Simulation, approximation, and analysis blocks support a classical-to-quantum physics workflow.",
+  "domain": "physics",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "physics_04_b01",
+      "type": "plasma_sim",
+      "x": 60,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b02",
+      "uid": "physics_04_b02",
+      "type": "stats_block",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "physics_04_b03",
+      "type": "complex_ops",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "physics_04_b04",
+      "type": "bit_ops",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "physics_04_b05",
+      "type": "symbolic_math",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "physics_04_b06",
+      "type": "interpolation_block",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "physics_04_b07",
+      "type": "eigenvalue_block",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "physics_04_b08",
+      "type": "graph_theory",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "physics_04_b09",
+      "type": "information_theory",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "physics_04_b10",
+      "type": "type_cast",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "physics_04_b11",
+      "type": "debug_break",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "physics_04_b12",
+      "type": "parallel_map",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "physics_04_b13",
+      "type": "cache_block",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "physics_04_b14",
+      "type": "progress_bar",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "physics_04_b15",
+      "type": "experiment_tracker",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "physics_04_b16",
+      "type": "data_version",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "physics_04_b17",
+      "type": "conditional_skip",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "physics_04_b18",
+      "type": "format_number",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "physics_04_b19",
+      "type": "plot_block",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "physics_04_b20",
+      "type": "save_file",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "physics_04_b21",
+      "type": "circuit_diagram",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "physics_04_b22",
+      "type": "network_graph_plot",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "physics_04_b23",
+      "type": "report_gen",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "physics_04_b24",
+      "type": "animation_block",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "physics_04_b25",
+      "type": "console_log_block",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "label": "Optics interference study"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "density",
+      "toId": "b02",
+      "toPort": "ci",
+      "fid": "b01",
+      "fp": "density",
+      "tid": "b02",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "result",
+      "toId": "b03",
+      "toPort": "a",
+      "fid": "b02",
+      "fp": "result",
+      "tid": "b03",
+      "tp": "a"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "result",
+      "toId": "b04",
+      "toPort": "a",
+      "fid": "b03",
+      "fp": "result",
+      "tid": "b04",
+      "tp": "a"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "result",
+      "toId": "b05",
+      "toPort": "expr",
+      "fid": "b04",
+      "fp": "result",
+      "tid": "b05",
+      "tp": "expr"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "result",
+      "toId": "b06",
+      "toPort": "x",
+      "fid": "b05",
+      "fp": "result",
+      "tid": "b06",
+      "tp": "x"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "y_new",
+      "toId": "b07",
+      "toPort": "A",
+      "fid": "b06",
+      "fp": "y_new",
+      "tid": "b07",
+      "tp": "A"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "eigenvalues",
+      "toId": "b08",
+      "toPort": "G",
+      "fid": "b07",
+      "fp": "eigenvalues",
+      "tid": "b08",
+      "tp": "G"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "result",
+      "toId": "b09",
+      "toPort": "p",
+      "fid": "b08",
+      "fp": "result",
+      "tid": "b09",
+      "tp": "p"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "result",
+      "toId": "b10",
+      "toPort": "ci",
+      "fid": "b09",
+      "fp": "result",
+      "tid": "b10",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "result",
+      "toId": "b11",
+      "toPort": "ai",
+      "fid": "b10",
+      "fp": "result",
+      "tid": "b11",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "ao",
+      "toId": "b12",
+      "toPort": "fn",
+      "fid": "b11",
+      "fp": "ao",
+      "tid": "b12",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "results",
+      "toId": "b13",
+      "toPort": "fn",
+      "fid": "b12",
+      "fp": "results",
+      "tid": "b13",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "result",
+      "toId": "b14",
+      "toPort": "iterable",
+      "fid": "b13",
+      "fp": "result",
+      "tid": "b14",
+      "tp": "iterable"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "item",
+      "toId": "b15",
+      "toPort": "data",
+      "fid": "b14",
+      "fp": "item",
+      "tid": "b15",
+      "tp": "data"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "run_id",
+      "toId": "b16",
+      "toPort": "data",
+      "fid": "b15",
+      "fp": "run_id",
+      "tid": "b16",
+      "tp": "data"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "version_id",
+      "toId": "b17",
+      "toPort": "condition",
+      "fid": "b16",
+      "fp": "version_id",
+      "tid": "b17",
+      "tp": "condition"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "pass",
+      "toId": "b18",
+      "toPort": "value",
+      "fid": "b17",
+      "fp": "pass",
+      "tid": "b18",
+      "tp": "value"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "string",
+      "toId": "b19",
+      "toPort": "x",
+      "fid": "b18",
+      "fp": "string",
+      "tid": "b19",
+      "tp": "x"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "figure",
+      "toId": "b20",
+      "toPort": "data",
+      "fid": "b19",
+      "fp": "figure",
+      "tid": "b20",
+      "tp": "data"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "filepath",
+      "toId": "b21",
+      "toPort": "ri",
+      "fid": "b20",
+      "fp": "filepath",
+      "tid": "b21",
+      "tp": "ri"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "diagram",
+      "toId": "b22",
+      "toPort": "G",
+      "fid": "b21",
+      "fp": "diagram",
+      "tid": "b22",
+      "tp": "G"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "html_file",
+      "toId": "b23",
+      "toPort": "data",
+      "fid": "b22",
+      "fp": "html_file",
+      "tid": "b23",
+      "tp": "data"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "file_path",
+      "toId": "b24",
+      "toPort": "frames",
+      "fid": "b23",
+      "fp": "file_path",
+      "tid": "b24",
+      "tp": "frames"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "gif_path",
+      "toId": "b25",
+      "toPort": "value",
+      "fid": "b24",
+      "fp": "gif_path",
+      "tid": "b25",
+      "tp": "value"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

@@ -1,0 +1,17 @@
+{
+  "version": "3.2",
+  "blocks": [
+    {
+      "id": "b2",
+      "type": "applied_portfolio_optimization",
+      "x": 1,
+      "y": 2,
+      "params": {}
+    }
+  ],
+  "wires": [],
+  "name": "Finance",
+  "tabId": "t2",
+  "active": false,
+  "savedAt": "2026-04-25T09:53:54.650Z"
+}

@@ -1,0 +1,460 @@
+{
+  "id": "materials_03",
+  "uid": "materials_03_d9f490c0",
+  "title": "Phonon stability check",
+  "cat": "Materials Science",
+  "diff": "A",
+  "desc": "Crystal, band, phonon, and battery blocks explore candidate materials for energy and transport.",
+  "domain": "materials",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "materials_03_b01",
+      "type": "json_reader",
+      "x": 60,
+      "y": 60,
+      "params": {
+        "file_path": "data.json",
+        "jsonl_mode": false,
+        "output_var": "data"
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "materials_03_b02",
+      "type": "tensor_network",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "materials_03_b03",
+      "type": "topological_phase",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "materials_03_b04",
+      "type": "dft_plus_u",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "materials_03_b05",
+      "type": "h_gate",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "materials_03_b06",
+      "type": "x_gate",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "materials_03_b07",
+      "type": "y_gate",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "materials_03_b08",
+      "type": "z_gate",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "materials_03_b09",
+      "type": "s_gate",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "materials_03_b10",
+      "type": "sdg_gate",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "materials_03_b11",
+      "type": "t_gate",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "materials_03_b12",
+      "type": "tdg_gate",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "materials_03_b13",
+      "type": "sx_gate",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "materials_03_b14",
+      "type": "rx_gate",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "materials_03_b15",
+      "type": "ry_gate",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "materials_03_b16",
+      "type": "rz_gate",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "materials_03_b17",
+      "type": "phase_gate",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "materials_03_b18",
+      "type": "u3_gate",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "materials_03_b19",
+      "type": "cnot_gate",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "materials_03_b20",
+      "type": "cz_gate",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "materials_03_b21",
+      "type": "cy_gate",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "materials_03_b22",
+      "type": "swap_gate",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "materials_03_b23",
+      "type": "iswap_gate",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "materials_03_b24",
+      "type": "cp_gate",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "materials_03_b25",
+      "type": "histogram_plot",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "title": "Phonon stability check"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "data",
+      "toId": "b02",
+      "toPort": "H",
+      "fid": "b01",
+      "fp": "data",
+      "tid": "b02",
+      "tp": "H"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "energy",
+      "toId": "b03",
+      "toPort": "H",
+      "fid": "b02",
+      "fp": "energy",
+      "tid": "b03",
+      "tp": "H"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "invariant",
+      "toId": "b04",
+      "toPort": "crystal",
+      "fid": "b03",
+      "fp": "invariant",
+      "tid": "b04",
+      "tp": "crystal"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "band_gap",
+      "toId": "b05",
+      "toPort": "qi",
+      "fid": "b04",
+      "fp": "band_gap",
+      "tid": "b05",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "qo",
+      "toId": "b06",
+      "toPort": "qi",
+      "fid": "b05",
+      "fp": "qo",
+      "tid": "b06",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "qo",
+      "toId": "b07",
+      "toPort": "qi",
+      "fid": "b06",
+      "fp": "qo",
+      "tid": "b07",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "qo",
+      "toId": "b08",
+      "toPort": "qi",
+      "fid": "b07",
+      "fp": "qo",
+      "tid": "b08",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "qo",
+      "toId": "b09",
+      "toPort": "qi",
+      "fid": "b08",
+      "fp": "qo",
+      "tid": "b09",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "qo",
+      "toId": "b10",
+      "toPort": "qi",
+      "fid": "b09",
+      "fp": "qo",
+      "tid": "b10",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "qo",
+      "toId": "b11",
+      "toPort": "qi",
+      "fid": "b10",
+      "fp": "qo",
+      "tid": "b11",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "qo",
+      "toId": "b12",
+      "toPort": "qi",
+      "fid": "b11",
+      "fp": "qo",
+      "tid": "b12",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "qo",
+      "toId": "b13",
+      "toPort": "qi",
+      "fid": "b12",
+      "fp": "qo",
+      "tid": "b13",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "qo",
+      "toId": "b14",
+      "toPort": "qi",
+      "fid": "b13",
+      "fp": "qo",
+      "tid": "b14",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "qo",
+      "toId": "b15",
+      "toPort": "qi",
+      "fid": "b14",
+      "fp": "qo",
+      "tid": "b15",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "qo",
+      "toId": "b16",
+      "toPort": "qi",
+      "fid": "b15",
+      "fp": "qo",
+      "tid": "b16",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "qo",
+      "toId": "b17",
+      "toPort": "qi",
+      "fid": "b16",
+      "fp": "qo",
+      "tid": "b17",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "qo",
+      "toId": "b18",
+      "toPort": "qi",
+      "fid": "b17",
+      "fp": "qo",
+      "tid": "b18",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "qo",
+      "toId": "b19",
+      "toPort": "ci",
+      "fid": "b18",
+      "fp": "qo",
+      "tid": "b19",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "co",
+      "toId": "b20",
+      "toPort": "a",
+      "fid": "b19",
+      "fp": "co",
+      "tid": "b20",
+      "tp": "a"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "ao",
+      "toId": "b21",
+      "toPort": "c",
+      "fid": "b20",
+      "fp": "ao",
+      "tid": "b21",
+      "tp": "c"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "co",
+      "toId": "b22",
+      "toPort": "a",
+      "fid": "b21",
+      "fp": "co",
+      "tid": "b22",
+      "tp": "a"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "ao",
+      "toId": "b23",
+      "toPort": "a",
+      "fid": "b22",
+      "fp": "ao",
+      "tid": "b23",
+      "tp": "a"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "ao",
+      "toId": "b24",
+      "toPort": "c",
+      "fid": "b23",
+      "fp": "ao",
+      "tid": "b24",
+      "tp": "c"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "co",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "co",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

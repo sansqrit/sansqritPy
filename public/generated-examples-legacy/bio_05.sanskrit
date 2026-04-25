@@ -1,0 +1,458 @@
+{
+  "id": "bio_05",
+  "uid": "bio_05_3fb84567",
+  "title": "Metagenomics survey",
+  "cat": "Biology",
+  "diff": "B",
+  "desc": "Sequencing, expression, folding, and annotation blocks are combined into a practical bioinformatics workflow.",
+  "domain": "bio",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "bio_05_b01",
+      "type": "dna_seq",
+      "x": 60,
+      "y": 60,
+      "params": {
+        "sequence": "ATGCGTACGTTAGC"
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "bio_05_b02",
+      "type": "join_block",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "bio_05_b03",
+      "type": "pivot_block",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "bio_05_b04",
+      "type": "schema_validate",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "bio_05_b05",
+      "type": "window_transform",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "bio_05_b06",
+      "type": "resample_block",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "bio_05_b07",
+      "type": "encode_features",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "bio_05_b08",
+      "type": "missing_impute",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "bio_05_b09",
+      "type": "normalize_block",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "bio_05_b10",
+      "type": "explode_block",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "bio_05_b11",
+      "type": "dedup_block",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "bio_05_b12",
+      "type": "binning_block",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "bio_05_b13",
+      "type": "type_cast",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "bio_05_b14",
+      "type": "debug_break",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "bio_05_b15",
+      "type": "parallel_map",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "bio_05_b16",
+      "type": "cache_block",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "bio_05_b17",
+      "type": "progress_bar",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "bio_05_b18",
+      "type": "experiment_tracker",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "bio_05_b19",
+      "type": "data_version",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "bio_05_b20",
+      "type": "conditional_skip",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "bio_05_b21",
+      "type": "format_number",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "bio_05_b22",
+      "type": "train_model",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "bio_05_b23",
+      "type": "neural_net",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "bio_05_b24",
+      "type": "predict_block",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "bio_05_b25",
+      "type": "histogram_plot",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "title": "Metagenomics survey"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "dna",
+      "toId": "b02",
+      "toPort": "left",
+      "fid": "b01",
+      "fp": "dna",
+      "tid": "b02",
+      "tp": "left"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "merged",
+      "toId": "b03",
+      "toPort": "ai",
+      "fid": "b02",
+      "fp": "merged",
+      "tid": "b03",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "pivot",
+      "toId": "b04",
+      "toPort": "ai",
+      "fid": "b03",
+      "fp": "pivot",
+      "tid": "b04",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "valid",
+      "toId": "b05",
+      "toPort": "data",
+      "fid": "b04",
+      "fp": "valid",
+      "tid": "b05",
+      "tp": "data"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "result",
+      "toId": "b06",
+      "toPort": "data",
+      "fid": "b05",
+      "fp": "result",
+      "tid": "b06",
+      "tp": "data"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "result",
+      "toId": "b07",
+      "toPort": "X",
+      "fid": "b06",
+      "fp": "result",
+      "tid": "b07",
+      "tp": "X"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "X_encoded",
+      "toId": "b08",
+      "toPort": "data",
+      "fid": "b07",
+      "fp": "X_encoded",
+      "tid": "b08",
+      "tp": "data"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "imputed",
+      "toId": "b09",
+      "toPort": "X",
+      "fid": "b08",
+      "fp": "imputed",
+      "tid": "b09",
+      "tp": "X"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "scaled",
+      "toId": "b10",
+      "toPort": "data",
+      "fid": "b09",
+      "fp": "scaled",
+      "tid": "b10",
+      "tp": "data"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "result",
+      "toId": "b11",
+      "toPort": "data",
+      "fid": "b10",
+      "fp": "result",
+      "tid": "b11",
+      "tp": "data"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "deduped",
+      "toId": "b12",
+      "toPort": "data",
+      "fid": "b11",
+      "fp": "deduped",
+      "tid": "b12",
+      "tp": "data"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "binned",
+      "toId": "b13",
+      "toPort": "ci",
+      "fid": "b12",
+      "fp": "binned",
+      "tid": "b13",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "result",
+      "toId": "b14",
+      "toPort": "ai",
+      "fid": "b13",
+      "fp": "result",
+      "tid": "b14",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "ao",
+      "toId": "b15",
+      "toPort": "fn",
+      "fid": "b14",
+      "fp": "ao",
+      "tid": "b15",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "results",
+      "toId": "b16",
+      "toPort": "fn",
+      "fid": "b15",
+      "fp": "results",
+      "tid": "b16",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "result",
+      "toId": "b17",
+      "toPort": "iterable",
+      "fid": "b16",
+      "fp": "result",
+      "tid": "b17",
+      "tp": "iterable"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "item",
+      "toId": "b18",
+      "toPort": "data",
+      "fid": "b17",
+      "fp": "item",
+      "tid": "b18",
+      "tp": "data"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "run_id",
+      "toId": "b19",
+      "toPort": "data",
+      "fid": "b18",
+      "fp": "run_id",
+      "tid": "b19",
+      "tp": "data"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "version_id",
+      "toId": "b20",
+      "toPort": "condition",
+      "fid": "b19",
+      "fp": "version_id",
+      "tid": "b20",
+      "tp": "condition"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "pass",
+      "toId": "b21",
+      "toPort": "value",
+      "fid": "b20",
+      "fp": "pass",
+      "tid": "b21",
+      "tp": "value"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "string",
+      "toId": "b22",
+      "toPort": "X",
+      "fid": "b21",
+      "fp": "string",
+      "tid": "b22",
+      "tp": "X"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "model",
+      "toId": "b23",
+      "toPort": "X",
+      "fid": "b22",
+      "fp": "model",
+      "tid": "b23",
+      "tp": "X"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "model",
+      "toId": "b24",
+      "toPort": "model",
+      "fid": "b23",
+      "fp": "model",
+      "tid": "b24",
+      "tp": "model"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "predictions",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "predictions",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

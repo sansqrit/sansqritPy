@@ -1,0 +1,659 @@
+{
+  "id": "physics_01",
+  "uid": "uid_physics_01",
+  "title": "Physics Simulation Example 1",
+  "cat": "Physics",
+  "diff": "Beginner",
+  "desc": "Classical and quantum-inspired physics workflows for simulation, optimisation, and analysis.",
+  "domain": "Physics Simulation",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "physics_01_b01",
+      "type": "hamiltonian_block",
+      "x": 80,
+      "y": 180,
+      "params": {
+        "pauli_string": "0.5*Z0*Z1 + 0.3*X0",
+        "format": "pauli_string",
+        "compute_ground_state": false,
+        "output_var": "ham",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "physics_01_b02",
+      "type": "finite_element",
+      "x": 240,
+      "y": 208,
+      "params": {
+        "mesh_var": "mesh",
+        "physics": "structural",
+        "solver": "FEniCS",
+        "boundary_conditions_var": "bcs",
+        "output_var": "fea",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b03",
+      "uid": "physics_01_b03",
+      "type": "em_field_sim",
+      "x": 400,
+      "y": 180,
+      "params": {
+        "geometry_var": "geometry",
+        "method": "FDTD",
+        "frequency_ghz": 10,
+        "excitation_var": "source",
+        "output_var": "em",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b04",
+      "uid": "physics_01_b04",
+      "type": "optics_sim",
+      "x": 560,
+      "y": 208,
+      "params": {
+        "optical_system_var": "optics",
+        "simulation": "ray_tracing",
+        "source_var": "laser",
+        "output_var": "optics",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b05",
+      "uid": "physics_01_b05",
+      "type": "tensor_network",
+      "x": 720,
+      "y": 180,
+      "params": {
+        "ansatz": "MPS",
+        "bond_dim": 64,
+        "task": "ground_state",
+        "hamiltonian_var": "H",
+        "output_var": "tensor",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b06",
+      "uid": "physics_01_b06",
+      "type": "dft_plus_u",
+      "x": 880,
+      "y": 208,
+      "params": {
+        "crystal_var": "crystal",
+        "U_value_eV": 4,
+        "target_species": "Fe",
+        "code": "QuantumESPRESSO",
+        "output_var": "dftu",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b07",
+      "uid": "physics_01_b07",
+      "type": "qft_block",
+      "x": 1040,
+      "y": 180,
+      "params": {
+        "register": "q",
+        "n_qubits": 4,
+        "inverse": false,
+        "swap_bits": true,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b08",
+      "uid": "physics_01_b08",
+      "type": "qdrift_block",
+      "x": 1200,
+      "y": 208,
+      "params": {
+        "hamiltonian_var": "H",
+        "register": "q",
+        "time": 1,
+        "n_samples": 100,
+        "output_var": "qdrift",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b09",
+      "uid": "physics_01_b09",
+      "type": "qsim_block",
+      "x": 1360,
+      "y": 180,
+      "params": {
+        "hamiltonian_var": "H",
+        "register": "q",
+        "time": 1.0,
+        "method": "Trotter-2",
+        "error": 0.001,
+        "output_var": "qsim",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b10",
+      "uid": "physics_01_b10",
+      "type": "qram_block",
+      "x": 1520,
+      "y": 208,
+      "params": {
+        "data_var": "data",
+        "architecture": "bucket_brigade",
+        "n_address": 4,
+        "output_var": "qram",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b11",
+      "uid": "physics_01_b11",
+      "type": "quantum_walk_search",
+      "x": 1680,
+      "y": 180,
+      "params": {
+        "graph_type": "hypercube",
+        "n_vertices": 256,
+        "n_marked": 1,
+        "shots": 1000,
+        "output_var": "qwalk_search",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b12",
+      "uid": "physics_01_b12",
+      "type": "quantum_counting",
+      "x": 1840,
+      "y": 208,
+      "params": {
+        "n_qubits": 5,
+        "n_precision": 5,
+        "oracle_fn": "oracle",
+        "shots": 1000,
+        "output_var": "qcount",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b13",
+      "uid": "physics_01_b13",
+      "type": "qsvt_block",
+      "x": 2000,
+      "y": 180,
+      "params": {
+        "block_encoding_var": "block_enc",
+        "poly_coeff_var": "poly",
+        "register": "q",
+        "output_var": "qsvt_result",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b14",
+      "uid": "physics_01_b14",
+      "type": "qite_block",
+      "x": 2160,
+      "y": 208,
+      "params": {
+        "hamiltonian": "H",
+        "register": "q",
+        "beta": 1,
+        "db": 0.05,
+        "output_var": "qite",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b15",
+      "uid": "physics_01_b15",
+      "type": "variational_gibbs",
+      "x": 2320,
+      "y": 180,
+      "params": {
+        "hamiltonian": "H",
+        "beta": 1,
+        "method": "variational",
+        "output_var": "vgibbs",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b16",
+      "uid": "physics_01_b16",
+      "type": "mbl_sim",
+      "x": 2480,
+      "y": 208,
+      "params": {
+        "n_spins": 10,
+        "disorder_W": 2.5,
+        "J_coupling": 1,
+        "n_time_steps": 100,
+        "output_var": "mbl",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b17",
+      "uid": "physics_01_b17",
+      "type": "vqls_block",
+      "x": 2640,
+      "y": 180,
+      "params": {
+        "A_var": "A_pauli",
+        "b_state_var": "b_circuit",
+        "ansatz": "EfficientSU2",
+        "shots": 1000,
+        "output_var": "vqls",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b18",
+      "uid": "physics_01_b18",
+      "type": "h_gate",
+      "x": 2800,
+      "y": 208,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b19",
+      "uid": "physics_01_b19",
+      "type": "x_gate",
+      "x": 2960,
+      "y": 180,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b20",
+      "uid": "physics_01_b20",
+      "type": "y_gate",
+      "x": 3120,
+      "y": 208,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b21",
+      "uid": "physics_01_b21",
+      "type": "z_gate",
+      "x": 3280,
+      "y": 180,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b22",
+      "uid": "physics_01_b22",
+      "type": "s_gate",
+      "x": 3440,
+      "y": 208,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b23",
+      "uid": "physics_01_b23",
+      "type": "sdg_gate",
+      "x": 3600,
+      "y": 180,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b24",
+      "uid": "physics_01_b24",
+      "type": "t_gate",
+      "x": 3760,
+      "y": 208,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b25",
+      "uid": "physics_01_b25",
+      "type": "report_gen",
+      "x": 3920,
+      "y": 180,
+      "params": {
+        "title": "Physics Report 1",
+        "data_var": "results",
+        "format": "HTML",
+        "output_file": "report_phys_1.html",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "hamiltonian",
+      "toId": "b02",
+      "toPort": "mesh",
+      "fid": "b01",
+      "fp": "hamiltonian",
+      "tid": "b02",
+      "tp": "mesh"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "displacement",
+      "toId": "b03",
+      "toPort": "geometry",
+      "fid": "b02",
+      "fp": "displacement",
+      "tid": "b03",
+      "tp": "geometry"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "E_field",
+      "toId": "b04",
+      "toPort": "system",
+      "fid": "b03",
+      "fp": "E_field",
+      "tid": "b04",
+      "tp": "system"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "intensity",
+      "toId": "b05",
+      "toPort": "H",
+      "fid": "b04",
+      "fp": "intensity",
+      "tid": "b05",
+      "tp": "H"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "energy",
+      "toId": "b06",
+      "toPort": "crystal",
+      "fid": "b05",
+      "fp": "energy",
+      "tid": "b06",
+      "tp": "crystal"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "band_gap",
+      "toId": "b07",
+      "toPort": "ri",
+      "fid": "b06",
+      "fp": "band_gap",
+      "tid": "b07",
+      "tp": "ri"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "ro",
+      "toId": "b08",
+      "toPort": "ri",
+      "fid": "b07",
+      "fp": "ro",
+      "tid": "b08",
+      "tp": "ri"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "ro",
+      "toId": "b09",
+      "toPort": "ri",
+      "fid": "b08",
+      "fp": "ro",
+      "tid": "b09",
+      "tp": "ri"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "ro",
+      "toId": "b10",
+      "toPort": "data",
+      "fid": "b09",
+      "fp": "ro",
+      "tid": "b10",
+      "tp": "data"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "qdata",
+      "toId": "b11",
+      "toPort": "in",
+      "fid": "b10",
+      "fp": "qdata",
+      "tid": "b11",
+      "tp": "in"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "vertex",
+      "toId": "b12",
+      "toPort": "oracle",
+      "fid": "b11",
+      "fp": "vertex",
+      "tid": "b12",
+      "tp": "oracle"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "count",
+      "toId": "b13",
+      "toPort": "ri",
+      "fid": "b12",
+      "fp": "count",
+      "tid": "b13",
+      "tp": "ri"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "ro",
+      "toId": "b14",
+      "toPort": "ri",
+      "fid": "b13",
+      "fp": "ro",
+      "tid": "b14",
+      "tp": "ri"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "ro",
+      "toId": "b15",
+      "toPort": "in",
+      "fid": "b14",
+      "fp": "ro",
+      "tid": "b15",
+      "tp": "in"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "state",
+      "toId": "b16",
+      "toPort": "in",
+      "fid": "b15",
+      "fp": "state",
+      "tid": "b16",
+      "tp": "in"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "entropy",
+      "toId": "b17",
+      "toPort": "A",
+      "fid": "b16",
+      "fp": "entropy",
+      "tid": "b17",
+      "tp": "A"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "x_state",
+      "toId": "b18",
+      "toPort": "qi",
+      "fid": "b17",
+      "fp": "x_state",
+      "tid": "b18",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "qo",
+      "toId": "b19",
+      "toPort": "qi",
+      "fid": "b18",
+      "fp": "qo",
+      "tid": "b19",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "qo",
+      "toId": "b20",
+      "toPort": "qi",
+      "fid": "b19",
+      "fp": "qo",
+      "tid": "b20",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "qo",
+      "toId": "b21",
+      "toPort": "qi",
+      "fid": "b20",
+      "fp": "qo",
+      "tid": "b21",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "qo",
+      "toId": "b22",
+      "toPort": "qi",
+      "fid": "b21",
+      "fp": "qo",
+      "tid": "b22",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "qo",
+      "toId": "b23",
+      "toPort": "qi",
+      "fid": "b22",
+      "fp": "qo",
+      "tid": "b23",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "qo",
+      "toId": "b24",
+      "toPort": "qi",
+      "fid": "b23",
+      "fp": "qo",
+      "tid": "b24",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "qo",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "qo",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

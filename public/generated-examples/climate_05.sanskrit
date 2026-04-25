@@ -1,0 +1,653 @@
+{
+  "id": "climate_05",
+  "uid": "uid_climate_05",
+  "title": "Climate & Earth Systems Example 5",
+  "cat": "Climate",
+  "diff": "Research",
+  "desc": "Earth system modelling for emissions, hydrology, biodiversity, and energy transition planning.",
+  "domain": "Climate & Earth Systems",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "climate_05_b01",
+      "type": "solar_irradiance",
+      "x": 80,
+      "y": 180,
+      "params": {
+        "latitude": 40,
+        "longitude": -74,
+        "date_start": "2024-01-01",
+        "n_days": 365,
+        "output_var": "irradiance",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "climate_05_b02",
+      "type": "wildfire_predict",
+      "x": 240,
+      "y": 208,
+      "params": {
+        "weather_var": "weather",
+        "vegetation_var": "vegetation",
+        "model": "GBT",
+        "output_var": "wildfire",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b03",
+      "uid": "climate_05_b03",
+      "type": "air_quality",
+      "x": 400,
+      "y": 180,
+      "params": {
+        "emissions_var": "emissions",
+        "met_var": "met_data",
+        "model": "simple_dispersion",
+        "output_var": "air_quality",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b04",
+      "uid": "climate_05_b04",
+      "type": "hydrology_block",
+      "x": 560,
+      "y": 208,
+      "params": {
+        "precip_var": "precip",
+        "dem_var": "dem",
+        "model": "HBV",
+        "output_var": "hydrology",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b05",
+      "uid": "climate_05_b05",
+      "type": "biodiversity_block",
+      "x": 720,
+      "y": 180,
+      "params": {
+        "occurrence_var": "occurrences",
+        "climate_var": "climate_data",
+        "model": "MaxEnt",
+        "output_var": "biodiversity",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b06",
+      "uid": "climate_05_b06",
+      "type": "carbon_offset",
+      "x": 880,
+      "y": 208,
+      "params": {
+        "activity_var": "activity",
+        "methodology": "GHG_Protocol",
+        "output_var": "offset",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b07",
+      "uid": "climate_05_b07",
+      "type": "life_cycle_assess",
+      "x": 1040,
+      "y": 180,
+      "params": {
+        "product_var": "product",
+        "functional_unit": "1 kg",
+        "method": "ReCiPe",
+        "output_var": "lca",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b08",
+      "uid": "climate_05_b08",
+      "type": "filter_block",
+      "x": 1200,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "condition": "row.score > 0.5",
+        "output_var": "filtered",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b09",
+      "uid": "climate_05_b09",
+      "type": "map_transform",
+      "x": 1360,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "transform_expr": "x * 1.05",
+        "output_var": "mapped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b10",
+      "uid": "climate_05_b10",
+      "type": "sort_block",
+      "x": 1520,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "key_expr": "x",
+        "descending": false,
+        "output_var": "sorted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b11",
+      "uid": "climate_05_b11",
+      "type": "groupby_block",
+      "x": 1680,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "key_fn": "x[\"category\"]",
+        "agg": "list",
+        "output_var": "grouped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b12",
+      "uid": "climate_05_b12",
+      "type": "pivot_block",
+      "x": 1840,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "index": "region",
+        "columns": "product",
+        "values": "revenue",
+        "aggfunc": "sum",
+        "output_var": "pivoted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b13",
+      "uid": "climate_05_b13",
+      "type": "window_transform",
+      "x": 2000,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "window_size": 7,
+        "agg": "mean",
+        "center": false,
+        "output_var": "windowed",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b14",
+      "uid": "climate_05_b14",
+      "type": "feature_eng",
+      "x": 2160,
+      "y": 208,
+      "params": {
+        "X_var": "X",
+        "steps": "[{\"type\":\"StandardScaler\"},{\"type\":\"OneHotEncoder\"}]",
+        "output_var": "features",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b15",
+      "uid": "climate_05_b15",
+      "type": "type_cast",
+      "x": 2320,
+      "y": 180,
+      "params": {
+        "input_var": "x",
+        "to_type": "float",
+        "output_var": "casted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b16",
+      "uid": "climate_05_b16",
+      "type": "normalize_block",
+      "x": 2480,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "scaler": "StandardScaler",
+        "output_var": "normalised",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b17",
+      "uid": "climate_05_b17",
+      "type": "missing_impute",
+      "x": 2640,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "strategy": "median",
+        "fill_value": "0",
+        "output_var": "imputed",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b18",
+      "uid": "climate_05_b18",
+      "type": "renewable_opt",
+      "x": 2800,
+      "y": 208,
+      "params": {
+        "demand_var": "demand",
+        "solar_resource_var": "solar",
+        "wind_resource_var": "wind",
+        "storage_hours": 4,
+        "solver": "LP",
+        "output_var": "renewable",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b19",
+      "uid": "climate_05_b19",
+      "type": "wildfire_predict",
+      "x": 2960,
+      "y": 180,
+      "params": {
+        "weather_var": "weather",
+        "vegetation_var": "vegetation",
+        "model": "GBT",
+        "output_var": "wildfire",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b20",
+      "uid": "climate_05_b20",
+      "type": "air_quality",
+      "x": 3120,
+      "y": 208,
+      "params": {
+        "emissions_var": "emissions",
+        "met_var": "met_data",
+        "model": "simple_dispersion",
+        "output_var": "air_quality",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b21",
+      "uid": "climate_05_b21",
+      "type": "hydrology_block",
+      "x": 3280,
+      "y": 180,
+      "params": {
+        "precip_var": "precip",
+        "dem_var": "dem",
+        "model": "HBV",
+        "output_var": "hydrology",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b22",
+      "uid": "climate_05_b22",
+      "type": "biodiversity_block",
+      "x": 3440,
+      "y": 208,
+      "params": {
+        "occurrence_var": "occurrences",
+        "climate_var": "climate_data",
+        "model": "MaxEnt",
+        "output_var": "biodiversity",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b23",
+      "uid": "climate_05_b23",
+      "type": "carbon_offset",
+      "x": 3600,
+      "y": 180,
+      "params": {
+        "activity_var": "activity",
+        "methodology": "GHG_Protocol",
+        "output_var": "offset",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b24",
+      "uid": "climate_05_b24",
+      "type": "life_cycle_assess",
+      "x": 3760,
+      "y": 208,
+      "params": {
+        "product_var": "product",
+        "functional_unit": "1 kg",
+        "method": "ReCiPe",
+        "output_var": "lca",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b25",
+      "uid": "climate_05_b25",
+      "type": "histogram_plot",
+      "x": 3920,
+      "y": 180,
+      "params": {
+        "data_var": "results",
+        "bins": 24,
+        "normalise": true,
+        "title": "Climate Histogram 5",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "ghi",
+      "toId": "b02",
+      "toPort": "weather",
+      "fid": "b01",
+      "fp": "ghi",
+      "tid": "b02",
+      "tp": "weather"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "risk_map",
+      "toId": "b03",
+      "toPort": "emissions",
+      "fid": "b02",
+      "fp": "risk_map",
+      "tid": "b03",
+      "tp": "emissions"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "pm25",
+      "toId": "b04",
+      "toPort": "precipitation",
+      "fid": "b03",
+      "fp": "pm25",
+      "tid": "b04",
+      "tp": "precipitation"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "streamflow",
+      "toId": "b05",
+      "toPort": "occurrences",
+      "fid": "b04",
+      "fp": "streamflow",
+      "tid": "b05",
+      "tp": "occurrences"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "habitat_map",
+      "toId": "b06",
+      "toPort": "activity",
+      "fid": "b05",
+      "fp": "habitat_map",
+      "tid": "b06",
+      "tp": "activity"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "co2_tons",
+      "toId": "b07",
+      "toPort": "product",
+      "fid": "b06",
+      "fp": "co2_tons",
+      "tid": "b07",
+      "tp": "product"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "impact_categories",
+      "toId": "b08",
+      "toPort": "ai",
+      "fid": "b07",
+      "fp": "impact_categories",
+      "tid": "b08",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "filtered",
+      "toId": "b09",
+      "toPort": "ai",
+      "fid": "b08",
+      "fp": "filtered",
+      "tid": "b09",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "result",
+      "toId": "b10",
+      "toPort": "ai",
+      "fid": "b09",
+      "fp": "result",
+      "tid": "b10",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "sorted",
+      "toId": "b11",
+      "toPort": "ai",
+      "fid": "b10",
+      "fp": "sorted",
+      "tid": "b11",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "grouped",
+      "toId": "b12",
+      "toPort": "ai",
+      "fid": "b11",
+      "fp": "grouped",
+      "tid": "b12",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "pivot",
+      "toId": "b13",
+      "toPort": "data",
+      "fid": "b12",
+      "fp": "pivot",
+      "tid": "b13",
+      "tp": "data"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "result",
+      "toId": "b14",
+      "toPort": "X",
+      "fid": "b13",
+      "fp": "result",
+      "tid": "b14",
+      "tp": "X"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "features",
+      "toId": "b15",
+      "toPort": "ci",
+      "fid": "b14",
+      "fp": "features",
+      "tid": "b15",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "result",
+      "toId": "b16",
+      "toPort": "X",
+      "fid": "b15",
+      "fp": "result",
+      "tid": "b16",
+      "tp": "X"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "scaled",
+      "toId": "b17",
+      "toPort": "data",
+      "fid": "b16",
+      "fp": "scaled",
+      "tid": "b17",
+      "tp": "data"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "imputed",
+      "toId": "b18",
+      "toPort": "demand",
+      "fid": "b17",
+      "fp": "imputed",
+      "tid": "b18",
+      "tp": "demand"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "capacity_mix",
+      "toId": "b19",
+      "toPort": "weather",
+      "fid": "b18",
+      "fp": "capacity_mix",
+      "tid": "b19",
+      "tp": "weather"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "risk_map",
+      "toId": "b20",
+      "toPort": "emissions",
+      "fid": "b19",
+      "fp": "risk_map",
+      "tid": "b20",
+      "tp": "emissions"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "pm25",
+      "toId": "b21",
+      "toPort": "precipitation",
+      "fid": "b20",
+      "fp": "pm25",
+      "tid": "b21",
+      "tp": "precipitation"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "streamflow",
+      "toId": "b22",
+      "toPort": "occurrences",
+      "fid": "b21",
+      "fp": "streamflow",
+      "tid": "b22",
+      "tp": "occurrences"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "habitat_map",
+      "toId": "b23",
+      "toPort": "activity",
+      "fid": "b22",
+      "fp": "habitat_map",
+      "tid": "b23",
+      "tp": "activity"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "co2_tons",
+      "toId": "b24",
+      "toPort": "product",
+      "fid": "b23",
+      "fp": "co2_tons",
+      "tid": "b24",
+      "tp": "product"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "impact_categories",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "impact_categories",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

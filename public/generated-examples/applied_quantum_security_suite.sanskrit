@@ -1,0 +1,20 @@
+{
+  "id": "applied_quantum_security_suite",
+  "title": "Applied Quantum Security Suite",
+  "cat": "Applied Quantum",
+  "diff": "Expert",
+  "desc": "Compare PQC, QKD, QRNG, blind quantum computing, and quantum digital signatures.",
+  "blocks": [
+    {"id": "pqc", "type": "applied_post_quantum_cryptography", "x": 80, "y": 160, "params": {"method": "Kyber/KEM analysis", "sample_size": 10}},
+    {"id": "qkd", "type": "applied_quantum_key_distribution", "x": 360, "y": 160, "params": {"method": "Decoy state model", "sample_size": 10}},
+    {"id": "qrng", "type": "applied_quantum_random_number_generation", "x": 640, "y": 160, "params": {"method": "NIST test suite", "sample_size": 10}},
+    {"id": "qds", "type": "applied_quantum_digital_signatures", "x": 920, "y": 160, "params": {"method": "Finite-key bound", "sample_size": 10}},
+    {"id": "tbl", "type": "table_display", "x": 1200, "y": 160, "params": {"title": "Quantum Security Evaluation", "page_size": 25}}
+  ],
+  "wires": [
+    {"fromId": "pqc", "fromPort": "dataset", "toId": "qkd", "toPort": "dataset"},
+    {"fromId": "qkd", "fromPort": "dataset", "toId": "qrng", "toPort": "dataset"},
+    {"fromId": "qrng", "fromPort": "dataset", "toId": "qds", "toPort": "dataset"},
+    {"fromId": "qds", "fromPort": "dataset", "toId": "tbl", "toPort": "dataset"}
+  ]
+}

@@ -7,8 +7,9 @@ import http             from 'http';
 import fs               from 'fs';
 import path             from 'path';
 import os               from 'os';
+import v8               from 'v8';
 import { fileURLToPath } from 'url';
-import { execSync }      from 'child_process';
+import { execSync, execFileSync } from 'child_process';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT   = path.resolve(__dirname, '../../');
@@ -52,7 +53,7 @@ async function boot() {
 // ═══════════════════════════════════════════════════════════════════════════════
 // CSV PARSER (pure Node.js)
 // ═══════════════════════════════════════════════════════════════════════════════
-function parseCSV(text) {
+function parseCSV(text, delimiter = ",") {
   const lines = text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').trim().split('\n');
   if (!lines.length) return { columns:[], rows:[] };
   const parseRow = line => {
@@ -60,7 +61,7 @@ function parseCSV(text) {
     for(let i=0;i<len;i++){
       const ch=line[i];
       if(ch==='"'){ if(inQ&&line[i+1]==='"'){cur+='"';i++;}else{inQ=!inQ;} }
-      else if(ch===','&&!inQ){cols.push(cur.trim());cur='';}
+      else if(ch===delimiter&&!inQ){cols.push(cur.trim());cur='';}
       else cur+=ch;
     }
     cols.push(cur.trim());
@@ -79,6 +80,272 @@ function parseCSV(text) {
 function rowsToCSV(columns, rows) {
   const esc = v => /[",\n]/.test(String(v||'')) ? '"'+String(v||'').replace(/"/g,'""')+'"' : String(v||'');
   return [columns.join(','), ...rows.map(r=>columns.map(c=>esc(r[c]||'')).join(','))].join('\n');
+}
+
+
+function ensureRowIds(rows) {
+  return (rows || []).map((row, i) => {
+    const obj = row && typeof row === 'object' ? { ...row } : { value: row };
+    if (obj.row_id === undefined || obj.row_id === null || obj.row_id === '') obj.row_id = `row_${i + 1}`;
+    return obj;
+  });
+}
+
+function datasetFromRows(rows, columns = null) {
+  const cleanRows = ensureRowIds(rows || []);
+  const cols = columns && columns.length ? [...columns] : [...new Set(cleanRows.flatMap(r => Object.keys(r)))];
+  if (!cols.includes('row_id')) cols.unshift('row_id');
+  const orderedRows = cleanRows.map((r, i) => {
+    const obj = {};
+    cols.forEach(c => { obj[c] = r[c] !== undefined ? r[c] : (c === 'row_id' ? `row_${i + 1}` : ''); });
+    return obj;
+  });
+  return { columns: cols, rows: orderedRows, total_rows: orderedRows.length, types: inferTypes(cols, orderedRows) };
+}
+
+function flattenJsonRows(data) {
+  const rows = Array.isArray(data) ? data : (data && typeof data === 'object' ? [data] : []);
+  const flat = rows.map((row) => {
+    if (!row || typeof row !== 'object') return { value: row };
+    const out = {};
+    const walk = (prefix, value) => {
+      if (value === null || value === undefined) { out[prefix] = ''; return; }
+      if (Array.isArray(value)) { out[prefix] = JSON.stringify(value); return; }
+      if (typeof value === 'object') {
+        const keys = Object.keys(value);
+        if (!keys.length) { out[prefix] = '{}'; return; }
+        keys.forEach(k => walk(prefix ? `${prefix}.${k}` : k, value[k]));
+        return;
+      }
+      out[prefix] = value;
+    };
+    Object.entries(row).forEach(([k, v]) => walk(k, v));
+    return out;
+  });
+  return datasetFromRows(flat);
+}
+
+function parseJsonTable(text) {
+  const data = JSON.parse(text);
+  return flattenJsonRows(data);
+}
+
+function runPythonStdlib(script, args = [], options = {}) {
+  const candidates = [
+    process.env.PYTHON,
+    process.platform === 'win32' ? 'python' : 'python3',
+    process.platform === 'win32' ? 'py' : 'python',
+  ].filter(Boolean);
+  let lastErr = null;
+  for (const cmd of candidates) {
+    try {
+      const cmdArgs = cmd === 'py' ? ['-3', '-c', script, ...args] : ['-c', script, ...args];
+      return execFileSync(cmd, cmdArgs, { encoding: 'utf8', maxBuffer: 20 * 1024 * 1024, ...options });
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr || new Error('Python is not available');
+}
+
+function parseXmlTable(text) {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sanskrit-xml-'));
+  const xmlPath = path.join(tmpDir, 'upload.xml');
+  fs.writeFileSync(xmlPath, text, 'utf8');
+  const script = String.raw`
+import json, sys, xml.etree.ElementTree as ET
+path = sys.argv[1]
+root = ET.parse(path).getroot()
+
+def clean(v):
+    if v is None:
+        return ''
+    return v.strip() if isinstance(v, str) else v
+
+def flatten(node, prefix=''):
+    out = {}
+    for k, v in node.attrib.items():
+        out[(prefix + '@' + k) if prefix else '@' + k] = clean(v)
+    text = clean(node.text)
+    if text and (not list(node)):
+        out[prefix or node.tag] = text
+    elif text and prefix and prefix not in out:
+        out[prefix] = text
+    for child in node:
+        key = child.tag
+        child_prefix = f"{prefix}.{key}" if prefix else key
+        if list(child) or child.attrib:
+            sub = flatten(child, child_prefix)
+            out.update(sub)
+        else:
+            val = clean(child.text)
+            out[child_prefix] = val
+    return out
+
+children = list(root)
+# Prefer repeated child elements as rows
+counts = {}
+for ch in children:
+    counts[ch.tag] = counts.get(ch.tag, 0) + 1
+repeat_tag = next((k for k, v in counts.items() if v > 1), None)
+rows = []
+if repeat_tag:
+    for ch in children:
+        if ch.tag == repeat_tag:
+            rows.append(flatten(ch))
+else:
+    rows = [flatten(root)]
+cols = []
+for r in rows:
+    for k in r.keys():
+        if k not in cols:
+            cols.append(k)
+print(json.dumps({'columns': cols, 'rows': rows}))
+`;
+  try {
+    const out = runPythonStdlib(script, [xmlPath]);
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+    const parsed = JSON.parse(out.trim() || '{}');
+    return datasetFromRows(parsed.rows || [], parsed.columns || []);
+  } catch (e) {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+    throw new Error('XML parse failed: ' + e.message);
+  }
+}
+
+function parseExcelTable(uploadedFile, params = {}) {
+  const base64 = uploadedFile?.content || '';
+  if (!base64) return { error: 'No Excel payload' };
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sanskrit-xlsx-'));
+  const xlsxPath = path.join(tmpDir, uploadedFile.name || 'upload.xlsx');
+  fs.writeFileSync(xlsxPath, Buffer.from(base64, 'base64'));
+  const script = String.raw`
+import json, re, sys, zipfile, xml.etree.ElementTree as ET
+path = sys.argv[1]
+sheet = sys.argv[2] if len(sys.argv) > 2 and sys.argv[2] else None
+
+NS = {
+    'main': 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
+    'rel': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
+    'pkgrel': 'http://schemas.openxmlformats.org/package/2006/relationships',
+}
+
+def col_index(cell_ref):
+    letters = ''.join(ch for ch in cell_ref if ch.isalpha()).upper()
+    n = 0
+    for ch in letters:
+        n = n * 26 + (ord(ch) - 64)
+    return max(n - 1, 0)
+
+def read_xml(zf, name):
+    return ET.fromstring(zf.read(name))
+
+with zipfile.ZipFile(path) as zf:
+    shared = []
+    if 'xl/sharedStrings.xml' in zf.namelist():
+        root = read_xml(zf, 'xl/sharedStrings.xml')
+        for si in root.findall('main:si', NS):
+            text = ''.join(t.text or '' for t in si.findall('.//main:t', NS))
+            shared.append(text)
+
+    wb = read_xml(zf, 'xl/workbook.xml')
+    rels = read_xml(zf, 'xl/_rels/workbook.xml.rels')
+    rel_map = {}
+    for rel in rels:
+        rid = rel.attrib.get('Id')
+        target = rel.attrib.get('Target', '')
+        if rid:
+            rel_map[rid] = 'xl/' + target.lstrip('/')
+
+    sheets = []
+    for s in wb.findall('main:sheets/main:sheet', NS):
+        name = s.attrib.get('name', '')
+        rid = s.attrib.get('{%s}id' % NS['rel'])
+        if rid in rel_map:
+            sheets.append((name, rel_map[rid]))
+    if not sheets:
+        print(json.dumps({'columns': [], 'rows': []}))
+        raise SystemExit(0)
+    chosen = next((item for item in sheets if sheet and item[0] == sheet), sheets[0])
+    ws = read_xml(zf, chosen[1])
+
+    table = {}
+    max_col = 0
+    max_row = 0
+    for row in ws.findall('.//main:sheetData/main:row', NS):
+        r_idx = int(row.attrib.get('r', '0') or '0') - 1
+        max_row = max(max_row, r_idx)
+        for c in row.findall('main:c', NS):
+            ref = c.attrib.get('r', '')
+            c_idx = col_index(ref)
+            max_col = max(max_col, c_idx)
+            typ = c.attrib.get('t')
+            v = c.find('main:v', NS)
+            inline = c.find('main:is/main:t', NS)
+            val = ''
+            if inline is not None:
+                val = inline.text or ''
+            elif v is not None:
+                raw = v.text or ''
+                if typ == 's':
+                    try:
+                        val = shared[int(raw)]
+                    except Exception:
+                        val = raw
+                elif typ == 'b':
+                    val = raw == '1'
+                else:
+                    try:
+                        val = float(raw) if ('.' in raw) else int(raw)
+                    except Exception:
+                        val = raw
+            table[(r_idx, c_idx)] = val
+
+    matrix = []
+    for r in range(max_row + 1):
+        matrix.append([table.get((r, c), '') for c in range(max_col + 1)])
+
+rows = matrix
+if not rows or not any(any(str(v) for v in row) for row in rows):
+    print(json.dumps({'columns': [], 'rows': []}))
+    raise SystemExit(0)
+columns = []
+for i, c in enumerate(rows[0]):
+    columns.append(str(c) if c not in (None, '') else f'col_{i+1}')
+out = []
+for row in rows[1:]:
+    obj = {}
+    for i, col in enumerate(columns):
+        v = row[i] if i < len(row) else None
+        obj[col] = '' if v is None else v
+    out.append(obj)
+print(json.dumps({'columns': columns, 'rows': out}, default=str))
+`;
+  try {
+    const out = runPythonStdlib(script, [xlsxPath, params.sheet_name || params.sheet || '']);
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+    const parsed = JSON.parse(out.trim() || '{}');
+    return datasetFromRows(parsed.rows || [], parsed.columns || []);
+  } catch (e) {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+    return { error: 'Excel parse failed: ' + e.message };
+  }
+}
+
+function parseUploadedFile(uploadedFile, params = {}, op = '') {
+  if (!uploadedFile) return null;
+  const name = String(uploadedFile.name || params.filename || params.file_path || '').toLowerCase();
+  const ext = uploadedFile.ext || path.extname(name).replace(/^\./, '').toLowerCase();
+  const kind = uploadedFile.kind || (['xlsx', 'xls'].includes(ext) ? 'base64' : 'text');
+  const text = kind === 'base64' ? Buffer.from(uploadedFile.content || '', 'base64').toString('utf8') : String(uploadedFile.content || '');
+  if (['csv', 'tsv'].includes(ext) || op === 'csv_reader') {
+    const sep = params.separator || (ext === 'tsv' ? '\t' : ',');
+    return { kind: 'csv', text, separator: sep };
+  }
+  if (ext === 'json' || op === 'json_reader') return { kind: 'json', text };
+  if (ext === 'xml' || op === 'xml_reader') return { kind: 'xml', text };
+  if (['xlsx', 'xls'].includes(ext) || op === 'excel_reader') return { kind: 'excel', uploadedFile };
+  return { kind: 'text', text };
 }
 
 // Infer column types
@@ -102,33 +369,109 @@ function inferTypes(columns, rows) {
 const ETL = {
 
   // ── SOURCES ────────────────────────────────────────────────────────────────
-  csv_reader(params, _inputs, uploadedData) {
+  csv_reader(params, _inputs, uploadedData, uploadedFile) {
     let text = '';
-    if(uploadedData) { text=uploadedData; }
-    else if(params.filename) {
-      const fp=path.join(DATA, path.basename(params.filename));
-      if(!fs.existsSync(fp)) return {error:'File not found: '+params.filename};
-      text=fs.readFileSync(fp,'utf8');
-    } else return {error:'No filename specified'};
-    const {columns,rows}=parseCSV(text);
-    const limited=params.preview_rows?rows.slice(0,parseInt(params.preview_rows)||100):rows;
-    const types=inferTypes(columns,rows);
-    return {dataset:{columns,rows:limited,total_rows:rows.length,types},log:'CSV loaded: '+columns.length+' cols, '+rows.length+' rows'};
+    const fpName = params.file_path || params.filename || params.path;
+    if (uploadedFile || uploadedData) {
+      const up = uploadedFile || { content: uploadedData, name: fpName || '', kind: 'text', ext: path.extname(String(fpName || '')).replace(/^\./, '').toLowerCase() };
+      const parsed = parseUploadedFile(up, params, 'csv_reader');
+      text = parsed.kind === 'base64' ? Buffer.from(up.content || '', 'base64').toString('utf8') : parsed.text;
+      if (parsed.kind === 'excel') {
+        const ds = parseExcelTable(up, params);
+        if (ds.error) return { error: ds.error };
+        const limited = params.preview_rows ? ds.rows.slice(0, parseInt(params.preview_rows) || 100) : ds.rows;
+        return { dataset: { ...ds, rows: limited }, log: 'Excel loaded: ' + ds.columns.length + ' cols, ' + ds.rows.length + ' rows' };
+      }
+      if (parsed.kind === 'xml') {
+        const ds = parseXmlTable(text);
+        const limited = params.preview_rows ? ds.rows.slice(0, parseInt(params.preview_rows) || 100) : ds.rows;
+        return { dataset: { ...ds, rows: limited }, log: 'XML loaded: ' + ds.columns.length + ' cols, ' + ds.rows.length + ' rows' };
+      }
+    } else if (fpName) {
+      const fp = path.join(DATA, path.basename(fpName));
+      if (!fs.existsSync(fp)) return { error: 'File not found: ' + fpName };
+      text = fs.readFileSync(fp, 'utf8');
+    } else return { error: 'No filename specified' };
+    const sep = params.separator || (String(fpName).toLowerCase().endsWith('.tsv') ? '	' : ',');
+    const {columns,rows}=parseCSV(text, sep);
+    const dataset = datasetFromRows(rows, columns);
+    const limited=params.preview_rows?dataset.rows.slice(0,parseInt(params.preview_rows)||100):dataset.rows;
+    return {dataset:{...dataset,rows:limited},log:'CSV loaded: '+dataset.columns.length+' cols, '+dataset.rows.length+' rows'};
   },
 
-  json_reader(params, _inputs, uploadedData) {
+  json_reader(params, _inputs, uploadedData, uploadedFile) {
     let data=null;
-    if(uploadedData){try{data=JSON.parse(uploadedData);}catch(e){return{error:'Invalid JSON'};}}
-    else if(params.filename){
-      const fp=path.join(DATA,path.basename(params.filename));
-      if(!fs.existsSync(fp))return{error:'File not found: '+params.filename};
+    const fpName = params.file_path || params.filename || params.path;
+    if (uploadedFile || uploadedData) {
+      const up = uploadedFile || { content: uploadedData, name: fpName || '', kind: 'text', ext: 'json' };
+      const parsed = parseUploadedFile(up, params, 'json_reader');
+      if (parsed.kind === 'excel') {
+        const ds = parseExcelTable(up, params);
+        if (ds.error) return { error: ds.error };
+        const limited = params.preview_rows ? ds.rows.slice(0, parseInt(params.preview_rows) || 100) : ds.rows;
+        return { dataset: { ...ds, rows: limited }, log: 'Excel loaded: ' + ds.columns.length + ' cols, ' + ds.rows.length + ' rows' };
+      }
+      if (parsed.kind === 'xml') {
+        const ds = parseXmlTable(parsed.text);
+        const limited = params.preview_rows ? ds.rows.slice(0, parseInt(params.preview_rows) || 100) : ds.rows;
+        return { dataset: { ...ds, rows: limited }, log: 'XML loaded: ' + ds.columns.length + ' cols, ' + ds.rows.length + ' rows' };
+      }
+      try { data = JSON.parse(parsed.text); } catch (e) { return { error: 'Invalid JSON' }; }
+    } else if (fpName) {
+      const fp=path.join(DATA,path.basename(fpName));
+      if(!fs.existsSync(fp))return{error:'File not found: '+fpName};
       try{data=JSON.parse(fs.readFileSync(fp,'utf8'));}catch(e){return{error:'Invalid JSON file'};}
     }
     if(!data)return{error:'No data'};
-    const rows=Array.isArray(data)?data:[data];
-    const columns=[...new Set(rows.flatMap(r=>Object.keys(r)))];
-    const types=inferTypes(columns,rows);
-    return{dataset:{columns,rows,total_rows:rows.length,types},log:'JSON loaded: '+rows.length+' rows'};
+    const ds = flattenJsonRows(data);
+    const limited=params.preview_rows?ds.rows.slice(0,parseInt(params.preview_rows)||100):ds.rows;
+    return{dataset:{...ds,rows:limited},log:'JSON loaded: '+limited.length+' rows'};
+  },
+
+  xml_reader(params, _inputs, uploadedData, uploadedFile) {
+    let text = '';
+    const fpName = params.file_path || params.filename || params.path;
+    if (uploadedFile || uploadedData) {
+      const up = uploadedFile || { content: uploadedData, name: fpName || 'upload.xml', kind: 'text', ext: 'xml' };
+      const parsed = parseUploadedFile(up, params, 'xml_reader');
+      if (parsed.kind === 'excel') {
+        const ds = parseExcelTable(up, params);
+        if (ds.error) return { error: ds.error };
+        const limited = params.preview_rows ? ds.rows.slice(0, parseInt(params.preview_rows) || 100) : ds.rows;
+        return { dataset: { ...ds, rows: limited }, log: 'Excel loaded: ' + ds.columns.length + ' cols, ' + ds.rows.length + ' rows' };
+      }
+      text = parsed.text;
+    } else if (fpName) {
+      const fp = path.join(DATA, path.basename(fpName));
+      if (!fs.existsSync(fp)) return { error: 'File not found: ' + fpName };
+      text = fs.readFileSync(fp, 'utf8');
+    } else return { error: 'No XML file specified' };
+    const ds = parseXmlTable(text);
+    const limited = params.preview_rows ? ds.rows.slice(0, parseInt(params.preview_rows) || 100) : ds.rows;
+    return { dataset: { ...ds, rows: limited }, log: 'XML loaded: ' + ds.columns.length + ' cols, ' + ds.rows.length + ' rows' };
+  },
+
+  excel_reader(params, _inputs, uploadedData, uploadedFile) {
+    const fpName = params.file_path || params.filename || params.path;
+    let up = uploadedFile || null;
+    if (!up && uploadedData) {
+      up = { content: uploadedData, name: fpName || 'upload.xlsx', kind: 'base64', ext: 'xlsx' };
+    }
+    if (!up && fpName) {
+      const fp = path.join(DATA, path.basename(fpName));
+      if (!fs.existsSync(fp)) return { error: 'File not found: ' + fpName };
+      up = {
+        name: path.basename(fp),
+        content: fs.readFileSync(fp).toString('base64'),
+        kind: 'base64',
+        ext: path.extname(fp).replace(/^\./, '').toLowerCase(),
+      };
+    }
+    if (!up) return { error: 'No Excel file specified' };
+    const ds = parseExcelTable(up, params);
+    if (ds.error) return { error: ds.error };
+    const limited = params.preview_rows ? ds.rows.slice(0, parseInt(params.preview_rows) || 100) : ds.rows;
+    return { dataset: { ...ds, rows: limited }, log: 'Excel loaded: ' + ds.columns.length + ' cols, ' + ds.rows.length + ' rows' };
   },
 
   inline_data(params) {
@@ -783,6 +1126,59 @@ const DS = {
   },
 };
 
+const OP_ALIASES = {
+  filter_block: 'filter_rows',
+  sort_block: 'sort_rows',
+  groupby_block: 'group_by',
+  pivot_block: 'pivot',
+  schema_validate: 'validate_schema',
+  table_block: 'profile',
+  normalize_block: 'normalize',
+  missing_impute: 'fill_nulls',
+  encode_features: 'encode',
+  xml_ops: 'xml_reader',
+  json_ops: 'json_reader',
+};
+
+function normalizeOperationParams(operation, params = {}) {
+  const p = { ...params };
+  if (!p.filename && p.file_path) p.filename = p.file_path;
+  if (!p.file_path && p.filename) p.file_path = p.filename;
+  if (operation === 'filter_block') {
+    const m = String(p.condition || '').match(/row(?:\[['"]([^'"]+)['"]\]|\.([A-Za-z0-9_]+))\s*(==|!=|>=|<=|>|<|contains)\s*['"]?([^'"]+)['"]?/);
+    if (m) {
+      p.column = m[1] || m[2];
+      p.operator = m[3];
+      p.value = m[4];
+    }
+  }
+  if (operation === 'sort_block') {
+    p.column = p.column || String(p.key_expr || '').replace(/x\[['"]([^'"]+)['"]\]/, '$1').replace(/^row\./, '') || 'row_id';
+    p.order = p.descending === true || p.descending === 'true' ? 'desc' : 'asc';
+  }
+  if (operation === 'groupby_block') {
+    p.group_by = p.group_by || String(p.key_fn || '').replace(/x\[['"]([^'"]+)['"]\]/, '$1').replace(/^row\./, '') || 'row_id';
+    if (!p.aggregations) p.aggregations = '[]';
+  }
+  if (operation === 'pivot_block') {
+    p.aggfn = p.aggfn || p.aggfunc || 'sum';
+  }
+  if (operation === 'normalize_block') {
+    p.columns = p.columns || p.column || '';
+    p.method = p.method || 'minmax';
+  }
+  if (operation === 'missing_impute') {
+    p.columns = p.columns || p.column || '';
+    p.strategy = p.strategy || p.method || 'value';
+    p.value = p.value ?? '';
+  }
+  if (operation === 'encode_features') {
+    p.column = p.column || p.columns || '';
+    p.method = p.method || 'onehot';
+  }
+  return p;
+}
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // QUANTUM RUN + COMPILE
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -842,6 +1238,29 @@ function cpuPct(){
   const dt=cur.reduce((s,c,i)=>s+(c.tot-_pc[i].tot),0);
   _pc=cur; return dt?Math.round((1-di/dt)*100):0;
 }
+function metricsSnapshot(){
+  const m=process.memoryUsage(), fr=os.freemem(), tf=os.totalmem();
+  const heapUsed=Math.round(m.heapUsed/1048576);
+  const heapAllocated=Math.round(m.heapTotal/1048576);
+  const heapLimit=Math.round(v8.getHeapStatistics().heap_size_limit/1048576);
+  return {
+    cpu:cpuPct(),
+    heap_mb:heapUsed,
+    heap_used_mb:heapUsed,
+    heap_allocated_mb:heapAllocated,
+    heap_total:heapLimit,
+    heap_total_mb:heapLimit,
+    heap_limit_mb:heapLimit,
+    sys_pct:Math.round((1-fr/tf)*100),
+    sys_free:Math.round(fr/1048576),
+    sys_free_mb:Math.round(fr/1048576),
+    sys_total_mb:Math.round(tf/1048576),
+    uptime:Math.floor(process.uptime()),
+    clients:_sse.size,
+    node:process.version,
+    platform:os.platform(),
+  };
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // SETTINGS STORE (simple file-based persistence)
@@ -875,10 +1294,7 @@ function sseBcast(event,data){_sse.forEach(r=>{if(!r.writableEnded)r.write('even
 
 setInterval(()=>{
   if(!_sse.size)return;
-  const m=process.memoryUsage(), fr=os.freemem(), tf=os.totalmem();
-  sseBcast('metrics',{cpu:cpuPct(),heap_mb:Math.round(m.heapUsed/1048576),
-    heap_total:Math.round(m.heapTotal/1048576),sys_pct:Math.round((1-fr/tf)*100),
-    sys_free:Math.round(fr/1048576),uptime:Math.floor(process.uptime()),clients:_sse.size});
+  sseBcast('metrics',metricsSnapshot());
 },2000);
 
 function setHeaders(res,ct){
@@ -905,16 +1321,21 @@ function parseMultipart(buf, boundary) {
     if(start<0)break;
     pos=start+delim.length;
     if(buf[pos]===0x2d&&buf[pos+1]===0x2d)break; // --
-    pos+=2; // CRLF
+    if(buf[pos]===0x0d&&buf[pos+1]===0x0a) pos+=2;
     const hEnd=buf.indexOf('\r\n\r\n',pos);
     if(hEnd<0)break;
     const headers=buf.slice(pos,hEnd).toString();
     pos=hEnd+4;
     const nextDelim=buf.indexOf(delim,pos);
-    const content=nextDelim>0?buf.slice(pos,nextDelim-2):buf.slice(pos);
+    const raw=nextDelim>0?buf.slice(pos,nextDelim-2):buf.slice(pos);
     const nameMatch=headers.match(/name="([^"]+)"/);
-    if(nameMatch)parts[nameMatch[1]]=content;
+    if(nameMatch){
+      const fileMatch=headers.match(/filename="([^"]*)"/);
+      const typeMatch=headers.match(/Content-Type:\s*([^\r\n]+)/i);
+      parts[nameMatch[1]]={content:raw,filename:fileMatch?fileMatch[1]:'',contentType:typeMatch?typeMatch[1]:'',headers};
+    }
     pos=nextDelim;
+    if(pos<0)break;
   }
   return parts;
 }
@@ -945,8 +1366,7 @@ const server=http.createServer(async(req,res)=>{
 
     // Metrics
     if(meth==='GET'&&url==='/api/metrics'){
-      const m=process.memoryUsage(),fr=os.freemem(),tf=os.totalmem();
-      return jsonRes(res,{cpu:cpuPct(),heap_mb:Math.round(m.heapUsed/1048576),heap_total:Math.round(m.heapTotal/1048576),sys_pct:Math.round((1-fr/tf)*100),sys_free:Math.round(fr/1048576),uptime:Math.floor(process.uptime()),clients:_sse.size,node:process.version,platform:os.platform()});
+      return jsonRes(res,metricsSnapshot());
     }
 
     // Settings
@@ -974,39 +1394,66 @@ const server=http.createServer(async(req,res)=>{
     if(meth==='POST'&&url==='/api/etl'){
       const body=await readBody(req);
       const {operation,params,inputs}=body;
-      const handler=ETL[operation]||DS[operation];
+      const op = OP_ALIASES[operation] || operation;
+      const handler=ETL[op]||DS[op];
       if(!handler)return jsonRes(res,{error:'Unknown operation: '+operation},400);
       try{
-        const result=handler(params||{},inputs||{});
+        const execParams = normalizeOperationParams(operation, params || {});
+        const result=handler(execParams,inputs||{},body.uploadedData||null,body.uploadedFile||body.file||null);
         return jsonRes(res,{ok:true,...result});
       }catch(e){return jsonRes(res,{error:e.message},500);}
     }
 
-    // File upload for ETL
+    // File upload for ETL (multipart or JSON/base64)
     if(meth==='POST'&&url==='/api/upload'){
       const body=await readBody(req);
-      if(!body._multipart)return jsonRes(res,{error:'multipart required'},400);
-      const ct=body._ct||''; const bndry=ct.split('boundary=')[1]?.trim();
-      if(!bndry)return jsonRes(res,{error:'No boundary'},400);
-      const parts=parseMultipart(body._raw,bndry);
-      const fileKey=Object.keys(parts).find(k=>k!=='operation'&&k!=='params');
-      if(!fileKey)return jsonRes(res,{error:'No file found'},400);
-      const content=parts[fileKey].toString('utf8');
-      const parsed=parseCSV(content);
-      const types=inferTypes(parsed.columns,parsed.rows);
-      return jsonRes(res,{ok:true,dataset:{...parsed,total_rows:parsed.rows.length,types}});
+      let uploadedFile=null;
+      if(body._multipart){
+        const ct=body._ct||''; const bndry=ct.split('boundary=')[1]?.trim();
+        if(!bndry)return jsonRes(res,{error:'No boundary'},400);
+        const parts=parseMultipart(body._raw,bndry);
+        const fileKey=Object.keys(parts).find(k=>k!=='operation'&&k!=='params');
+        if(!fileKey)return jsonRes(res,{error:'No file found'},400);
+        const part = parts[fileKey];
+        const name = part.filename || fileKey || 'upload.csv';
+        uploadedFile = { name, content: part.content.toString('base64'), kind:'base64', ext:path.extname(name).replace(/^\./,'').toLowerCase(), mime: part.contentType || '' };
+      } else {
+        try { uploadedFile = body.uploadedFile || body.file || null; } catch(e) {}
+        if (body.content && !uploadedFile) {
+          uploadedFile = { name: body.filename || body.file_name || 'upload.csv', content: body.content, kind: body.kind || 'text', ext: (body.ext || path.extname(body.filename||'')).replace(/^\./,'').toLowerCase() };
+        }
+      }
+      if(!uploadedFile)return jsonRes(res,{error:'No file found'},400);
+      const op = body.operation || '';
+      let result;
+      const parsed = parseUploadedFile(uploadedFile, body.params || {}, op);
+      if (parsed.kind === 'csv') {
+        const {columns,rows}=parseCSV(parsed.text, parsed.separator || ',');
+        result = datasetFromRows(rows, columns);
+      } else if (parsed.kind === 'json') {
+        try { result = flattenJsonRows(JSON.parse(parsed.text)); } catch(e) { return jsonRes(res,{error:'Invalid JSON'} ,400); }
+      } else if (parsed.kind === 'xml') {
+        result = parseXmlTable(parsed.text);
+      } else if (parsed.kind === 'excel') {
+        result = parseExcelTable(uploadedFile, body.params || {});
+      } else {
+        const {columns,rows}=parseCSV(parsed.text, parsed.separator || ',');
+        result = datasetFromRows(rows, columns);
+      }
+      if (result && result.error) return jsonRes(res, { error: result.error }, 400);
+      return jsonRes(res,{ok:true,dataset:result});
     }
 
     // Sample data list
     if(meth==='GET'&&url==='/api/samples'){
       try{
-        const files=fs.readdirSync(DATA).filter(f=>f.endsWith('.csv')||f.endsWith('.json'));
+        const files=fs.readdirSync(DATA).filter(f=>f.endsWith('.csv')||f.endsWith('.json')||f.endsWith('.xml')||f.endsWith('.xlsx')||f.endsWith('.xls'));
         return jsonRes(res,{files});
       }catch(e){return jsonRes(res,{files:[]});}
     }
 
     // Canvas examples
-    if(meth==='GET'&&url==='/api/examples')return jsonRes(res,CANVAS_EXAMPLES);
+    if((meth==='GET'&&url==='/api/examples')||(meth==='GET'&&url==='/api/canvas-examples'))return jsonRes(res,loadCanvasExamples());
 
     // Export
     if(meth==='POST'&&url==='/api/export'){
@@ -1180,6 +1627,41 @@ process.on('unhandledRejection', e => er('Unhandled: '+e));
 // ═══════════════════════════════════════════════════════════════════════════════
 // CANVAS EXAMPLES
 // ═══════════════════════════════════════════════════════════════════════════════
+
+function loadCanvasExamples() {
+  const dir = path.join(PUBLIC, 'generated-examples');
+  const items = [];
+  try {
+    if (fs.existsSync(dir)) {
+      const files = fs.readdirSync(dir).filter(f => f.endsWith('.sanskrit') || f.endsWith('.json')).sort();
+      for (const file of files) {
+        try {
+          const raw = fs.readFileSync(path.join(dir, file), 'utf8');
+          const ex = JSON.parse(raw);
+          if (!ex || typeof ex !== 'object') continue;
+          items.push({
+            id: ex.id || path.basename(file, path.extname(file)),
+            title: ex.title || path.basename(file, path.extname(file)),
+            cat: ex.cat || ex.category || 'General',
+            diff: ex.diff || ex.difficulty || 'Intermediate',
+            desc: ex.desc || ex.description || '',
+            blocks: ex.blocks || [],
+            wires: ex.wires || [],
+            uid: ex.uid || ex.id || path.basename(file, path.extname(file)),
+            file,
+          });
+        } catch (e) {
+          wr(`Example parse ${file}: ${e.message}`);
+        }
+      }
+      if (items.length) return items;
+    }
+  } catch (e) {
+    wr('Canvas examples: ' + e.message);
+  }
+  return CANVAS_EXAMPLES;
+}
+
 const CANVAS_EXAMPLES=[
 {id:'bell',title:'Bell State',cat:'Quantum',diff:'Beginner',desc:'Two entangled qubits. Quantum Hello World.',blocks:[{id:'r',type:'quantum_register',x:80,y:160,params:{n_qubits:2,name:'q'}},{id:'h',type:'h_gate',x:340,y:160,params:{qubit:0}},{id:'c',type:'cnot_gate',x:600,y:160,params:{control:0,target:1}},{id:'m',type:'measure_all',x:860,y:160,params:{shots:1000}},{id:'ch',type:'histogram_chart',x:1120,y:160,params:{title:'Bell State'}}],wires:[{fromId:'r',fromPort:'out',toId:'h',toPort:'in'},{fromId:'h',fromPort:'out',toId:'c',toPort:'in'},{fromId:'c',fromPort:'out',toId:'m',toPort:'in'},{fromId:'m',fromPort:'result',toId:'ch',toPort:'data'}]},
 {id:'csv_clean',title:'CSV Data Cleaning Pipeline',cat:'ETL',diff:'Beginner',desc:'Load CSV, drop nulls, trim strings, view clean data.',blocks:[{id:'r',type:'csv_reader',x:80,y:160,params:{filename:'customers.csv'}},{id:'d',type:'drop_nulls',x:340,y:160,params:{columns:'name,email'}},{id:'t',type:'trim_strings',x:600,y:160,params:{}},{id:'p',type:'profile',x:860,y:160,params:{}},{id:'tbl',type:'table_display',x:1120,y:160,params:{title:'Clean Customers'}}],wires:[{fromId:'r',fromPort:'dataset',toId:'d',toPort:'dataset'},{fromId:'d',fromPort:'dataset',toId:'t',toPort:'dataset'},{fromId:'t',fromPort:'dataset',toId:'p',toPort:'dataset'},{fromId:'p',fromPort:'dataset',toId:'tbl',toPort:'dataset'}]},
@@ -1329,9 +1811,9 @@ const _origETL = Object.fromEntries(
 // Wrap each ETL operation to log calls
 Object.keys(ETL).forEach(op => {
   const orig = ETL[op];
-  ETL[op] = function(params, inputs, uploadedData) {
+  ETL[op] = function(params, inputs, uploadedData, uploadedFile) {
     const t0 = Date.now();
-    const result = orig(params, inputs, uploadedData);
+    const result = orig(params, inputs, uploadedData, uploadedFile);
     const ms = Date.now() - t0;
     writeLog({ type: 'etl', text: `${op}(${JSON.stringify(params).slice(0,100)}) → ${result.log||''} [${ms}ms]` });
     return result;
@@ -1372,3 +1854,24 @@ setTimeout(() => {
   _serverRequestHandler = server.listeners('request')[0] || ((req,res)=>res.end());
   startServer(PORT, 0);
 }, 0);
+
+// ── JOBS + GITHUB ─────────────────────────────────────────────────────────────
+const JOBS_DIR=path.join(ROOT,'jobs');
+function mkJ(){if(!fs.existsSync(JOBS_DIR))fs.mkdirSync(JOBS_DIR,{recursive:true});}
+const _baseH=server.listeners('request')[0];
+server.removeAllListeners('request');
+server.on('request',async(req,res)=>{
+  const u=req.url.split('?')[0],m=req.method;
+  if(m==='POST'&&u==='/api/jobs/save'){const b=await readBody(req);mkJ();if(!b.name)return jsonRes(res,{error:'missing name'},400);const sl=b.name.replace(/[^a-zA-Z0-9_-]/g,'_'),ts=new Date().toISOString().replace(/[:.]/g,'-').slice(0,19),dir=path.join(JOBS_DIR,sl+'_'+ts);fs.mkdirSync(dir,{recursive:true});fs.writeFileSync(path.join(dir,'canvas.json'),JSON.stringify({...(b.canvas||{}),savedAt:new Date().toISOString(),name:b.name},null,2));return jsonRes(res,{ok:true,jobId:sl+'_'+ts});}
+  if(m==='POST'&&u==='/api/jobs/autosave'){const b=await readBody(req);if(!b.name)return jsonRes(res,{ok:false},400);mkJ();const sl=b.name.replace(/[^a-zA-Z0-9_-]/g,'_'),dirs=fs.existsSync(JOBS_DIR)?fs.readdirSync(JOBS_DIR).filter(d=>d.startsWith(sl+'_')).sort():[];const dir=dirs.length?path.join(JOBS_DIR,dirs.pop()):path.join(JOBS_DIR,sl+'_'+new Date().toISOString().replace(/[:.]/g,'-').slice(0,19));if(!fs.existsSync(dir))fs.mkdirSync(dir,{recursive:true});fs.writeFileSync(path.join(dir,'canvas.json'),JSON.stringify({...(b.canvas||{}),savedAt:new Date().toISOString(),name:b.name},null,2));return jsonRes(res,{ok:true});}
+  if(m==='GET'&&u==='/api/jobs/list'){mkJ();try{const jobs=fs.readdirSync(JOBS_DIR).filter(d=>fs.statSync(path.join(JOBS_DIR,d)).isDirectory()).map(d=>{try{const meta=JSON.parse(fs.readFileSync(path.join(JOBS_DIR,d,'canvas.json'),'utf8'));return{id:d,name:meta.name||d,savedAt:meta.savedAt,blocks:(meta.blocks||[]).length};}catch(e){return{id:d,name:d,savedAt:'',blocks:0};}}).sort((a,b)=>b.savedAt.localeCompare(a.savedAt));return jsonRes(res,{jobs});}catch(e){return jsonRes(res,{jobs:[]});}}
+  if(m==='GET'&&u.startsWith('/api/jobs/')&&u.length>'/api/jobs/'.length){const id=u.replace('/api/jobs/',''),fp=path.join(JOBS_DIR,path.basename(id),'canvas.json');if(!fs.existsSync(fp))return jsonRes(res,{error:'not found'},404);try{return jsonRes(res,JSON.parse(fs.readFileSync(fp,'utf8')));}catch(e){return jsonRes(res,{error:e.message},500);}}
+  if(m==='GET'&&u==='/api/github/status'){try{return jsonRes(res,{ok:true,status:execSync('git -C "'+ROOT+'" status --porcelain 2>&1',{encoding:'utf8'}).trim()||'clean'});}catch(e){return jsonRes(res,{ok:false,error:e.message});}}
+  if(m==='POST'&&u==='/api/github/commit'){const b=await readBody(req);const msg=(b.message||'Update').replace(/"/g,"'");try{execSync('git -C "'+ROOT+'" add -A 2>&1',{encoding:'utf8'});const out=execSync('git -C "'+ROOT+'" commit -m "'+msg+'" 2>&1',{encoding:'utf8'});return jsonRes(res,{ok:true,output:out.trim()});}catch(e){return jsonRes(res,{ok:false,error:e.message});}}
+  if(m==='POST'&&u==='/api/github/push'){const b=await readBody(req);try{return jsonRes(res,{ok:true,output:execSync('git -C "'+ROOT+'" push '+(b.remote||'origin')+' '+(b.branch||'main')+' 2>&1',{encoding:'utf8'}).trim()});}catch(e){return jsonRes(res,{ok:false,error:e.message});}}
+  if(m==='POST'&&u==='/api/github/pull'){const b=await readBody(req);try{return jsonRes(res,{ok:true,output:execSync('git -C "'+ROOT+'" pull '+(b.remote||'origin')+' '+(b.branch||'main')+' 2>&1',{encoding:'utf8'}).trim()});}catch(e){return jsonRes(res,{ok:false,error:e.message});}}
+  if(m==='POST'&&u==='/api/github/init'){const b=await readBody(req);try{const cmds=['git -C "'+ROOT+'" init'];if(b.username)cmds.push('git -C "'+ROOT+'" config user.name "'+b.username.replace(/"/g,"'")+'"');if(b.email)cmds.push('git -C "'+ROOT+'" config user.email "'+b.email.replace(/"/g,"'")+'"');if(b.remote_url)cmds.push('git -C "'+ROOT+'" remote add origin "'+b.remote_url+'" 2>/dev/null||git -C "'+ROOT+'" remote set-url origin "'+b.remote_url+'"');const out=cmds.map(c=>{try{return execSync(c+' 2>&1',{encoding:'utf8'});}catch(e){return e.message;}}).join('\n');return jsonRes(res,{ok:true,output:out.trim()});}catch(e){return jsonRes(res,{ok:false,error:e.message});}}
+  if(m==='GET'&&u==='/api/github/load-canvas'){const fp=path.join(ROOT,'canvas.json');const fp2=path.join(ROOT,'canvas.sanskrit');if(fs.existsSync(fp)){try{return jsonRes(res,{canvas:JSON.parse(fs.readFileSync(fp,'utf8'))});}catch(e){}}if(fs.existsSync(fp2)){try{return jsonRes(res,{canvas:JSON.parse(fs.readFileSync(fp2,'utf8'))});}catch(e){}}return jsonRes(res,{canvas:null});}
+  _baseH(req,res);
+});
+ok('Jobs+GitHub API ready');

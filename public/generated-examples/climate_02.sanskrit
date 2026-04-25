@@ -1,0 +1,653 @@
+{
+  "id": "climate_02",
+  "uid": "uid_climate_02",
+  "title": "Climate & Earth Systems Example 2",
+  "cat": "Climate",
+  "diff": "Intermediate",
+  "desc": "Earth system modelling for emissions, hydrology, biodiversity, and energy transition planning.",
+  "domain": "Climate & Earth Systems",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "climate_02_b01",
+      "type": "co2_model",
+      "x": 80,
+      "y": 180,
+      "params": {
+        "emissions_path": "{\"2024\":37.5,\"2030\":30,\"2050\":0}",
+        "carbon_cycle": "DICE",
+        "output_var": "co2_result",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "climate_02_b02",
+      "type": "sort_block",
+      "x": 240,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "key_expr": "x",
+        "descending": false,
+        "output_var": "sorted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b03",
+      "uid": "climate_02_b03",
+      "type": "groupby_block",
+      "x": 400,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "key_fn": "x[\"category\"]",
+        "agg": "list",
+        "output_var": "grouped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b04",
+      "uid": "climate_02_b04",
+      "type": "pivot_block",
+      "x": 560,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "index": "region",
+        "columns": "product",
+        "values": "revenue",
+        "aggfunc": "sum",
+        "output_var": "pivoted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b05",
+      "uid": "climate_02_b05",
+      "type": "window_transform",
+      "x": 720,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "window_size": 7,
+        "agg": "mean",
+        "center": false,
+        "output_var": "windowed",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b06",
+      "uid": "climate_02_b06",
+      "type": "feature_eng",
+      "x": 880,
+      "y": 208,
+      "params": {
+        "X_var": "X",
+        "steps": "[{\"type\":\"StandardScaler\"},{\"type\":\"OneHotEncoder\"}]",
+        "output_var": "features",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b07",
+      "uid": "climate_02_b07",
+      "type": "type_cast",
+      "x": 1040,
+      "y": 180,
+      "params": {
+        "input_var": "x",
+        "to_type": "float",
+        "output_var": "casted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b08",
+      "uid": "climate_02_b08",
+      "type": "normalize_block",
+      "x": 1200,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "scaler": "StandardScaler",
+        "output_var": "normalised",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b09",
+      "uid": "climate_02_b09",
+      "type": "missing_impute",
+      "x": 1360,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "strategy": "median",
+        "fill_value": "0",
+        "output_var": "imputed",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b10",
+      "uid": "climate_02_b10",
+      "type": "renewable_opt",
+      "x": 1520,
+      "y": 208,
+      "params": {
+        "demand_var": "demand",
+        "solar_resource_var": "solar",
+        "wind_resource_var": "wind",
+        "storage_hours": 4,
+        "solver": "LP",
+        "output_var": "renewable",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b11",
+      "uid": "climate_02_b11",
+      "type": "wildfire_predict",
+      "x": 1680,
+      "y": 180,
+      "params": {
+        "weather_var": "weather",
+        "vegetation_var": "vegetation",
+        "model": "GBT",
+        "output_var": "wildfire",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b12",
+      "uid": "climate_02_b12",
+      "type": "air_quality",
+      "x": 1840,
+      "y": 208,
+      "params": {
+        "emissions_var": "emissions",
+        "met_var": "met_data",
+        "model": "simple_dispersion",
+        "output_var": "air_quality",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b13",
+      "uid": "climate_02_b13",
+      "type": "hydrology_block",
+      "x": 2000,
+      "y": 180,
+      "params": {
+        "precip_var": "precip",
+        "dem_var": "dem",
+        "model": "HBV",
+        "output_var": "hydrology",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b14",
+      "uid": "climate_02_b14",
+      "type": "biodiversity_block",
+      "x": 2160,
+      "y": 208,
+      "params": {
+        "occurrence_var": "occurrences",
+        "climate_var": "climate_data",
+        "model": "MaxEnt",
+        "output_var": "biodiversity",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b15",
+      "uid": "climate_02_b15",
+      "type": "carbon_offset",
+      "x": 2320,
+      "y": 180,
+      "params": {
+        "activity_var": "activity",
+        "methodology": "GHG_Protocol",
+        "output_var": "offset",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b16",
+      "uid": "climate_02_b16",
+      "type": "life_cycle_assess",
+      "x": 2480,
+      "y": 208,
+      "params": {
+        "product_var": "product",
+        "functional_unit": "1 kg",
+        "method": "ReCiPe",
+        "output_var": "lca",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b17",
+      "uid": "climate_02_b17",
+      "type": "filter_block",
+      "x": 2640,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "condition": "row.score > 0.5",
+        "output_var": "filtered",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b18",
+      "uid": "climate_02_b18",
+      "type": "map_transform",
+      "x": 2800,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "transform_expr": "x * 1.05",
+        "output_var": "mapped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b19",
+      "uid": "climate_02_b19",
+      "type": "sort_block",
+      "x": 2960,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "key_expr": "x",
+        "descending": false,
+        "output_var": "sorted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b20",
+      "uid": "climate_02_b20",
+      "type": "groupby_block",
+      "x": 3120,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "key_fn": "x[\"category\"]",
+        "agg": "list",
+        "output_var": "grouped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b21",
+      "uid": "climate_02_b21",
+      "type": "pivot_block",
+      "x": 3280,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "index": "region",
+        "columns": "product",
+        "values": "revenue",
+        "aggfunc": "sum",
+        "output_var": "pivoted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b22",
+      "uid": "climate_02_b22",
+      "type": "window_transform",
+      "x": 3440,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "window_size": 7,
+        "agg": "mean",
+        "center": false,
+        "output_var": "windowed",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b23",
+      "uid": "climate_02_b23",
+      "type": "feature_eng",
+      "x": 3600,
+      "y": 180,
+      "params": {
+        "X_var": "X",
+        "steps": "[{\"type\":\"StandardScaler\"},{\"type\":\"OneHotEncoder\"}]",
+        "output_var": "features",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b24",
+      "uid": "climate_02_b24",
+      "type": "type_cast",
+      "x": 3760,
+      "y": 208,
+      "params": {
+        "input_var": "x",
+        "to_type": "float",
+        "output_var": "casted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b25",
+      "uid": "climate_02_b25",
+      "type": "table_block",
+      "x": 3920,
+      "y": 180,
+      "params": {
+        "data_var": "results",
+        "max_rows": 100,
+        "sortable": true,
+        "filterable": true,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "co2_ppm",
+      "toId": "b02",
+      "toPort": "ai",
+      "fid": "b01",
+      "fp": "co2_ppm",
+      "tid": "b02",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "sorted",
+      "toId": "b03",
+      "toPort": "ai",
+      "fid": "b02",
+      "fp": "sorted",
+      "tid": "b03",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "grouped",
+      "toId": "b04",
+      "toPort": "ai",
+      "fid": "b03",
+      "fp": "grouped",
+      "tid": "b04",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "pivot",
+      "toId": "b05",
+      "toPort": "data",
+      "fid": "b04",
+      "fp": "pivot",
+      "tid": "b05",
+      "tp": "data"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "result",
+      "toId": "b06",
+      "toPort": "X",
+      "fid": "b05",
+      "fp": "result",
+      "tid": "b06",
+      "tp": "X"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "features",
+      "toId": "b07",
+      "toPort": "ci",
+      "fid": "b06",
+      "fp": "features",
+      "tid": "b07",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "result",
+      "toId": "b08",
+      "toPort": "X",
+      "fid": "b07",
+      "fp": "result",
+      "tid": "b08",
+      "tp": "X"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "scaled",
+      "toId": "b09",
+      "toPort": "data",
+      "fid": "b08",
+      "fp": "scaled",
+      "tid": "b09",
+      "tp": "data"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "imputed",
+      "toId": "b10",
+      "toPort": "demand",
+      "fid": "b09",
+      "fp": "imputed",
+      "tid": "b10",
+      "tp": "demand"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "capacity_mix",
+      "toId": "b11",
+      "toPort": "weather",
+      "fid": "b10",
+      "fp": "capacity_mix",
+      "tid": "b11",
+      "tp": "weather"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "risk_map",
+      "toId": "b12",
+      "toPort": "emissions",
+      "fid": "b11",
+      "fp": "risk_map",
+      "tid": "b12",
+      "tp": "emissions"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "pm25",
+      "toId": "b13",
+      "toPort": "precipitation",
+      "fid": "b12",
+      "fp": "pm25",
+      "tid": "b13",
+      "tp": "precipitation"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "streamflow",
+      "toId": "b14",
+      "toPort": "occurrences",
+      "fid": "b13",
+      "fp": "streamflow",
+      "tid": "b14",
+      "tp": "occurrences"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "habitat_map",
+      "toId": "b15",
+      "toPort": "activity",
+      "fid": "b14",
+      "fp": "habitat_map",
+      "tid": "b15",
+      "tp": "activity"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "co2_tons",
+      "toId": "b16",
+      "toPort": "product",
+      "fid": "b15",
+      "fp": "co2_tons",
+      "tid": "b16",
+      "tp": "product"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "impact_categories",
+      "toId": "b17",
+      "toPort": "ai",
+      "fid": "b16",
+      "fp": "impact_categories",
+      "tid": "b17",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "filtered",
+      "toId": "b18",
+      "toPort": "ai",
+      "fid": "b17",
+      "fp": "filtered",
+      "tid": "b18",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "result",
+      "toId": "b19",
+      "toPort": "ai",
+      "fid": "b18",
+      "fp": "result",
+      "tid": "b19",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "sorted",
+      "toId": "b20",
+      "toPort": "ai",
+      "fid": "b19",
+      "fp": "sorted",
+      "tid": "b20",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "grouped",
+      "toId": "b21",
+      "toPort": "ai",
+      "fid": "b20",
+      "fp": "grouped",
+      "tid": "b21",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "pivot",
+      "toId": "b22",
+      "toPort": "data",
+      "fid": "b21",
+      "fp": "pivot",
+      "tid": "b22",
+      "tp": "data"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "result",
+      "toId": "b23",
+      "toPort": "X",
+      "fid": "b22",
+      "fp": "result",
+      "tid": "b23",
+      "tp": "X"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "features",
+      "toId": "b24",
+      "toPort": "ci",
+      "fid": "b23",
+      "fp": "features",
+      "tid": "b24",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "result",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "result",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

@@ -1,0 +1,660 @@
+{
+  "id": "genai_01",
+  "uid": "uid_genai_01",
+  "title": "GenAI & NLP Example 1",
+  "cat": "GenAI",
+  "diff": "Beginner",
+  "desc": "Prompting, retrieval, summarisation, generation, and structured outputs for research assistants.",
+  "domain": "GenAI & NLP",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "genai_01_b01",
+      "type": "mcp_server",
+      "x": 80,
+      "y": 180,
+      "params": {
+        "server_url": "https://mcp.example.com/sse",
+        "server_name": "my_mcp_1",
+        "transport": "SSE",
+        "output_var": "mcp_server",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "genai_01_b02",
+      "type": "ollama_block",
+      "x": 240,
+      "y": 208,
+      "params": {
+        "model": "llama3.1",
+        "host": "http://localhost:11434",
+        "prompt": "",
+        "temperature": 0.7,
+        "max_tokens": 2048,
+        "stream": false,
+        "output_var": "ollama",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b03",
+      "uid": "genai_01_b03",
+      "type": "transformers_block",
+      "x": 400,
+      "y": 180,
+      "params": {
+        "model_name": "bert-base-uncased",
+        "task": "text-classification",
+        "input_var": "text",
+        "output_var": "transformers",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b04",
+      "uid": "genai_01_b04",
+      "type": "summarize_block",
+      "x": 560,
+      "y": 208,
+      "params": {
+        "text_var": "text",
+        "method": "abstractive",
+        "model": "BART",
+        "max_length": 200,
+        "output_var": "summary",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b05",
+      "uid": "genai_01_b05",
+      "type": "translation_block",
+      "x": 720,
+      "y": 180,
+      "params": {
+        "text_var": "text",
+        "src_lang": "en",
+        "tgt_lang": "fr",
+        "model": "NLLB-200",
+        "output_var": "translation",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b06",
+      "uid": "genai_01_b06",
+      "type": "keyword_extract",
+      "x": 880,
+      "y": 208,
+      "params": {
+        "text_var": "text",
+        "method": "KeyBERT",
+        "top_k": 10,
+        "output_var": "keywords",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b07",
+      "uid": "genai_01_b07",
+      "type": "dep_parse",
+      "x": 1040,
+      "y": 180,
+      "params": {
+        "text_var": "text",
+        "model": "spaCy",
+        "output_var": "deps",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b08",
+      "uid": "genai_01_b08",
+      "type": "tts_block",
+      "x": 1200,
+      "y": 208,
+      "params": {
+        "text_var": "text",
+        "engine": "edge-tts",
+        "voice": "default",
+        "speed": 1,
+        "output_file": "speech.mp3",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b09",
+      "uid": "genai_01_b09",
+      "type": "regex_ner",
+      "x": 1360,
+      "y": 180,
+      "params": {
+        "text_var": "text",
+        "patterns": "[\"drug\",\"protein\"]",
+        "output_var": "ner",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b10",
+      "uid": "genai_01_b10",
+      "type": "feature_eng",
+      "x": 1520,
+      "y": 208,
+      "params": {
+        "X_var": "X",
+        "steps": "[{\"type\":\"StandardScaler\"},{\"type\":\"OneHotEncoder\"}]",
+        "output_var": "features",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b11",
+      "uid": "genai_01_b11",
+      "type": "dimensionality_red",
+      "x": 1680,
+      "y": 180,
+      "params": {
+        "X_var": "X",
+        "method": "pca",
+        "n_components": 3,
+        "output_var": "reduced",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b12",
+      "uid": "genai_01_b12",
+      "type": "transfer_learn",
+      "x": 1840,
+      "y": 208,
+      "params": {
+        "pretrained_model": "resnet50",
+        "X_train": "X_train",
+        "y_train": "y_train",
+        "strategy": "LoRA",
+        "epochs": 20,
+        "lr": 0.0001,
+        "output_model": "ft_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b13",
+      "uid": "genai_01_b13",
+      "type": "meta_learning",
+      "x": 2000,
+      "y": 180,
+      "params": {
+        "tasks_var": "tasks",
+        "algorithm": "MAML",
+        "n_shot": 5,
+        "n_way": 5,
+        "output_model": "meta_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b14",
+      "uid": "genai_01_b14",
+      "type": "federated_learn",
+      "x": 2160,
+      "y": 208,
+      "params": {
+        "client_data": "[\"client_0\",\"client_1\",\"client_2\"]",
+        "algorithm": "FedAvg",
+        "rounds": 10,
+        "local_epochs": 5,
+        "output_model": "fl_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b15",
+      "uid": "genai_01_b15",
+      "type": "diffusion_model",
+      "x": 2320,
+      "y": 180,
+      "params": {
+        "data_var": "data",
+        "architecture": "DDPM",
+        "timesteps": 1000,
+        "epochs": 500,
+        "output_model": "diffusion_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b16",
+      "uid": "genai_01_b16",
+      "type": "type_cast",
+      "x": 2480,
+      "y": 208,
+      "params": {
+        "input_var": "x",
+        "to_type": "float",
+        "output_var": "casted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b17",
+      "uid": "genai_01_b17",
+      "type": "progress_bar",
+      "x": 2640,
+      "y": 180,
+      "params": {
+        "iterable_var": "items",
+        "description": "Processing",
+        "leave": true,
+        "output_var": "item",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b18",
+      "uid": "genai_01_b18",
+      "type": "data_version",
+      "x": 2800,
+      "y": 208,
+      "params": {
+        "data_var": "data",
+        "system": "DVC",
+        "version_tag": "v1.0.0",
+        "message": "Add training data",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b19",
+      "uid": "genai_01_b19",
+      "type": "conditional_skip",
+      "x": 2960,
+      "y": 180,
+      "params": {
+        "condition": "env == \"prod\"",
+        "log_skip": true,
+        "skip_message": "Skipping: converged",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b20",
+      "uid": "genai_01_b20",
+      "type": "format_number",
+      "x": 3120,
+      "y": 208,
+      "params": {
+        "value_var": "value",
+        "format": "auto",
+        "precision": 4,
+        "output_var": "formatted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b21",
+      "uid": "genai_01_b21",
+      "type": "prompt_template",
+      "x": 3280,
+      "y": 180,
+      "params": {
+        "template": "Summarise the dataset",
+        "variables": "{\"role\":\"scientist\",\"question\":\"...\"}",
+        "output_var": "prompt",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b22",
+      "uid": "genai_01_b22",
+      "type": "structured_output",
+      "x": 3440,
+      "y": 208,
+      "params": {
+        "prompt_var": "prompt",
+        "schema": "{\"summary\":\"string\"}",
+        "model": "gpt-4o",
+        "output_var": "structured",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b23",
+      "uid": "genai_01_b23",
+      "type": "embeddings_block",
+      "x": 3600,
+      "y": 180,
+      "params": {
+        "text_var": "text",
+        "model": "text-embedding-3-small",
+        "output_var": "embeddings",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b24",
+      "uid": "genai_01_b24",
+      "type": "vector_store_block",
+      "x": 3760,
+      "y": 208,
+      "params": {
+        "documents_var": "docs",
+        "store": "ChromaDB",
+        "embedding_model": "text-embedding-3-small",
+        "collection": "papers",
+        "output_var": "vector_store",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b25",
+      "uid": "genai_01_b25",
+      "type": "report_gen",
+      "x": 3920,
+      "y": 180,
+      "params": {
+        "title": "GenAI Report 1",
+        "data_var": "results",
+        "format": "HTML",
+        "output_file": "report_genai_1.html",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "server_ref",
+      "toId": "b02",
+      "toPort": "prompt",
+      "fid": "b01",
+      "fp": "server_ref",
+      "tid": "b02",
+      "tp": "prompt"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "response",
+      "toId": "b03",
+      "toPort": "input",
+      "fid": "b02",
+      "fp": "response",
+      "tid": "b03",
+      "tp": "input"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "output",
+      "toId": "b04",
+      "toPort": "text",
+      "fid": "b03",
+      "fp": "output",
+      "tid": "b04",
+      "tp": "text"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "summary",
+      "toId": "b05",
+      "toPort": "text",
+      "fid": "b04",
+      "fp": "summary",
+      "tid": "b05",
+      "tp": "text"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "translation",
+      "toId": "b06",
+      "toPort": "text",
+      "fid": "b05",
+      "fp": "translation",
+      "tid": "b06",
+      "tp": "text"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "keywords",
+      "toId": "b07",
+      "toPort": "text",
+      "fid": "b06",
+      "fp": "keywords",
+      "tid": "b07",
+      "tp": "text"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "tree",
+      "toId": "b08",
+      "toPort": "text",
+      "fid": "b07",
+      "fp": "tree",
+      "tid": "b08",
+      "tp": "text"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "audio_file",
+      "toId": "b09",
+      "toPort": "text",
+      "fid": "b08",
+      "fp": "audio_file",
+      "tid": "b09",
+      "tp": "text"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "entities",
+      "toId": "b10",
+      "toPort": "X",
+      "fid": "b09",
+      "fp": "entities",
+      "tid": "b10",
+      "tp": "X"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "features",
+      "toId": "b11",
+      "toPort": "X",
+      "fid": "b10",
+      "fp": "features",
+      "tid": "b11",
+      "tp": "X"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "embedding",
+      "toId": "b12",
+      "toPort": "data",
+      "fid": "b11",
+      "fp": "embedding",
+      "tid": "b12",
+      "tp": "data"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "model",
+      "toId": "b13",
+      "toPort": "tasks",
+      "fid": "b12",
+      "fp": "model",
+      "tid": "b13",
+      "tp": "tasks"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "model",
+      "toId": "b14",
+      "toPort": "clients",
+      "fid": "b13",
+      "fp": "model",
+      "tid": "b14",
+      "tp": "clients"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "model",
+      "toId": "b15",
+      "toPort": "data",
+      "fid": "b14",
+      "fp": "model",
+      "tid": "b15",
+      "tp": "data"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "model",
+      "toId": "b16",
+      "toPort": "ci",
+      "fid": "b15",
+      "fp": "model",
+      "tid": "b16",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "result",
+      "toId": "b17",
+      "toPort": "iterable",
+      "fid": "b16",
+      "fp": "result",
+      "tid": "b17",
+      "tp": "iterable"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "item",
+      "toId": "b18",
+      "toPort": "data",
+      "fid": "b17",
+      "fp": "item",
+      "tid": "b18",
+      "tp": "data"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "version_id",
+      "toId": "b19",
+      "toPort": "condition",
+      "fid": "b18",
+      "fp": "version_id",
+      "tid": "b19",
+      "tp": "condition"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "pass",
+      "toId": "b20",
+      "toPort": "value",
+      "fid": "b19",
+      "fp": "pass",
+      "tid": "b20",
+      "tp": "value"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "string",
+      "toId": "b21",
+      "toPort": "vars",
+      "fid": "b20",
+      "fp": "string",
+      "tid": "b21",
+      "tp": "vars"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "prompt",
+      "toId": "b22",
+      "toPort": "prompt",
+      "fid": "b21",
+      "fp": "prompt",
+      "tid": "b22",
+      "tp": "prompt"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "data",
+      "toId": "b23",
+      "toPort": "text",
+      "fid": "b22",
+      "fp": "data",
+      "tid": "b23",
+      "tp": "text"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "embeddings",
+      "toId": "b24",
+      "toPort": "docs",
+      "fid": "b23",
+      "fp": "embeddings",
+      "tid": "b24",
+      "tp": "docs"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "vector_store",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "vector_store",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

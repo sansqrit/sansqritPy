@@ -1,0 +1,456 @@
+{
+  "id": "physics_05",
+  "uid": "physics_05_140133c9",
+  "title": "Cosmology parameter scan",
+  "cat": "Physics",
+  "diff": "B",
+  "desc": "Simulation, approximation, and analysis blocks support a classical-to-quantum physics workflow.",
+  "domain": "physics",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "physics_05_b01",
+      "type": "nbody_sim",
+      "x": 60,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b02",
+      "uid": "physics_05_b02",
+      "type": "interpolation_block",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "physics_05_b03",
+      "type": "eigenvalue_block",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "physics_05_b04",
+      "type": "graph_theory",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "physics_05_b05",
+      "type": "information_theory",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "physics_05_b06",
+      "type": "type_cast",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "physics_05_b07",
+      "type": "debug_break",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "physics_05_b08",
+      "type": "parallel_map",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "physics_05_b09",
+      "type": "cache_block",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "physics_05_b10",
+      "type": "progress_bar",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "physics_05_b11",
+      "type": "experiment_tracker",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "physics_05_b12",
+      "type": "data_version",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "physics_05_b13",
+      "type": "conditional_skip",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "physics_05_b14",
+      "type": "format_number",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "physics_05_b15",
+      "type": "plot_block",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "physics_05_b16",
+      "type": "save_file",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "physics_05_b17",
+      "type": "circuit_diagram",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "physics_05_b18",
+      "type": "network_graph_plot",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "physics_05_b19",
+      "type": "report_gen",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "physics_05_b20",
+      "type": "animation_block",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "physics_05_b21",
+      "type": "monte_carlo",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "physics_05_b22",
+      "type": "molecular_dynamics",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "physics_05_b23",
+      "type": "fluid_dynamics",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "physics_05_b24",
+      "type": "finite_element",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "physics_05_b25",
+      "type": "logger_block",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "label": "Cosmology parameter scan"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "trajectory",
+      "toId": "b02",
+      "toPort": "x",
+      "fid": "b01",
+      "fp": "trajectory",
+      "tid": "b02",
+      "tp": "x"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "y_new",
+      "toId": "b03",
+      "toPort": "A",
+      "fid": "b02",
+      "fp": "y_new",
+      "tid": "b03",
+      "tp": "A"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "eigenvalues",
+      "toId": "b04",
+      "toPort": "G",
+      "fid": "b03",
+      "fp": "eigenvalues",
+      "tid": "b04",
+      "tp": "G"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "result",
+      "toId": "b05",
+      "toPort": "p",
+      "fid": "b04",
+      "fp": "result",
+      "tid": "b05",
+      "tp": "p"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "result",
+      "toId": "b06",
+      "toPort": "ci",
+      "fid": "b05",
+      "fp": "result",
+      "tid": "b06",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "result",
+      "toId": "b07",
+      "toPort": "ai",
+      "fid": "b06",
+      "fp": "result",
+      "tid": "b07",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "ao",
+      "toId": "b08",
+      "toPort": "fn",
+      "fid": "b07",
+      "fp": "ao",
+      "tid": "b08",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "results",
+      "toId": "b09",
+      "toPort": "fn",
+      "fid": "b08",
+      "fp": "results",
+      "tid": "b09",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "result",
+      "toId": "b10",
+      "toPort": "iterable",
+      "fid": "b09",
+      "fp": "result",
+      "tid": "b10",
+      "tp": "iterable"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "item",
+      "toId": "b11",
+      "toPort": "data",
+      "fid": "b10",
+      "fp": "item",
+      "tid": "b11",
+      "tp": "data"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "run_id",
+      "toId": "b12",
+      "toPort": "data",
+      "fid": "b11",
+      "fp": "run_id",
+      "tid": "b12",
+      "tp": "data"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "version_id",
+      "toId": "b13",
+      "toPort": "condition",
+      "fid": "b12",
+      "fp": "version_id",
+      "tid": "b13",
+      "tp": "condition"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "pass",
+      "toId": "b14",
+      "toPort": "value",
+      "fid": "b13",
+      "fp": "pass",
+      "tid": "b14",
+      "tp": "value"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "string",
+      "toId": "b15",
+      "toPort": "x",
+      "fid": "b14",
+      "fp": "string",
+      "tid": "b15",
+      "tp": "x"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "figure",
+      "toId": "b16",
+      "toPort": "data",
+      "fid": "b15",
+      "fp": "figure",
+      "tid": "b16",
+      "tp": "data"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "filepath",
+      "toId": "b17",
+      "toPort": "ri",
+      "fid": "b16",
+      "fp": "filepath",
+      "tid": "b17",
+      "tp": "ri"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "diagram",
+      "toId": "b18",
+      "toPort": "G",
+      "fid": "b17",
+      "fp": "diagram",
+      "tid": "b18",
+      "tp": "G"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "html_file",
+      "toId": "b19",
+      "toPort": "data",
+      "fid": "b18",
+      "fp": "html_file",
+      "tid": "b19",
+      "tp": "data"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "file_path",
+      "toId": "b20",
+      "toPort": "frames",
+      "fid": "b19",
+      "fp": "file_path",
+      "tid": "b20",
+      "tp": "frames"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "gif_path",
+      "toId": "b21",
+      "toPort": "hamiltonian",
+      "fid": "b20",
+      "fp": "gif_path",
+      "tid": "b21",
+      "tp": "hamiltonian"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "observable",
+      "toId": "b22",
+      "toPort": "system",
+      "fid": "b21",
+      "fp": "observable",
+      "tid": "b22",
+      "tp": "system"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "trajectory",
+      "toId": "b23",
+      "toPort": "geometry",
+      "fid": "b22",
+      "fp": "trajectory",
+      "tid": "b23",
+      "tp": "geometry"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "velocity",
+      "toId": "b24",
+      "toPort": "mesh",
+      "fid": "b23",
+      "fp": "velocity",
+      "tid": "b24",
+      "tp": "mesh"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "displacement",
+      "toId": "b25",
+      "toPort": "value",
+      "fid": "b24",
+      "fp": "displacement",
+      "tid": "b25",
+      "tp": "value"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

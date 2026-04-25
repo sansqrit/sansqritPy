@@ -1,0 +1,458 @@
+{
+  "id": "drug_01",
+  "uid": "drug_01_33eab88f",
+  "title": "Screening funnel",
+  "cat": "Chemistry",
+  "diff": "B",
+  "desc": "Cheminformatics, docking, ADMET, and lead optimization blocks model a realistic discovery funnel.",
+  "domain": "drug",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "drug_01_b01",
+      "type": "molecule_init",
+      "x": 60,
+      "y": 60,
+      "params": {
+        "molecule": "H2O"
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "drug_01_b02",
+      "type": "vqe_chemistry",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "drug_01_b03",
+      "type": "hartree_fock",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "drug_01_b04",
+      "type": "mp2_block",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "drug_01_b05",
+      "type": "ccsd_t_block",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "drug_01_b06",
+      "type": "dft_block",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "drug_01_b07",
+      "type": "tanimoto_block",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "drug_01_b08",
+      "type": "spectroscopy_block",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "drug_01_b09",
+      "type": "pka_block",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "drug_01_b10",
+      "type": "logp_block",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "drug_01_b11",
+      "type": "reaction_path",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "drug_01_b12",
+      "type": "excited_state_vqe",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "drug_01_b13",
+      "type": "active_space",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "drug_01_b14",
+      "type": "vibrational_modes",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "drug_01_b15",
+      "type": "solvation_block",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "drug_01_b16",
+      "type": "nbo_analysis",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "drug_01_b17",
+      "type": "td_dft",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "drug_01_b18",
+      "type": "gfn_xtb",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "drug_01_b19",
+      "type": "fp_similarity_screen",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "drug_01_b20",
+      "type": "scaffold_decomp",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "drug_01_b21",
+      "type": "retrosynthesis",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "drug_01_b22",
+      "type": "pharmacophore",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "drug_01_b23",
+      "type": "mmpdb_block",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "drug_01_b24",
+      "type": "solubility_pred",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "drug_01_b25",
+      "type": "table_block",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "title": "Screening funnel"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "mol",
+      "toId": "b02",
+      "toPort": "mol",
+      "fid": "b01",
+      "fp": "mol",
+      "tid": "b02",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "energy",
+      "toId": "b03",
+      "toPort": "mol",
+      "fid": "b02",
+      "fp": "energy",
+      "tid": "b03",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "hf_out",
+      "toId": "b04",
+      "toPort": "hf",
+      "fid": "b03",
+      "fp": "hf_out",
+      "tid": "b04",
+      "tp": "hf"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "energy",
+      "toId": "b05",
+      "toPort": "hf",
+      "fid": "b04",
+      "fp": "energy",
+      "tid": "b05",
+      "tp": "hf"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "energy",
+      "toId": "b06",
+      "toPort": "mol",
+      "fid": "b05",
+      "fp": "energy",
+      "tid": "b06",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "energy",
+      "toId": "b07",
+      "toPort": "a",
+      "fid": "b06",
+      "fp": "energy",
+      "tid": "b07",
+      "tp": "a"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "score",
+      "toId": "b08",
+      "toPort": "mol",
+      "fid": "b07",
+      "fp": "score",
+      "tid": "b08",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "spectrum",
+      "toId": "b09",
+      "toPort": "mol",
+      "fid": "b08",
+      "fp": "spectrum",
+      "tid": "b09",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "pka",
+      "toId": "b10",
+      "toPort": "mol",
+      "fid": "b09",
+      "fp": "pka",
+      "tid": "b10",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "logp",
+      "toId": "b11",
+      "toPort": "reactants",
+      "fid": "b10",
+      "fp": "logp",
+      "tid": "b11",
+      "tp": "reactants"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "pathway",
+      "toId": "b12",
+      "toPort": "mol",
+      "fid": "b11",
+      "fp": "pathway",
+      "tid": "b12",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "energies",
+      "toId": "b13",
+      "toPort": "mol",
+      "fid": "b12",
+      "fp": "energies",
+      "tid": "b13",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "energy",
+      "toId": "b14",
+      "toPort": "mol",
+      "fid": "b13",
+      "fp": "energy",
+      "tid": "b14",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "frequencies",
+      "toId": "b15",
+      "toPort": "mol",
+      "fid": "b14",
+      "fp": "frequencies",
+      "tid": "b15",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "solvation_energy",
+      "toId": "b16",
+      "toPort": "mol",
+      "fid": "b15",
+      "fp": "solvation_energy",
+      "tid": "b16",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "charges",
+      "toId": "b17",
+      "toPort": "mol",
+      "fid": "b16",
+      "fp": "charges",
+      "tid": "b17",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "spectrum",
+      "toId": "b18",
+      "toPort": "mol",
+      "fid": "b17",
+      "fp": "spectrum",
+      "tid": "b18",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "energy",
+      "toId": "b19",
+      "toPort": "query",
+      "fid": "b18",
+      "fp": "energy",
+      "tid": "b19",
+      "tp": "query"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "hits",
+      "toId": "b20",
+      "toPort": "mol",
+      "fid": "b19",
+      "fp": "hits",
+      "tid": "b20",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "scaffold",
+      "toId": "b21",
+      "toPort": "target",
+      "fid": "b20",
+      "fp": "scaffold",
+      "tid": "b21",
+      "tp": "target"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "routes",
+      "toId": "b22",
+      "toPort": "actives",
+      "fid": "b21",
+      "fp": "routes",
+      "tid": "b22",
+      "tp": "actives"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "model",
+      "toId": "b23",
+      "toPort": "series",
+      "fid": "b22",
+      "fp": "model",
+      "tid": "b23",
+      "tp": "series"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "transforms",
+      "toId": "b24",
+      "toPort": "mol",
+      "fid": "b23",
+      "fp": "transforms",
+      "tid": "b24",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "logS",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "logS",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

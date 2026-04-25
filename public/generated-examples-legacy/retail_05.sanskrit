@@ -1,0 +1,463 @@
+{
+  "id": "retail_05",
+  "uid": "retail_05_0ce02aa0",
+  "title": "Inventory reorder QA",
+  "cat": "ETL",
+  "diff": "B",
+  "desc": "Local sales and customer data flow through cleaning, enrichment, feature engineering, and ranked output for planners.",
+  "domain": "retail",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "retail_05_b01",
+      "type": "csv_reader",
+      "x": 60,
+      "y": 60,
+      "params": {
+        "file_path": "sales.csv",
+        "separator": ",",
+        "header": true,
+        "auto_types": true,
+        "encoding": "utf-8",
+        "output_var": "df"
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "retail_05_b02",
+      "type": "neural_net",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "retail_05_b03",
+      "type": "predict_block",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "retail_05_b04",
+      "type": "clustering_block",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "retail_05_b05",
+      "type": "dimensionality_red",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "retail_05_b06",
+      "type": "feature_eng",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "retail_05_b07",
+      "type": "model_eval",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "retail_05_b08",
+      "type": "transformers_block",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "retail_05_b09",
+      "type": "automl_block",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "retail_05_b10",
+      "type": "xgboost_block",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "retail_05_b11",
+      "type": "time_series_forecast",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "retail_05_b12",
+      "type": "anomaly_ml",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "retail_05_b13",
+      "type": "graph_nn",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "retail_05_b14",
+      "type": "contrastive_learn",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "retail_05_b15",
+      "type": "meta_learning",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "retail_05_b16",
+      "type": "knowledge_distill",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "retail_05_b17",
+      "type": "federated_learn",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "retail_05_b18",
+      "type": "diffusion_model",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "retail_05_b19",
+      "type": "causal_inference",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "retail_05_b20",
+      "type": "survival_analysis",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "retail_05_b21",
+      "type": "shap_explain",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "retail_05_b22",
+      "type": "gp_regression",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "retail_05_b23",
+      "type": "transfer_learn",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "retail_05_b24",
+      "type": "normalizing_flow",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "retail_05_b25",
+      "type": "logger_block",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "label": "Inventory reorder QA"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "dataframe",
+      "toId": "b02",
+      "toPort": "X",
+      "fid": "b01",
+      "fp": "dataframe",
+      "tid": "b02",
+      "tp": "X"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "model",
+      "toId": "b03",
+      "toPort": "model",
+      "fid": "b02",
+      "fp": "model",
+      "tid": "b03",
+      "tp": "model"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "predictions",
+      "toId": "b04",
+      "toPort": "X",
+      "fid": "b03",
+      "fp": "predictions",
+      "tid": "b04",
+      "tp": "X"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "labels",
+      "toId": "b05",
+      "toPort": "X",
+      "fid": "b04",
+      "fp": "labels",
+      "tid": "b05",
+      "tp": "X"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "embedding",
+      "toId": "b06",
+      "toPort": "X",
+      "fid": "b05",
+      "fp": "embedding",
+      "tid": "b06",
+      "tp": "X"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "features",
+      "toId": "b07",
+      "toPort": "model",
+      "fid": "b06",
+      "fp": "features",
+      "tid": "b07",
+      "tp": "model"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "metrics",
+      "toId": "b08",
+      "toPort": "input",
+      "fid": "b07",
+      "fp": "metrics",
+      "tid": "b08",
+      "tp": "input"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "output",
+      "toId": "b09",
+      "toPort": "X",
+      "fid": "b08",
+      "fp": "output",
+      "tid": "b09",
+      "tp": "X"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "model",
+      "toId": "b10",
+      "toPort": "X",
+      "fid": "b09",
+      "fp": "model",
+      "tid": "b10",
+      "tp": "X"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "model",
+      "toId": "b11",
+      "toPort": "series",
+      "fid": "b10",
+      "fp": "model",
+      "tid": "b11",
+      "tp": "series"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "forecast",
+      "toId": "b12",
+      "toPort": "X",
+      "fid": "b11",
+      "fp": "forecast",
+      "tid": "b12",
+      "tp": "X"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "labels",
+      "toId": "b13",
+      "toPort": "graph",
+      "fid": "b12",
+      "fp": "labels",
+      "tid": "b13",
+      "tp": "graph"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "model",
+      "toId": "b14",
+      "toPort": "data",
+      "fid": "b13",
+      "fp": "model",
+      "tid": "b14",
+      "tp": "data"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "encoder",
+      "toId": "b15",
+      "toPort": "tasks",
+      "fid": "b14",
+      "fp": "encoder",
+      "tid": "b15",
+      "tp": "tasks"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "model",
+      "toId": "b16",
+      "toPort": "teacher",
+      "fid": "b15",
+      "fp": "model",
+      "tid": "b16",
+      "tp": "teacher"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "model",
+      "toId": "b17",
+      "toPort": "clients",
+      "fid": "b16",
+      "fp": "model",
+      "tid": "b17",
+      "tp": "clients"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "model",
+      "toId": "b18",
+      "toPort": "data",
+      "fid": "b17",
+      "fp": "model",
+      "tid": "b18",
+      "tp": "data"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "model",
+      "toId": "b19",
+      "toPort": "data",
+      "fid": "b18",
+      "fp": "model",
+      "tid": "b19",
+      "tp": "data"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "ate",
+      "toId": "b20",
+      "toPort": "data",
+      "fid": "b19",
+      "fp": "ate",
+      "tid": "b20",
+      "tp": "data"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "survival_curve",
+      "toId": "b21",
+      "toPort": "model",
+      "fid": "b20",
+      "fp": "survival_curve",
+      "tid": "b21",
+      "tp": "model"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "shap_values",
+      "toId": "b22",
+      "toPort": "X",
+      "fid": "b21",
+      "fp": "shap_values",
+      "tid": "b22",
+      "tp": "X"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "model",
+      "toId": "b23",
+      "toPort": "data",
+      "fid": "b22",
+      "fp": "model",
+      "tid": "b23",
+      "tp": "data"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "model",
+      "toId": "b24",
+      "toPort": "data",
+      "fid": "b23",
+      "fp": "model",
+      "tid": "b24",
+      "tp": "data"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "model",
+      "toId": "b25",
+      "toPort": "value",
+      "fid": "b24",
+      "fp": "model",
+      "tid": "b25",
+      "tp": "value"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

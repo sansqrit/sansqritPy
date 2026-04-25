@@ -1,0 +1,20 @@
+{
+  "id": "applied_finance_risk_engine",
+  "title": "Applied Finance Risk Engine",
+  "cat": "Applied Finance",
+  "diff": "Advanced",
+  "desc": "Optimize portfolio allocation, price options, run stress scenarios, and compute regulatory capital.",
+  "blocks": [
+    {"id": "port", "type": "applied_portfolio_optimization", "x": 80, "y": 160, "params": {"method": "CVaR optimizer", "sample_size": 18}},
+    {"id": "option", "type": "applied_monte_carlo_option_pricing", "x": 360, "y": 160, "params": {"method": "Heston MC", "sample_size": 18}},
+    {"id": "stress", "type": "applied_risk_management_scenario_analysis", "x": 640, "y": 160, "params": {"method": "Monte Carlo VaR", "sample_size": 18}},
+    {"id": "capital", "type": "applied_regulatory_capital_calculations", "x": 920, "y": 160, "params": {"method": "FRTB sensitivities", "sample_size": 18}},
+    {"id": "tbl", "type": "table_display", "x": 1200, "y": 160, "params": {"title": "Risk-Adjusted Finance Decisions", "page_size": 25}}
+  ],
+  "wires": [
+    {"fromId": "port", "fromPort": "dataset", "toId": "option", "toPort": "dataset"},
+    {"fromId": "option", "fromPort": "dataset", "toId": "stress", "toPort": "dataset"},
+    {"fromId": "stress", "fromPort": "dataset", "toId": "capital", "toPort": "dataset"},
+    {"fromId": "capital", "fromPort": "dataset", "toId": "tbl", "toPort": "dataset"}
+  ]
+}

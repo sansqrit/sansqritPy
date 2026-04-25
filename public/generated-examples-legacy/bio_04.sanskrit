@@ -1,0 +1,456 @@
+{
+  "id": "bio_04",
+  "uid": "bio_04_60706889",
+  "title": "CRISPR safety check",
+  "cat": "Biology",
+  "diff": "I",
+  "desc": "Sequencing, expression, folding, and annotation blocks are combined into a practical bioinformatics workflow.",
+  "domain": "bio",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "bio_04_b01",
+      "type": "proteomics_block",
+      "x": 60,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b02",
+      "uid": "bio_04_b02",
+      "type": "filter_block",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "bio_04_b03",
+      "type": "map_transform",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "bio_04_b04",
+      "type": "sort_block",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "bio_04_b05",
+      "type": "groupby_block",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "bio_04_b06",
+      "type": "join_block",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "bio_04_b07",
+      "type": "pivot_block",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "bio_04_b08",
+      "type": "schema_validate",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "bio_04_b09",
+      "type": "window_transform",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "bio_04_b10",
+      "type": "resample_block",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "bio_04_b11",
+      "type": "encode_features",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "bio_04_b12",
+      "type": "missing_impute",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "bio_04_b13",
+      "type": "normalize_block",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "bio_04_b14",
+      "type": "explode_block",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "bio_04_b15",
+      "type": "dedup_block",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "bio_04_b16",
+      "type": "binning_block",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "bio_04_b17",
+      "type": "type_cast",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "bio_04_b18",
+      "type": "debug_break",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "bio_04_b19",
+      "type": "parallel_map",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "bio_04_b20",
+      "type": "cache_block",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "bio_04_b21",
+      "type": "progress_bar",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "bio_04_b22",
+      "type": "experiment_tracker",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "bio_04_b23",
+      "type": "data_version",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "bio_04_b24",
+      "type": "conditional_skip",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "bio_04_b25",
+      "type": "logger_block",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "label": "CRISPR safety check"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "protein_quant",
+      "toId": "b02",
+      "toPort": "ai",
+      "fid": "b01",
+      "fp": "protein_quant",
+      "tid": "b02",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "filtered",
+      "toId": "b03",
+      "toPort": "ai",
+      "fid": "b02",
+      "fp": "filtered",
+      "tid": "b03",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "result",
+      "toId": "b04",
+      "toPort": "ai",
+      "fid": "b03",
+      "fp": "result",
+      "tid": "b04",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "sorted",
+      "toId": "b05",
+      "toPort": "ai",
+      "fid": "b04",
+      "fp": "sorted",
+      "tid": "b05",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "grouped",
+      "toId": "b06",
+      "toPort": "left",
+      "fid": "b05",
+      "fp": "grouped",
+      "tid": "b06",
+      "tp": "left"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "merged",
+      "toId": "b07",
+      "toPort": "ai",
+      "fid": "b06",
+      "fp": "merged",
+      "tid": "b07",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "pivot",
+      "toId": "b08",
+      "toPort": "ai",
+      "fid": "b07",
+      "fp": "pivot",
+      "tid": "b08",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "valid",
+      "toId": "b09",
+      "toPort": "data",
+      "fid": "b08",
+      "fp": "valid",
+      "tid": "b09",
+      "tp": "data"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "result",
+      "toId": "b10",
+      "toPort": "data",
+      "fid": "b09",
+      "fp": "result",
+      "tid": "b10",
+      "tp": "data"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "result",
+      "toId": "b11",
+      "toPort": "X",
+      "fid": "b10",
+      "fp": "result",
+      "tid": "b11",
+      "tp": "X"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "X_encoded",
+      "toId": "b12",
+      "toPort": "data",
+      "fid": "b11",
+      "fp": "X_encoded",
+      "tid": "b12",
+      "tp": "data"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "imputed",
+      "toId": "b13",
+      "toPort": "X",
+      "fid": "b12",
+      "fp": "imputed",
+      "tid": "b13",
+      "tp": "X"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "scaled",
+      "toId": "b14",
+      "toPort": "data",
+      "fid": "b13",
+      "fp": "scaled",
+      "tid": "b14",
+      "tp": "data"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "result",
+      "toId": "b15",
+      "toPort": "data",
+      "fid": "b14",
+      "fp": "result",
+      "tid": "b15",
+      "tp": "data"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "deduped",
+      "toId": "b16",
+      "toPort": "data",
+      "fid": "b15",
+      "fp": "deduped",
+      "tid": "b16",
+      "tp": "data"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "binned",
+      "toId": "b17",
+      "toPort": "ci",
+      "fid": "b16",
+      "fp": "binned",
+      "tid": "b17",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "result",
+      "toId": "b18",
+      "toPort": "ai",
+      "fid": "b17",
+      "fp": "result",
+      "tid": "b18",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "ao",
+      "toId": "b19",
+      "toPort": "fn",
+      "fid": "b18",
+      "fp": "ao",
+      "tid": "b19",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "results",
+      "toId": "b20",
+      "toPort": "fn",
+      "fid": "b19",
+      "fp": "results",
+      "tid": "b20",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "result",
+      "toId": "b21",
+      "toPort": "iterable",
+      "fid": "b20",
+      "fp": "result",
+      "tid": "b21",
+      "tp": "iterable"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "item",
+      "toId": "b22",
+      "toPort": "data",
+      "fid": "b21",
+      "fp": "item",
+      "tid": "b22",
+      "tp": "data"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "run_id",
+      "toId": "b23",
+      "toPort": "data",
+      "fid": "b22",
+      "fp": "run_id",
+      "tid": "b23",
+      "tp": "data"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "version_id",
+      "toId": "b24",
+      "toPort": "condition",
+      "fid": "b23",
+      "fp": "version_id",
+      "tid": "b24",
+      "tp": "condition"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "pass",
+      "toId": "b25",
+      "toPort": "value",
+      "fid": "b24",
+      "fp": "pass",
+      "tid": "b25",
+      "tp": "value"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

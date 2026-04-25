@@ -1,0 +1,20 @@
+{
+  "id": "applied_aerospace_mission_design",
+  "title": "Applied Aerospace Mission Design",
+  "cat": "Applied Simulation",
+  "diff": "Expert",
+  "desc": "Optimize orbit, spacecraft trajectory, CFD aerodynamics, and rocket engine performance.",
+  "blocks": [
+    {"id": "orbit", "type": "applied_satellite_orbit_optimization", "x": 80, "y": 160, "params": {"method": "Lambert solver", "sample_size": 15}},
+    {"id": "traj", "type": "applied_spacecraft_trajectory_planning", "x": 360, "y": 160, "params": {"method": "Low-thrust optimizer", "sample_size": 15}},
+    {"id": "cfd", "type": "applied_aerodynamic_flow_simulation_cfd", "x": 640, "y": 160, "params": {"method": "PINN CFD", "sample_size": 15}},
+    {"id": "rocket", "type": "applied_rocket_engine_combustion_modeling", "x": 920, "y": 160, "params": {"method": "Combustion instability model", "sample_size": 15}},
+    {"id": "tbl", "type": "table_display", "x": 1200, "y": 160, "params": {"title": "Mission Design Trade Study", "page_size": 25}}
+  ],
+  "wires": [
+    {"fromId": "orbit", "fromPort": "dataset", "toId": "traj", "toPort": "dataset"},
+    {"fromId": "traj", "fromPort": "dataset", "toId": "cfd", "toPort": "dataset"},
+    {"fromId": "cfd", "fromPort": "dataset", "toId": "rocket", "toPort": "dataset"},
+    {"fromId": "rocket", "fromPort": "dataset", "toId": "tbl", "toPort": "dataset"}
+  ]
+}

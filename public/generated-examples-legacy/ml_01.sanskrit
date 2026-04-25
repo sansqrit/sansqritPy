@@ -1,0 +1,463 @@
+{
+  "id": "ml_01",
+  "uid": "ml_01_b7e32a48",
+  "title": "Churn prediction",
+  "cat": "Machine Learning",
+  "diff": "B",
+  "desc": "Feature engineering, training, explainability, and RAG-style tooling are arranged as an end-to-end pipeline.",
+  "domain": "ml",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "ml_01_b01",
+      "type": "csv_reader",
+      "x": 60,
+      "y": 60,
+      "params": {
+        "file_path": "sales.csv",
+        "separator": ",",
+        "header": true,
+        "auto_types": true,
+        "encoding": "utf-8",
+        "output_var": "df"
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "ml_01_b02",
+      "type": "train_model",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "ml_01_b03",
+      "type": "neural_net",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "ml_01_b04",
+      "type": "predict_block",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "ml_01_b05",
+      "type": "clustering_block",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "ml_01_b06",
+      "type": "dimensionality_red",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "ml_01_b07",
+      "type": "feature_eng",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "ml_01_b08",
+      "type": "model_eval",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "ml_01_b09",
+      "type": "transformers_block",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "ml_01_b10",
+      "type": "automl_block",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "ml_01_b11",
+      "type": "xgboost_block",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "ml_01_b12",
+      "type": "time_series_forecast",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "ml_01_b13",
+      "type": "anomaly_ml",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "ml_01_b14",
+      "type": "graph_nn",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "ml_01_b15",
+      "type": "contrastive_learn",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "ml_01_b16",
+      "type": "meta_learning",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "ml_01_b17",
+      "type": "knowledge_distill",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "ml_01_b18",
+      "type": "federated_learn",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "ml_01_b19",
+      "type": "diffusion_model",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "ml_01_b20",
+      "type": "causal_inference",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "ml_01_b21",
+      "type": "survival_analysis",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "ml_01_b22",
+      "type": "shap_explain",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "ml_01_b23",
+      "type": "gp_regression",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "ml_01_b24",
+      "type": "transfer_learn",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "ml_01_b25",
+      "type": "table_block",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "title": "Churn prediction"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "dataframe",
+      "toId": "b02",
+      "toPort": "X",
+      "fid": "b01",
+      "fp": "dataframe",
+      "tid": "b02",
+      "tp": "X"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "model",
+      "toId": "b03",
+      "toPort": "X",
+      "fid": "b02",
+      "fp": "model",
+      "tid": "b03",
+      "tp": "X"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "model",
+      "toId": "b04",
+      "toPort": "model",
+      "fid": "b03",
+      "fp": "model",
+      "tid": "b04",
+      "tp": "model"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "predictions",
+      "toId": "b05",
+      "toPort": "X",
+      "fid": "b04",
+      "fp": "predictions",
+      "tid": "b05",
+      "tp": "X"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "labels",
+      "toId": "b06",
+      "toPort": "X",
+      "fid": "b05",
+      "fp": "labels",
+      "tid": "b06",
+      "tp": "X"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "embedding",
+      "toId": "b07",
+      "toPort": "X",
+      "fid": "b06",
+      "fp": "embedding",
+      "tid": "b07",
+      "tp": "X"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "features",
+      "toId": "b08",
+      "toPort": "model",
+      "fid": "b07",
+      "fp": "features",
+      "tid": "b08",
+      "tp": "model"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "metrics",
+      "toId": "b09",
+      "toPort": "input",
+      "fid": "b08",
+      "fp": "metrics",
+      "tid": "b09",
+      "tp": "input"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "output",
+      "toId": "b10",
+      "toPort": "X",
+      "fid": "b09",
+      "fp": "output",
+      "tid": "b10",
+      "tp": "X"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "model",
+      "toId": "b11",
+      "toPort": "X",
+      "fid": "b10",
+      "fp": "model",
+      "tid": "b11",
+      "tp": "X"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "model",
+      "toId": "b12",
+      "toPort": "series",
+      "fid": "b11",
+      "fp": "model",
+      "tid": "b12",
+      "tp": "series"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "forecast",
+      "toId": "b13",
+      "toPort": "X",
+      "fid": "b12",
+      "fp": "forecast",
+      "tid": "b13",
+      "tp": "X"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "labels",
+      "toId": "b14",
+      "toPort": "graph",
+      "fid": "b13",
+      "fp": "labels",
+      "tid": "b14",
+      "tp": "graph"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "model",
+      "toId": "b15",
+      "toPort": "data",
+      "fid": "b14",
+      "fp": "model",
+      "tid": "b15",
+      "tp": "data"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "encoder",
+      "toId": "b16",
+      "toPort": "tasks",
+      "fid": "b15",
+      "fp": "encoder",
+      "tid": "b16",
+      "tp": "tasks"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "model",
+      "toId": "b17",
+      "toPort": "teacher",
+      "fid": "b16",
+      "fp": "model",
+      "tid": "b17",
+      "tp": "teacher"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "model",
+      "toId": "b18",
+      "toPort": "clients",
+      "fid": "b17",
+      "fp": "model",
+      "tid": "b18",
+      "tp": "clients"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "model",
+      "toId": "b19",
+      "toPort": "data",
+      "fid": "b18",
+      "fp": "model",
+      "tid": "b19",
+      "tp": "data"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "model",
+      "toId": "b20",
+      "toPort": "data",
+      "fid": "b19",
+      "fp": "model",
+      "tid": "b20",
+      "tp": "data"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "ate",
+      "toId": "b21",
+      "toPort": "data",
+      "fid": "b20",
+      "fp": "ate",
+      "tid": "b21",
+      "tp": "data"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "survival_curve",
+      "toId": "b22",
+      "toPort": "model",
+      "fid": "b21",
+      "fp": "survival_curve",
+      "tid": "b22",
+      "tp": "model"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "shap_values",
+      "toId": "b23",
+      "toPort": "X",
+      "fid": "b22",
+      "fp": "shap_values",
+      "tid": "b23",
+      "tp": "X"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "model",
+      "toId": "b24",
+      "toPort": "data",
+      "fid": "b23",
+      "fp": "model",
+      "tid": "b24",
+      "tp": "data"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "model",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "model",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

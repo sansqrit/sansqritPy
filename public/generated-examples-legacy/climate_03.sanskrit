@@ -1,0 +1,456 @@
+{
+  "id": "climate_03",
+  "uid": "climate_03_e75419a7",
+  "title": "Wildfire response map",
+  "cat": "Climate",
+  "diff": "A",
+  "desc": "Weather, emissions, and hydrology inputs are transformed into actionable climate risk summaries.",
+  "domain": "climate",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "climate_03_b01",
+      "type": "climate_model",
+      "x": 60,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b02",
+      "uid": "climate_03_b02",
+      "type": "molecular_dynamics",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "climate_03_b03",
+      "type": "fluid_dynamics",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "climate_03_b04",
+      "type": "finite_element",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "climate_03_b05",
+      "type": "em_field_sim",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "climate_03_b06",
+      "type": "optics_sim",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "climate_03_b07",
+      "type": "tensor_network",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "climate_03_b08",
+      "type": "topological_phase",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "climate_03_b09",
+      "type": "dft_plus_u",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "climate_03_b10",
+      "type": "cobyla_opt",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "climate_03_b11",
+      "type": "spsa_opt",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "climate_03_b12",
+      "type": "adam_opt",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "climate_03_b13",
+      "type": "genetic_algo",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "climate_03_b14",
+      "type": "simulated_annealing",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "climate_03_b15",
+      "type": "pso_opt",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "climate_03_b16",
+      "type": "lbfgs_opt",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "climate_03_b17",
+      "type": "bayesian_opt",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "climate_03_b18",
+      "type": "portfolio_opt",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "climate_03_b19",
+      "type": "linear_prog",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "climate_03_b20",
+      "type": "integer_prog",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "climate_03_b21",
+      "type": "qubo_block",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "climate_03_b22",
+      "type": "grid_search",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "climate_03_b23",
+      "type": "nelder_mead",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "climate_03_b24",
+      "type": "diff_evolution",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "climate_03_b25",
+      "type": "histogram_plot",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "title": "Wildfire response map"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "temperature",
+      "toId": "b02",
+      "toPort": "system",
+      "fid": "b01",
+      "fp": "temperature",
+      "tid": "b02",
+      "tp": "system"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "trajectory",
+      "toId": "b03",
+      "toPort": "geometry",
+      "fid": "b02",
+      "fp": "trajectory",
+      "tid": "b03",
+      "tp": "geometry"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "velocity",
+      "toId": "b04",
+      "toPort": "mesh",
+      "fid": "b03",
+      "fp": "velocity",
+      "tid": "b04",
+      "tp": "mesh"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "displacement",
+      "toId": "b05",
+      "toPort": "geometry",
+      "fid": "b04",
+      "fp": "displacement",
+      "tid": "b05",
+      "tp": "geometry"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "E_field",
+      "toId": "b06",
+      "toPort": "system",
+      "fid": "b05",
+      "fp": "E_field",
+      "tid": "b06",
+      "tp": "system"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "intensity",
+      "toId": "b07",
+      "toPort": "H",
+      "fid": "b06",
+      "fp": "intensity",
+      "tid": "b07",
+      "tp": "H"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "energy",
+      "toId": "b08",
+      "toPort": "H",
+      "fid": "b07",
+      "fp": "energy",
+      "tid": "b08",
+      "tp": "H"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "invariant",
+      "toId": "b09",
+      "toPort": "crystal",
+      "fid": "b08",
+      "fp": "invariant",
+      "tid": "b09",
+      "tp": "crystal"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "band_gap",
+      "toId": "b10",
+      "toPort": "fn",
+      "fid": "b09",
+      "fp": "band_gap",
+      "tid": "b10",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "params",
+      "toId": "b11",
+      "toPort": "fn",
+      "fid": "b10",
+      "fp": "params",
+      "tid": "b11",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "params",
+      "toId": "b12",
+      "toPort": "fn",
+      "fid": "b11",
+      "fp": "params",
+      "tid": "b12",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "params",
+      "toId": "b13",
+      "toPort": "fn",
+      "fid": "b12",
+      "fp": "params",
+      "tid": "b13",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "solution",
+      "toId": "b14",
+      "toPort": "fn",
+      "fid": "b13",
+      "fp": "solution",
+      "tid": "b14",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "solution",
+      "toId": "b15",
+      "toPort": "fn",
+      "fid": "b14",
+      "fp": "solution",
+      "tid": "b15",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "solution",
+      "toId": "b16",
+      "toPort": "fn",
+      "fid": "b15",
+      "fp": "solution",
+      "tid": "b16",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "params",
+      "toId": "b17",
+      "toPort": "fn",
+      "fid": "b16",
+      "fp": "params",
+      "tid": "b17",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "params",
+      "toId": "b18",
+      "toPort": "returns",
+      "fid": "b17",
+      "fp": "params",
+      "tid": "b18",
+      "tp": "returns"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "weights",
+      "toId": "b19",
+      "toPort": "c",
+      "fid": "b18",
+      "fp": "weights",
+      "tid": "b19",
+      "tp": "c"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "x",
+      "toId": "b20",
+      "toPort": "problem",
+      "fid": "b19",
+      "fp": "x",
+      "tid": "b20",
+      "tp": "problem"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "solution",
+      "toId": "b21",
+      "toPort": "Q",
+      "fid": "b20",
+      "fp": "solution",
+      "tid": "b21",
+      "tp": "Q"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "x",
+      "toId": "b22",
+      "toPort": "model",
+      "fid": "b21",
+      "fp": "x",
+      "tid": "b22",
+      "tp": "model"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "best_params",
+      "toId": "b23",
+      "toPort": "fn",
+      "fid": "b22",
+      "fp": "best_params",
+      "tid": "b23",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "params",
+      "toId": "b24",
+      "toPort": "fn",
+      "fid": "b23",
+      "fp": "params",
+      "tid": "b24",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "solution",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "solution",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

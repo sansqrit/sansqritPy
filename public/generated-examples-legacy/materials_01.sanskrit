@@ -1,0 +1,459 @@
+{
+  "id": "materials_01",
+  "uid": "materials_01_813dd832",
+  "title": "Battery materials scan",
+  "cat": "Materials Science",
+  "diff": "B",
+  "desc": "Crystal, band, phonon, and battery blocks explore candidate materials for energy and transport.",
+  "domain": "materials",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "materials_01_b01",
+      "type": "crystal_structure",
+      "x": 60,
+      "y": 60,
+      "params": {
+        "material": "Si",
+        "space_group": "Fd-3m"
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "materials_01_b02",
+      "type": "phonon_block",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "materials_01_b03",
+      "type": "superconductor_block",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "materials_01_b04",
+      "type": "monte_carlo",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "materials_01_b05",
+      "type": "molecular_dynamics",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "materials_01_b06",
+      "type": "fluid_dynamics",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "materials_01_b07",
+      "type": "finite_element",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "materials_01_b08",
+      "type": "em_field_sim",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "materials_01_b09",
+      "type": "optics_sim",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "materials_01_b10",
+      "type": "tensor_network",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "materials_01_b11",
+      "type": "topological_phase",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "materials_01_b12",
+      "type": "dft_plus_u",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "materials_01_b13",
+      "type": "h_gate",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "materials_01_b14",
+      "type": "x_gate",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "materials_01_b15",
+      "type": "y_gate",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "materials_01_b16",
+      "type": "z_gate",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "materials_01_b17",
+      "type": "s_gate",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "materials_01_b18",
+      "type": "sdg_gate",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "materials_01_b19",
+      "type": "t_gate",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "materials_01_b20",
+      "type": "tdg_gate",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "materials_01_b21",
+      "type": "sx_gate",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "materials_01_b22",
+      "type": "rx_gate",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "materials_01_b23",
+      "type": "ry_gate",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "materials_01_b24",
+      "type": "rz_gate",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "materials_01_b25",
+      "type": "table_block",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "title": "Battery materials scan"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "crystal",
+      "toId": "b02",
+      "toPort": "crystal",
+      "fid": "b01",
+      "fp": "crystal",
+      "tid": "b02",
+      "tp": "crystal"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "phonons",
+      "toId": "b03",
+      "toPort": "crystal",
+      "fid": "b02",
+      "fp": "phonons",
+      "tid": "b03",
+      "tp": "crystal"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "Tc",
+      "toId": "b04",
+      "toPort": "hamiltonian",
+      "fid": "b03",
+      "fp": "Tc",
+      "tid": "b04",
+      "tp": "hamiltonian"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "observable",
+      "toId": "b05",
+      "toPort": "system",
+      "fid": "b04",
+      "fp": "observable",
+      "tid": "b05",
+      "tp": "system"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "trajectory",
+      "toId": "b06",
+      "toPort": "geometry",
+      "fid": "b05",
+      "fp": "trajectory",
+      "tid": "b06",
+      "tp": "geometry"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "velocity",
+      "toId": "b07",
+      "toPort": "mesh",
+      "fid": "b06",
+      "fp": "velocity",
+      "tid": "b07",
+      "tp": "mesh"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "displacement",
+      "toId": "b08",
+      "toPort": "geometry",
+      "fid": "b07",
+      "fp": "displacement",
+      "tid": "b08",
+      "tp": "geometry"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "E_field",
+      "toId": "b09",
+      "toPort": "system",
+      "fid": "b08",
+      "fp": "E_field",
+      "tid": "b09",
+      "tp": "system"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "intensity",
+      "toId": "b10",
+      "toPort": "H",
+      "fid": "b09",
+      "fp": "intensity",
+      "tid": "b10",
+      "tp": "H"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "energy",
+      "toId": "b11",
+      "toPort": "H",
+      "fid": "b10",
+      "fp": "energy",
+      "tid": "b11",
+      "tp": "H"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "invariant",
+      "toId": "b12",
+      "toPort": "crystal",
+      "fid": "b11",
+      "fp": "invariant",
+      "tid": "b12",
+      "tp": "crystal"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "band_gap",
+      "toId": "b13",
+      "toPort": "qi",
+      "fid": "b12",
+      "fp": "band_gap",
+      "tid": "b13",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "qo",
+      "toId": "b14",
+      "toPort": "qi",
+      "fid": "b13",
+      "fp": "qo",
+      "tid": "b14",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "qo",
+      "toId": "b15",
+      "toPort": "qi",
+      "fid": "b14",
+      "fp": "qo",
+      "tid": "b15",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "qo",
+      "toId": "b16",
+      "toPort": "qi",
+      "fid": "b15",
+      "fp": "qo",
+      "tid": "b16",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "qo",
+      "toId": "b17",
+      "toPort": "qi",
+      "fid": "b16",
+      "fp": "qo",
+      "tid": "b17",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "qo",
+      "toId": "b18",
+      "toPort": "qi",
+      "fid": "b17",
+      "fp": "qo",
+      "tid": "b18",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "qo",
+      "toId": "b19",
+      "toPort": "qi",
+      "fid": "b18",
+      "fp": "qo",
+      "tid": "b19",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "qo",
+      "toId": "b20",
+      "toPort": "qi",
+      "fid": "b19",
+      "fp": "qo",
+      "tid": "b20",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "qo",
+      "toId": "b21",
+      "toPort": "qi",
+      "fid": "b20",
+      "fp": "qo",
+      "tid": "b21",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "qo",
+      "toId": "b22",
+      "toPort": "qi",
+      "fid": "b21",
+      "fp": "qo",
+      "tid": "b22",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "qo",
+      "toId": "b23",
+      "toPort": "qi",
+      "fid": "b22",
+      "fp": "qo",
+      "tid": "b23",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "qo",
+      "toId": "b24",
+      "toPort": "qi",
+      "fid": "b23",
+      "fp": "qo",
+      "tid": "b24",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "qo",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "qo",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

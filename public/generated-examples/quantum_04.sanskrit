@@ -1,0 +1,638 @@
+{
+  "id": "quantum_04",
+  "uid": "uid_quantum_04",
+  "title": "Quantum Circuits Example 4",
+  "cat": "Quantum",
+  "diff": "Expert",
+  "desc": "Hardware-style quantum circuits with register setup, gate stacks, and state visualisation.",
+  "domain": "Quantum Circuits",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "quantum_04_b01",
+      "type": "q_register",
+      "x": 80,
+      "y": 180,
+      "params": {
+        "n_qubits": 4,
+        "name": "q",
+        "initial_state": "|0...0⟩",
+        "log_on_create": true,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "quantum_04_b02",
+      "type": "ry_gate",
+      "x": 240,
+      "y": 208,
+      "params": {
+        "target": 0,
+        "theta": 0.314,
+        "vqe_param": false,
+        "param_name": "θ₀",
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b03",
+      "uid": "quantum_04_b03",
+      "type": "rz_gate",
+      "x": 400,
+      "y": 180,
+      "params": {
+        "target": 0,
+        "theta": 0.314,
+        "vqe_param": false,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b04",
+      "uid": "quantum_04_b04",
+      "type": "phase_gate",
+      "x": 560,
+      "y": 208,
+      "params": {
+        "target": 0,
+        "theta": 0.314,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b05",
+      "uid": "quantum_04_b05",
+      "type": "u3_gate",
+      "x": 720,
+      "y": 180,
+      "params": {
+        "target": 0,
+        "theta": 0.314,
+        "phi": 0.157,
+        "lambda": 0,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b06",
+      "uid": "quantum_04_b06",
+      "type": "barrier_gate",
+      "x": 880,
+      "y": 208,
+      "params": {
+        "label": "Barrier",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b07",
+      "uid": "quantum_04_b07",
+      "type": "reset_gate",
+      "x": 1040,
+      "y": 180,
+      "params": {
+        "target": 0,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b08",
+      "uid": "quantum_04_b08",
+      "type": "delay_gate",
+      "x": 1200,
+      "y": 208,
+      "params": {
+        "target": 0,
+        "duration": 20,
+        "unit": "ns",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b09",
+      "uid": "quantum_04_b09",
+      "type": "custom_unitary",
+      "x": 1360,
+      "y": 180,
+      "params": {
+        "target": 0,
+        "matrix": "[[1,0],[0,1]]",
+        "validate": true,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b10",
+      "uid": "quantum_04_b10",
+      "type": "pauli_x_half",
+      "x": 1520,
+      "y": 208,
+      "params": {
+        "target": 0,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b11",
+      "uid": "quantum_04_b11",
+      "type": "qft_block",
+      "x": 1680,
+      "y": 180,
+      "params": {
+        "register": "q",
+        "n_qubits": 4,
+        "inverse": false,
+        "swap_bits": true,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b12",
+      "uid": "quantum_04_b12",
+      "type": "qdrift_block",
+      "x": 1840,
+      "y": 208,
+      "params": {
+        "hamiltonian_var": "H",
+        "register": "q",
+        "time": 1,
+        "n_samples": 100,
+        "output_var": "qdrift",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b13",
+      "uid": "quantum_04_b13",
+      "type": "qsim_block",
+      "x": 2000,
+      "y": 180,
+      "params": {
+        "hamiltonian_var": "H",
+        "register": "q",
+        "time": 1.0,
+        "method": "Trotter-2",
+        "error": 0.001,
+        "output_var": "qsim",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b14",
+      "uid": "quantum_04_b14",
+      "type": "qram_block",
+      "x": 2160,
+      "y": 208,
+      "params": {
+        "data_var": "data",
+        "architecture": "bucket_brigade",
+        "n_address": 4,
+        "output_var": "qram",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b15",
+      "uid": "quantum_04_b15",
+      "type": "quant_kernel",
+      "x": 2320,
+      "y": 180,
+      "params": {
+        "X_var": "X",
+        "feature_map": "zz",
+        "n_qubits": 4,
+        "reps": 2,
+        "output_var": "kernel",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b16",
+      "uid": "quantum_04_b16",
+      "type": "shadow_tomo",
+      "x": 2480,
+      "y": 208,
+      "params": {
+        "register": "q",
+        "shadow_type": "Pauli",
+        "n_shadows": 100,
+        "observables": "[\"Z0\",\"Z1\",\"Z0Z1\"]",
+        "output_var": "shadows",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b17",
+      "uid": "quantum_04_b17",
+      "type": "amp_est_block",
+      "x": 2640,
+      "y": 180,
+      "params": {
+        "n_eval": 5,
+        "method": "IQAE",
+        "output_var": "amp_est",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b18",
+      "uid": "quantum_04_b18",
+      "type": "qpe_block",
+      "x": 2800,
+      "y": 208,
+      "params": {
+        "n_precision": 4,
+        "shots": 1000,
+        "output_var": "qpe",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b19",
+      "uid": "quantum_04_b19",
+      "type": "h_gate",
+      "x": 2960,
+      "y": 180,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b20",
+      "uid": "quantum_04_b20",
+      "type": "x_gate",
+      "x": 3120,
+      "y": 208,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b21",
+      "uid": "quantum_04_b21",
+      "type": "y_gate",
+      "x": 3280,
+      "y": 180,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b22",
+      "uid": "quantum_04_b22",
+      "type": "z_gate",
+      "x": 3440,
+      "y": 208,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b23",
+      "uid": "quantum_04_b23",
+      "type": "s_gate",
+      "x": 3600,
+      "y": 180,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b24",
+      "uid": "quantum_04_b24",
+      "type": "sdg_gate",
+      "x": 3760,
+      "y": 208,
+      "params": {
+        "target": 0,
+        "noise_model": "none",
+        "error_rate": 0.001,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b25",
+      "uid": "quantum_04_b25",
+      "type": "console_log_block",
+      "x": 3920,
+      "y": 180,
+      "params": {
+        "value_var": "q",
+        "format": "json",
+        "prefix": "Q::",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "ro",
+      "toId": "b02",
+      "toPort": "qi",
+      "fid": "b01",
+      "fp": "ro",
+      "tid": "b02",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "qo",
+      "toId": "b03",
+      "toPort": "qi",
+      "fid": "b02",
+      "fp": "qo",
+      "tid": "b03",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "qo",
+      "toId": "b04",
+      "toPort": "qi",
+      "fid": "b03",
+      "fp": "qo",
+      "tid": "b04",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "qo",
+      "toId": "b05",
+      "toPort": "qi",
+      "fid": "b04",
+      "fp": "qo",
+      "tid": "b05",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "qo",
+      "toId": "b06",
+      "toPort": "ri",
+      "fid": "b05",
+      "fp": "qo",
+      "tid": "b06",
+      "tp": "ri"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "ro",
+      "toId": "b07",
+      "toPort": "qi",
+      "fid": "b06",
+      "fp": "ro",
+      "tid": "b07",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "qo",
+      "toId": "b08",
+      "toPort": "qi",
+      "fid": "b07",
+      "fp": "qo",
+      "tid": "b08",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "qo",
+      "toId": "b09",
+      "toPort": "qi",
+      "fid": "b08",
+      "fp": "qo",
+      "tid": "b09",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "qo",
+      "toId": "b10",
+      "toPort": "qi",
+      "fid": "b09",
+      "fp": "qo",
+      "tid": "b10",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "qo",
+      "toId": "b11",
+      "toPort": "ri",
+      "fid": "b10",
+      "fp": "qo",
+      "tid": "b11",
+      "tp": "ri"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "ro",
+      "toId": "b12",
+      "toPort": "ri",
+      "fid": "b11",
+      "fp": "ro",
+      "tid": "b12",
+      "tp": "ri"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "ro",
+      "toId": "b13",
+      "toPort": "ri",
+      "fid": "b12",
+      "fp": "ro",
+      "tid": "b13",
+      "tp": "ri"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "ro",
+      "toId": "b14",
+      "toPort": "data",
+      "fid": "b13",
+      "fp": "ro",
+      "tid": "b14",
+      "tp": "data"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "qdata",
+      "toId": "b15",
+      "toPort": "X",
+      "fid": "b14",
+      "fp": "qdata",
+      "tid": "b15",
+      "tp": "X"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "kernel_matrix",
+      "toId": "b16",
+      "toPort": "ri",
+      "fid": "b15",
+      "fp": "kernel_matrix",
+      "tid": "b16",
+      "tp": "ri"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "estimates",
+      "toId": "b17",
+      "toPort": "oracle",
+      "fid": "b16",
+      "fp": "estimates",
+      "tid": "b17",
+      "tp": "oracle"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "amp",
+      "toId": "b18",
+      "toPort": "state",
+      "fid": "b17",
+      "fp": "amp",
+      "tid": "b18",
+      "tp": "state"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "phase",
+      "toId": "b19",
+      "toPort": "qi",
+      "fid": "b18",
+      "fp": "phase",
+      "tid": "b19",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "qo",
+      "toId": "b20",
+      "toPort": "qi",
+      "fid": "b19",
+      "fp": "qo",
+      "tid": "b20",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "qo",
+      "toId": "b21",
+      "toPort": "qi",
+      "fid": "b20",
+      "fp": "qo",
+      "tid": "b21",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "qo",
+      "toId": "b22",
+      "toPort": "qi",
+      "fid": "b21",
+      "fp": "qo",
+      "tid": "b22",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "qo",
+      "toId": "b23",
+      "toPort": "qi",
+      "fid": "b22",
+      "fp": "qo",
+      "tid": "b23",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "qo",
+      "toId": "b24",
+      "toPort": "qi",
+      "fid": "b23",
+      "fp": "qo",
+      "tid": "b24",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "qo",
+      "toId": "b25",
+      "toPort": "value",
+      "fid": "b24",
+      "fp": "qo",
+      "tid": "b25",
+      "tp": "value"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

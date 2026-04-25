@@ -1,0 +1,456 @@
+{
+  "id": "climate_04",
+  "uid": "climate_04_eb82b6aa",
+  "title": "Grid renewables mix",
+  "cat": "Climate",
+  "diff": "I",
+  "desc": "Weather, emissions, and hydrology inputs are transformed into actionable climate risk summaries.",
+  "domain": "climate",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "climate_04_b01",
+      "type": "co2_model",
+      "x": 60,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b02",
+      "uid": "climate_04_b02",
+      "type": "optics_sim",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "climate_04_b03",
+      "type": "tensor_network",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "climate_04_b04",
+      "type": "topological_phase",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "climate_04_b05",
+      "type": "dft_plus_u",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "climate_04_b06",
+      "type": "cobyla_opt",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "climate_04_b07",
+      "type": "spsa_opt",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "climate_04_b08",
+      "type": "adam_opt",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "climate_04_b09",
+      "type": "genetic_algo",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "climate_04_b10",
+      "type": "simulated_annealing",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "climate_04_b11",
+      "type": "pso_opt",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "climate_04_b12",
+      "type": "lbfgs_opt",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "climate_04_b13",
+      "type": "bayesian_opt",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "climate_04_b14",
+      "type": "portfolio_opt",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "climate_04_b15",
+      "type": "linear_prog",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "climate_04_b16",
+      "type": "integer_prog",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "climate_04_b17",
+      "type": "qubo_block",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "climate_04_b18",
+      "type": "grid_search",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "climate_04_b19",
+      "type": "nelder_mead",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "climate_04_b20",
+      "type": "diff_evolution",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "climate_04_b21",
+      "type": "type_cast",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "climate_04_b22",
+      "type": "debug_break",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "climate_04_b23",
+      "type": "parallel_map",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "climate_04_b24",
+      "type": "cache_block",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "climate_04_b25",
+      "type": "console_log_block",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "label": "Grid renewables mix"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "co2_ppm",
+      "toId": "b02",
+      "toPort": "system",
+      "fid": "b01",
+      "fp": "co2_ppm",
+      "tid": "b02",
+      "tp": "system"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "intensity",
+      "toId": "b03",
+      "toPort": "H",
+      "fid": "b02",
+      "fp": "intensity",
+      "tid": "b03",
+      "tp": "H"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "energy",
+      "toId": "b04",
+      "toPort": "H",
+      "fid": "b03",
+      "fp": "energy",
+      "tid": "b04",
+      "tp": "H"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "invariant",
+      "toId": "b05",
+      "toPort": "crystal",
+      "fid": "b04",
+      "fp": "invariant",
+      "tid": "b05",
+      "tp": "crystal"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "band_gap",
+      "toId": "b06",
+      "toPort": "fn",
+      "fid": "b05",
+      "fp": "band_gap",
+      "tid": "b06",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "params",
+      "toId": "b07",
+      "toPort": "fn",
+      "fid": "b06",
+      "fp": "params",
+      "tid": "b07",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "params",
+      "toId": "b08",
+      "toPort": "fn",
+      "fid": "b07",
+      "fp": "params",
+      "tid": "b08",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "params",
+      "toId": "b09",
+      "toPort": "fn",
+      "fid": "b08",
+      "fp": "params",
+      "tid": "b09",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "solution",
+      "toId": "b10",
+      "toPort": "fn",
+      "fid": "b09",
+      "fp": "solution",
+      "tid": "b10",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "solution",
+      "toId": "b11",
+      "toPort": "fn",
+      "fid": "b10",
+      "fp": "solution",
+      "tid": "b11",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "solution",
+      "toId": "b12",
+      "toPort": "fn",
+      "fid": "b11",
+      "fp": "solution",
+      "tid": "b12",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "params",
+      "toId": "b13",
+      "toPort": "fn",
+      "fid": "b12",
+      "fp": "params",
+      "tid": "b13",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "params",
+      "toId": "b14",
+      "toPort": "returns",
+      "fid": "b13",
+      "fp": "params",
+      "tid": "b14",
+      "tp": "returns"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "weights",
+      "toId": "b15",
+      "toPort": "c",
+      "fid": "b14",
+      "fp": "weights",
+      "tid": "b15",
+      "tp": "c"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "x",
+      "toId": "b16",
+      "toPort": "problem",
+      "fid": "b15",
+      "fp": "x",
+      "tid": "b16",
+      "tp": "problem"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "solution",
+      "toId": "b17",
+      "toPort": "Q",
+      "fid": "b16",
+      "fp": "solution",
+      "tid": "b17",
+      "tp": "Q"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "x",
+      "toId": "b18",
+      "toPort": "model",
+      "fid": "b17",
+      "fp": "x",
+      "tid": "b18",
+      "tp": "model"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "best_params",
+      "toId": "b19",
+      "toPort": "fn",
+      "fid": "b18",
+      "fp": "best_params",
+      "tid": "b19",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "params",
+      "toId": "b20",
+      "toPort": "fn",
+      "fid": "b19",
+      "fp": "params",
+      "tid": "b20",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "solution",
+      "toId": "b21",
+      "toPort": "ci",
+      "fid": "b20",
+      "fp": "solution",
+      "tid": "b21",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "result",
+      "toId": "b22",
+      "toPort": "ai",
+      "fid": "b21",
+      "fp": "result",
+      "tid": "b22",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "ao",
+      "toId": "b23",
+      "toPort": "fn",
+      "fid": "b22",
+      "fp": "ao",
+      "tid": "b23",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "results",
+      "toId": "b24",
+      "toPort": "fn",
+      "fid": "b23",
+      "fp": "results",
+      "tid": "b24",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "result",
+      "toId": "b25",
+      "toPort": "value",
+      "fid": "b24",
+      "fp": "result",
+      "tid": "b25",
+      "tp": "value"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

@@ -1,0 +1,658 @@
+{
+  "id": "data_05",
+  "uid": "uid_data_05",
+  "title": "Enterprise Data Engineering Example 5",
+  "cat": "ETL",
+  "diff": "Research",
+  "desc": "Local file ingestion, cleansing, feature prep, and reporting for tabular operational data.",
+  "domain": "Enterprise Data Engineering",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "data_05_b01",
+      "type": "parquet_reader",
+      "x": 80,
+      "y": 180,
+      "params": {
+        "file_path": "local/customer_ops_5.parquet",
+        "columns": "",
+        "output_var": "df",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "data_05_b02",
+      "type": "type_cast",
+      "x": 240,
+      "y": 208,
+      "params": {
+        "input_var": "x",
+        "to_type": "float",
+        "output_var": "casted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b03",
+      "uid": "data_05_b03",
+      "type": "progress_bar",
+      "x": 400,
+      "y": 180,
+      "params": {
+        "iterable_var": "items",
+        "description": "Processing",
+        "leave": true,
+        "output_var": "item",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b04",
+      "uid": "data_05_b04",
+      "type": "data_version",
+      "x": 560,
+      "y": 208,
+      "params": {
+        "data_var": "data",
+        "system": "DVC",
+        "version_tag": "v1.0.0",
+        "message": "Add training data",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b05",
+      "uid": "data_05_b05",
+      "type": "conditional_skip",
+      "x": 720,
+      "y": 180,
+      "params": {
+        "condition": "env == \"prod\"",
+        "log_skip": true,
+        "skip_message": "Skipping: converged",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b06",
+      "uid": "data_05_b06",
+      "type": "format_number",
+      "x": 880,
+      "y": 208,
+      "params": {
+        "value_var": "value",
+        "format": "auto",
+        "precision": 4,
+        "output_var": "formatted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b07",
+      "uid": "data_05_b07",
+      "type": "feature_eng",
+      "x": 1040,
+      "y": 180,
+      "params": {
+        "X_var": "X",
+        "steps": "[{\"type\":\"StandardScaler\"},{\"type\":\"OneHotEncoder\"}]",
+        "output_var": "features",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b08",
+      "uid": "data_05_b08",
+      "type": "dimensionality_red",
+      "x": 1200,
+      "y": 208,
+      "params": {
+        "X_var": "X",
+        "method": "pca",
+        "n_components": 3,
+        "output_var": "reduced",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b09",
+      "uid": "data_05_b09",
+      "type": "transfer_learn",
+      "x": 1360,
+      "y": 180,
+      "params": {
+        "pretrained_model": "resnet50",
+        "X_train": "X_train",
+        "y_train": "y_train",
+        "strategy": "LoRA",
+        "epochs": 20,
+        "lr": 0.0001,
+        "output_model": "ft_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b10",
+      "uid": "data_05_b10",
+      "type": "meta_learning",
+      "x": 1520,
+      "y": 208,
+      "params": {
+        "tasks_var": "tasks",
+        "algorithm": "MAML",
+        "n_shot": 5,
+        "n_way": 5,
+        "output_model": "meta_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b11",
+      "uid": "data_05_b11",
+      "type": "federated_learn",
+      "x": 1680,
+      "y": 180,
+      "params": {
+        "client_data": "[\"client_0\",\"client_1\",\"client_2\"]",
+        "algorithm": "FedAvg",
+        "rounds": 10,
+        "local_epochs": 5,
+        "output_model": "fl_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b12",
+      "uid": "data_05_b12",
+      "type": "diffusion_model",
+      "x": 1840,
+      "y": 208,
+      "params": {
+        "data_var": "data",
+        "architecture": "DDPM",
+        "timesteps": 1000,
+        "epochs": 500,
+        "output_model": "diffusion_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b13",
+      "uid": "data_05_b13",
+      "type": "filter_block",
+      "x": 2000,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "condition": "row.score > 0.5",
+        "output_var": "filtered",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b14",
+      "uid": "data_05_b14",
+      "type": "map_transform",
+      "x": 2160,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "transform_expr": "x * 1.05",
+        "output_var": "mapped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b15",
+      "uid": "data_05_b15",
+      "type": "sort_block",
+      "x": 2320,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "key_expr": "x",
+        "descending": false,
+        "output_var": "sorted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b16",
+      "uid": "data_05_b16",
+      "type": "groupby_block",
+      "x": 2480,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "key_fn": "x[\"category\"]",
+        "agg": "list",
+        "output_var": "grouped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b17",
+      "uid": "data_05_b17",
+      "type": "pivot_block",
+      "x": 2640,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "index": "region",
+        "columns": "product",
+        "values": "revenue",
+        "aggfunc": "sum",
+        "output_var": "pivoted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b18",
+      "uid": "data_05_b18",
+      "type": "window_transform",
+      "x": 2800,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "window_size": 7,
+        "agg": "mean",
+        "center": false,
+        "output_var": "windowed",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b19",
+      "uid": "data_05_b19",
+      "type": "resample_block",
+      "x": 2960,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "freq": "1h",
+        "method": "mean",
+        "output_var": "resampled",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b20",
+      "uid": "data_05_b20",
+      "type": "encode_features",
+      "x": 3120,
+      "y": 208,
+      "params": {
+        "X_var": "X",
+        "col": "category",
+        "method": "onehot",
+        "output_var": "encoded",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b21",
+      "uid": "data_05_b21",
+      "type": "missing_impute",
+      "x": 3280,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "strategy": "median",
+        "fill_value": "0",
+        "output_var": "imputed",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b22",
+      "uid": "data_05_b22",
+      "type": "normalize_block",
+      "x": 3440,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "scaler": "StandardScaler",
+        "output_var": "normalised",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b23",
+      "uid": "data_05_b23",
+      "type": "explode_block",
+      "x": 3600,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "column": "tags",
+        "flatten_json": false,
+        "output_var": "exploded",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b24",
+      "uid": "data_05_b24",
+      "type": "binning_block",
+      "x": 3760,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "column": "age",
+        "strategy": "quantile",
+        "n_bins": 5,
+        "output_var": "binned",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b25",
+      "uid": "data_05_b25",
+      "type": "heatmap_plot",
+      "x": 3920,
+      "y": 180,
+      "params": {
+        "matrix_var": "df",
+        "title": "Data Heatmap 5",
+        "colormap": "viridis",
+        "annotate": false,
+        "cluster": true,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "dataframe",
+      "toId": "b02",
+      "toPort": "ci",
+      "fid": "b01",
+      "fp": "dataframe",
+      "tid": "b02",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "result",
+      "toId": "b03",
+      "toPort": "iterable",
+      "fid": "b02",
+      "fp": "result",
+      "tid": "b03",
+      "tp": "iterable"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "item",
+      "toId": "b04",
+      "toPort": "data",
+      "fid": "b03",
+      "fp": "item",
+      "tid": "b04",
+      "tp": "data"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "version_id",
+      "toId": "b05",
+      "toPort": "condition",
+      "fid": "b04",
+      "fp": "version_id",
+      "tid": "b05",
+      "tp": "condition"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "pass",
+      "toId": "b06",
+      "toPort": "value",
+      "fid": "b05",
+      "fp": "pass",
+      "tid": "b06",
+      "tp": "value"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "string",
+      "toId": "b07",
+      "toPort": "X",
+      "fid": "b06",
+      "fp": "string",
+      "tid": "b07",
+      "tp": "X"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "features",
+      "toId": "b08",
+      "toPort": "X",
+      "fid": "b07",
+      "fp": "features",
+      "tid": "b08",
+      "tp": "X"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "embedding",
+      "toId": "b09",
+      "toPort": "data",
+      "fid": "b08",
+      "fp": "embedding",
+      "tid": "b09",
+      "tp": "data"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "model",
+      "toId": "b10",
+      "toPort": "tasks",
+      "fid": "b09",
+      "fp": "model",
+      "tid": "b10",
+      "tp": "tasks"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "model",
+      "toId": "b11",
+      "toPort": "clients",
+      "fid": "b10",
+      "fp": "model",
+      "tid": "b11",
+      "tp": "clients"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "model",
+      "toId": "b12",
+      "toPort": "data",
+      "fid": "b11",
+      "fp": "model",
+      "tid": "b12",
+      "tp": "data"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "model",
+      "toId": "b13",
+      "toPort": "ai",
+      "fid": "b12",
+      "fp": "model",
+      "tid": "b13",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "filtered",
+      "toId": "b14",
+      "toPort": "ai",
+      "fid": "b13",
+      "fp": "filtered",
+      "tid": "b14",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "result",
+      "toId": "b15",
+      "toPort": "ai",
+      "fid": "b14",
+      "fp": "result",
+      "tid": "b15",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "sorted",
+      "toId": "b16",
+      "toPort": "ai",
+      "fid": "b15",
+      "fp": "sorted",
+      "tid": "b16",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "grouped",
+      "toId": "b17",
+      "toPort": "ai",
+      "fid": "b16",
+      "fp": "grouped",
+      "tid": "b17",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "pivot",
+      "toId": "b18",
+      "toPort": "data",
+      "fid": "b17",
+      "fp": "pivot",
+      "tid": "b18",
+      "tp": "data"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "result",
+      "toId": "b19",
+      "toPort": "data",
+      "fid": "b18",
+      "fp": "result",
+      "tid": "b19",
+      "tp": "data"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "result",
+      "toId": "b20",
+      "toPort": "X",
+      "fid": "b19",
+      "fp": "result",
+      "tid": "b20",
+      "tp": "X"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "X_encoded",
+      "toId": "b21",
+      "toPort": "data",
+      "fid": "b20",
+      "fp": "X_encoded",
+      "tid": "b21",
+      "tp": "data"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "imputed",
+      "toId": "b22",
+      "toPort": "X",
+      "fid": "b21",
+      "fp": "imputed",
+      "tid": "b22",
+      "tp": "X"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "scaled",
+      "toId": "b23",
+      "toPort": "data",
+      "fid": "b22",
+      "fp": "scaled",
+      "tid": "b23",
+      "tp": "data"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "result",
+      "toId": "b24",
+      "toPort": "data",
+      "fid": "b23",
+      "fp": "result",
+      "tid": "b24",
+      "tp": "data"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "binned",
+      "toId": "b25",
+      "toPort": "matrix",
+      "fid": "b24",
+      "fp": "binned",
+      "tid": "b25",
+      "tp": "matrix"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

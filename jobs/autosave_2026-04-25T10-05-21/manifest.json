@@ -1,0 +1,24 @@
+{
+  "sessionId": "autosave_2026-04-25T10-05-21",
+  "savedAt": "2026-04-25T10:05:26.395Z",
+  "activeTab": "t0",
+  "tabCount": 2,
+  "tabs": [
+    {
+      "id": "t0",
+      "label": "Canvas 1",
+      "active": true,
+      "file": "01_t0_Canvas_1.json",
+      "blocks": 5,
+      "wires": 4
+    },
+    {
+      "id": "_example",
+      "label": "📋 Example",
+      "active": false,
+      "file": "02__example____Example.json",
+      "blocks": 24,
+      "wires": 21
+    }
+  ]
+}

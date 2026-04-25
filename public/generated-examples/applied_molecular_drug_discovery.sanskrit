@@ -1,0 +1,20 @@
+{
+  "id": "applied_molecular_drug_discovery",
+  "title": "Applied Molecular Drug Discovery",
+  "cat": "Applied Science",
+  "diff": "Advanced",
+  "desc": "Dock ligands, rescore binding affinity, check toxicity, and rank lead candidates.",
+  "blocks": [
+    {"id": "dock", "type": "applied_molecular_docking", "x": 80, "y": 160, "params": {"method": "GNINA CNN scoring", "sample_size": 12, "confidence_target": 0.86}},
+    {"id": "aff", "type": "applied_small_molecule_binding_affinity", "x": 360, "y": 160, "params": {"method": "Docking plus MM-GBSA", "sample_size": 12, "confidence_target": 0.88}},
+    {"id": "tox", "type": "applied_drug_toxicity_prediction", "x": 640, "y": 160, "params": {"method": "Graph neural tox model", "objective": "minimize toxicity risk", "sample_size": 12}},
+    {"id": "bbb", "type": "applied_blood_brain_barrier_permeability", "x": 920, "y": 160, "params": {"method": "QSAR BBB model", "objective": "maximize CNS probability", "sample_size": 12}},
+    {"id": "tbl", "type": "table_display", "x": 1200, "y": 160, "params": {"title": "Ranked CNS Lead Candidates", "page_size": 25}}
+  ],
+  "wires": [
+    {"fromId": "dock", "fromPort": "dataset", "toId": "aff", "toPort": "dataset"},
+    {"fromId": "aff", "fromPort": "dataset", "toId": "tox", "toPort": "dataset"},
+    {"fromId": "tox", "fromPort": "dataset", "toId": "bbb", "toPort": "dataset"},
+    {"fromId": "bbb", "fromPort": "dataset", "toId": "tbl", "toPort": "dataset"}
+  ]
+}

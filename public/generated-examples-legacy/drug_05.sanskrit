@@ -1,0 +1,458 @@
+{
+  "id": "drug_05",
+  "uid": "drug_05_3200be87",
+  "title": "Retrosynthesis planning",
+  "cat": "Chemistry",
+  "diff": "B",
+  "desc": "Cheminformatics, docking, ADMET, and lead optimization blocks model a realistic discovery funnel.",
+  "domain": "drug",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "drug_05_b01",
+      "type": "molecule_init",
+      "x": 60,
+      "y": 60,
+      "params": {
+        "molecule": "H2O"
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "drug_05_b02",
+      "type": "gfn_xtb",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "drug_05_b03",
+      "type": "fp_similarity_screen",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "drug_05_b04",
+      "type": "scaffold_decomp",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "drug_05_b05",
+      "type": "retrosynthesis",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "drug_05_b06",
+      "type": "pharmacophore",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "drug_05_b07",
+      "type": "mmpdb_block",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "drug_05_b08",
+      "type": "solubility_pred",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "drug_05_b09",
+      "type": "molecular_docking",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "drug_05_b10",
+      "type": "admet_block",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "drug_05_b11",
+      "type": "virtual_screen",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "drug_05_b12",
+      "type": "qsar_model",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "drug_05_b13",
+      "type": "lead_opt",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "drug_05_b14",
+      "type": "de_novo_design",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "drug_05_b15",
+      "type": "toxicity_block",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "drug_05_b16",
+      "type": "binding_free_energy",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "drug_05_b17",
+      "type": "monte_carlo",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "drug_05_b18",
+      "type": "molecular_dynamics",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "drug_05_b19",
+      "type": "fluid_dynamics",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "drug_05_b20",
+      "type": "finite_element",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "drug_05_b21",
+      "type": "em_field_sim",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "drug_05_b22",
+      "type": "optics_sim",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "drug_05_b23",
+      "type": "tensor_network",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "drug_05_b24",
+      "type": "topological_phase",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "drug_05_b25",
+      "type": "heatmap_plot",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "title": "Retrosynthesis planning"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "mol",
+      "toId": "b02",
+      "toPort": "mol",
+      "fid": "b01",
+      "fp": "mol",
+      "tid": "b02",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "energy",
+      "toId": "b03",
+      "toPort": "query",
+      "fid": "b02",
+      "fp": "energy",
+      "tid": "b03",
+      "tp": "query"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "hits",
+      "toId": "b04",
+      "toPort": "mol",
+      "fid": "b03",
+      "fp": "hits",
+      "tid": "b04",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "scaffold",
+      "toId": "b05",
+      "toPort": "target",
+      "fid": "b04",
+      "fp": "scaffold",
+      "tid": "b05",
+      "tp": "target"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "routes",
+      "toId": "b06",
+      "toPort": "actives",
+      "fid": "b05",
+      "fp": "routes",
+      "tid": "b06",
+      "tp": "actives"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "model",
+      "toId": "b07",
+      "toPort": "series",
+      "fid": "b06",
+      "fp": "model",
+      "tid": "b07",
+      "tp": "series"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "transforms",
+      "toId": "b08",
+      "toPort": "mol",
+      "fid": "b07",
+      "fp": "transforms",
+      "tid": "b08",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "logS",
+      "toId": "b09",
+      "toPort": "ligand",
+      "fid": "b08",
+      "fp": "logS",
+      "tid": "b09",
+      "tp": "ligand"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "poses",
+      "toId": "b10",
+      "toPort": "mol",
+      "fid": "b09",
+      "fp": "poses",
+      "tid": "b10",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "admet",
+      "toId": "b11",
+      "toPort": "target",
+      "fid": "b10",
+      "fp": "admet",
+      "tid": "b11",
+      "tp": "target"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "hits",
+      "toId": "b12",
+      "toPort": "data",
+      "fid": "b11",
+      "fp": "hits",
+      "tid": "b12",
+      "tp": "data"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "model",
+      "toId": "b13",
+      "toPort": "scaffold",
+      "fid": "b12",
+      "fp": "model",
+      "tid": "b13",
+      "tp": "scaffold"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "leads",
+      "toId": "b14",
+      "toPort": "target",
+      "fid": "b13",
+      "fp": "leads",
+      "tid": "b14",
+      "tp": "target"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "molecules",
+      "toId": "b15",
+      "toPort": "mol",
+      "fid": "b14",
+      "fp": "molecules",
+      "tid": "b15",
+      "tp": "mol"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "toxicity",
+      "toId": "b16",
+      "toPort": "protein",
+      "fid": "b15",
+      "fp": "toxicity",
+      "tid": "b16",
+      "tp": "protein"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "delta_g",
+      "toId": "b17",
+      "toPort": "hamiltonian",
+      "fid": "b16",
+      "fp": "delta_g",
+      "tid": "b17",
+      "tp": "hamiltonian"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "observable",
+      "toId": "b18",
+      "toPort": "system",
+      "fid": "b17",
+      "fp": "observable",
+      "tid": "b18",
+      "tp": "system"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "trajectory",
+      "toId": "b19",
+      "toPort": "geometry",
+      "fid": "b18",
+      "fp": "trajectory",
+      "tid": "b19",
+      "tp": "geometry"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "velocity",
+      "toId": "b20",
+      "toPort": "mesh",
+      "fid": "b19",
+      "fp": "velocity",
+      "tid": "b20",
+      "tp": "mesh"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "displacement",
+      "toId": "b21",
+      "toPort": "geometry",
+      "fid": "b20",
+      "fp": "displacement",
+      "tid": "b21",
+      "tp": "geometry"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "E_field",
+      "toId": "b22",
+      "toPort": "system",
+      "fid": "b21",
+      "fp": "E_field",
+      "tid": "b22",
+      "tp": "system"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "intensity",
+      "toId": "b23",
+      "toPort": "H",
+      "fid": "b22",
+      "fp": "intensity",
+      "tid": "b23",
+      "tp": "H"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "energy",
+      "toId": "b24",
+      "toPort": "H",
+      "fid": "b23",
+      "fp": "energy",
+      "tid": "b24",
+      "tp": "H"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "invariant",
+      "toId": "b25",
+      "toPort": "matrix",
+      "fid": "b24",
+      "fp": "invariant",
+      "tid": "b25",
+      "tp": "matrix"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

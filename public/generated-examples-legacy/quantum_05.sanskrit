@@ -1,0 +1,456 @@
+{
+  "id": "quantum_05",
+  "uid": "quantum_05_8a551e8d",
+  "title": "QAOA max-cut study",
+  "cat": "Quantum",
+  "diff": "B",
+  "desc": "Registers, gates, measurement, quantum algorithms, and error correction are chained into a robust experiment.",
+  "domain": "quantum",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "quantum_05_b01",
+      "type": "shor_block",
+      "x": 60,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b02",
+      "uid": "quantum_05_b02",
+      "type": "cy_gate",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "quantum_05_b03",
+      "type": "swap_gate",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "quantum_05_b04",
+      "type": "iswap_gate",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "quantum_05_b05",
+      "type": "cp_gate",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "quantum_05_b06",
+      "type": "crz_gate",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "quantum_05_b07",
+      "type": "rzz_gate",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "quantum_05_b08",
+      "type": "ms_gate",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "quantum_05_b09",
+      "type": "ecr_gate",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "quantum_05_b10",
+      "type": "toffoli_gate",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "quantum_05_b11",
+      "type": "fredkin_gate",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "quantum_05_b12",
+      "type": "barrier_gate",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "quantum_05_b13",
+      "type": "reset_gate",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "quantum_05_b14",
+      "type": "delay_gate",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "quantum_05_b15",
+      "type": "custom_unitary",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "quantum_05_b16",
+      "type": "givens_gate",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "quantum_05_b17",
+      "type": "pauli_x_half",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "quantum_05_b18",
+      "type": "rzx_gate",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "quantum_05_b19",
+      "type": "rxx_gate",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "quantum_05_b20",
+      "type": "ryy_gate",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "quantum_05_b21",
+      "type": "sqiswap_gate",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "quantum_05_b22",
+      "type": "dcx_gate",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "quantum_05_b23",
+      "type": "xx_minus_yy",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "quantum_05_b24",
+      "type": "xx_plus_yy",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "quantum_05_b25",
+      "type": "structured_log",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "label": "QAOA max-cut study"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "factors",
+      "toId": "b02",
+      "toPort": "c",
+      "fid": "b01",
+      "fp": "factors",
+      "tid": "b02",
+      "tp": "c"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "co",
+      "toId": "b03",
+      "toPort": "a",
+      "fid": "b02",
+      "fp": "co",
+      "tid": "b03",
+      "tp": "a"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "ao",
+      "toId": "b04",
+      "toPort": "a",
+      "fid": "b03",
+      "fp": "ao",
+      "tid": "b04",
+      "tp": "a"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "ao",
+      "toId": "b05",
+      "toPort": "c",
+      "fid": "b04",
+      "fp": "ao",
+      "tid": "b05",
+      "tp": "c"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "co",
+      "toId": "b06",
+      "toPort": "c",
+      "fid": "b05",
+      "fp": "co",
+      "tid": "b06",
+      "tp": "c"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "co",
+      "toId": "b07",
+      "toPort": "a",
+      "fid": "b06",
+      "fp": "co",
+      "tid": "b07",
+      "tp": "a"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "ao",
+      "toId": "b08",
+      "toPort": "a",
+      "fid": "b07",
+      "fp": "ao",
+      "tid": "b08",
+      "tp": "a"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "ao",
+      "toId": "b09",
+      "toPort": "c",
+      "fid": "b08",
+      "fp": "ao",
+      "tid": "b09",
+      "tp": "c"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "co",
+      "toId": "b10",
+      "toPort": "c1",
+      "fid": "b09",
+      "fp": "co",
+      "tid": "b10",
+      "tp": "c1"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "c1o",
+      "toId": "b11",
+      "toPort": "c",
+      "fid": "b10",
+      "fp": "c1o",
+      "tid": "b11",
+      "tp": "c"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "co",
+      "toId": "b12",
+      "toPort": "ri",
+      "fid": "b11",
+      "fp": "co",
+      "tid": "b12",
+      "tp": "ri"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "ro",
+      "toId": "b13",
+      "toPort": "qi",
+      "fid": "b12",
+      "fp": "ro",
+      "tid": "b13",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "qo",
+      "toId": "b14",
+      "toPort": "qi",
+      "fid": "b13",
+      "fp": "qo",
+      "tid": "b14",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "qo",
+      "toId": "b15",
+      "toPort": "qi",
+      "fid": "b14",
+      "fp": "qo",
+      "tid": "b15",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "qo",
+      "toId": "b16",
+      "toPort": "a",
+      "fid": "b15",
+      "fp": "qo",
+      "tid": "b16",
+      "tp": "a"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "ao",
+      "toId": "b17",
+      "toPort": "qi",
+      "fid": "b16",
+      "fp": "ao",
+      "tid": "b17",
+      "tp": "qi"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "qo",
+      "toId": "b18",
+      "toPort": "a",
+      "fid": "b17",
+      "fp": "qo",
+      "tid": "b18",
+      "tp": "a"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "ao",
+      "toId": "b19",
+      "toPort": "a",
+      "fid": "b18",
+      "fp": "ao",
+      "tid": "b19",
+      "tp": "a"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "ao",
+      "toId": "b20",
+      "toPort": "a",
+      "fid": "b19",
+      "fp": "ao",
+      "tid": "b20",
+      "tp": "a"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "ao",
+      "toId": "b21",
+      "toPort": "a",
+      "fid": "b20",
+      "fp": "ao",
+      "tid": "b21",
+      "tp": "a"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "ao",
+      "toId": "b22",
+      "toPort": "a",
+      "fid": "b21",
+      "fp": "ao",
+      "tid": "b22",
+      "tp": "a"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "ao",
+      "toId": "b23",
+      "toPort": "a",
+      "fid": "b22",
+      "fp": "ao",
+      "tid": "b23",
+      "tp": "a"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "ao",
+      "toId": "b24",
+      "toPort": "a",
+      "fid": "b23",
+      "fp": "ao",
+      "tid": "b24",
+      "tp": "a"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "ao",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "ao",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

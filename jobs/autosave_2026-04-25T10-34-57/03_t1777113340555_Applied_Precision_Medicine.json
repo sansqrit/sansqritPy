@@ -1,0 +1,142 @@
+{
+  "version": "3.2",
+  "title": "Sanskrit Canvas",
+  "created": "2026-04-25T10:36:43.031Z",
+  "blocks": [
+    {
+      "id": "geno",
+      "uid": "geno",
+      "type": "applied_personalized_genomic_sequencing",
+      "x": 80,
+      "y": 160,
+      "params": {
+        "domain_id": "domain_biomed",
+        "problem_name": "Personalized Genomic Sequencing",
+        "method": "Variant annotation",
+        "objective": "maximize actionable evidence",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 20,
+        "confidence_target": 0.9,
+        "output_var": "result_33"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "ppi",
+      "uid": "ppi",
+      "type": "applied_protein_protein_interaction_networks",
+      "x": 360,
+      "y": 160,
+      "params": {
+        "domain_id": "domain_biomed",
+        "problem_name": "Protein-Protein Interaction Networks",
+        "method": "GNN link prediction",
+        "objective": "maximize target centrality",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 20,
+        "confidence_target": 0.9,
+        "output_var": "result_26"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "immune",
+      "uid": "immune",
+      "type": "applied_cancer_immunotherapy_targeting",
+      "x": 640,
+      "y": 160,
+      "params": {
+        "domain_id": "domain_biomed",
+        "problem_name": "Cancer Immunotherapy Targeting",
+        "method": "Neoantigen ranking",
+        "objective": "maximize response probability",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 20,
+        "confidence_target": 0.9,
+        "output_var": "result_43"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "crispr",
+      "uid": "crispr",
+      "type": "applied_crispr_cas9_target_optimization",
+      "x": 920,
+      "y": 160,
+      "params": {
+        "domain_id": "domain_biomed",
+        "problem_name": "CRISPR-Cas9 Target Optimization",
+        "method": "DeepCRISPR",
+        "objective": "maximize specificity",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 20,
+        "confidence_target": 0.9,
+        "output_var": "result_40"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "tbl",
+      "uid": "tbl",
+      "type": "table_display",
+      "x": 1200,
+      "y": 160,
+      "params": {
+        "title": "Prioritized Personalized Targets",
+        "page_size": 25,
+        "show_bars": "true"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fid": "geno",
+      "fp": "dataset",
+      "tid": "ppi",
+      "tp": "dataset"
+    },
+    {
+      "fid": "ppi",
+      "fp": "dataset",
+      "tid": "immune",
+      "tp": "dataset"
+    },
+    {
+      "fid": "immune",
+      "fp": "dataset",
+      "tid": "crispr",
+      "tp": "dataset"
+    },
+    {
+      "fid": "crispr",
+      "fp": "dataset",
+      "tid": "tbl",
+      "tp": "dataset"
+    }
+  ],
+  "name": "Applied Precision Medicine",
+  "tabId": "t1777113340555",
+  "active": true,
+  "savedAt": "2026-04-25T10:36:43.039Z"
+}

@@ -768,17 +768,23 @@ export class SanskritInterpreter {
     if(tok.t==='['){
       this._adv();if(this._peek().t===']'){this._eat(']');return[];}
       const exprStart=this._pos;
-      const first=await this._expr();
-      const exprEnd=this._pos;
-      if(this._peek().v==='for'){
-        // List comprehension — re-evaluate expression for each item
-        this._adv();const varName=this._adv().v;this._adv();const iter=await this._expr();
+      let forPos=-1,depth=0;
+      for(let i=this._pos;i<this._toks.length;i++){
+        const t=this._toks[i];
+        if(depth===0&&t.t===']')break;
+        if(depth===0&&t.v==='for'){forPos=i;break;}
+        if(t.t==='('||t.t==='['||t.t==='{')depth++;
+        else if(t.t===')'||t.t===']'||t.t==='}')depth=Math.max(0,depth-1);
+      }
+      if(forPos>=0){
+        const exprToks=this._toks.slice(exprStart,forPos);
+        this._pos=forPos+1;
+        const varName=this._eat('ID').v;this._eat('in');const iter=await this._expr();
         let condFn=null;if(this._peek().v==='if'){this._adv();const condToks=[];while(this._peek().t!==']'&&!this._eof())condToks.push(this._adv());condFn=condToks;}
         this._eat(']');
         let items=iter;
         if(iter&&iter.__range__){items=[];for(let v=iter.s;iter.step>0?v<iter.e:v>iter.e;v+=iter.step)items.push(v);}
         else if(!Array.isArray(items))items=items&&typeof items==='object'?Object.values(items):[];
-        const exprToks=this._toks.slice(exprStart,exprEnd);
         const result=[];
         for(const item of items){
           this._push();this._set(varName,item);
@@ -790,6 +796,7 @@ export class SanskritInterpreter {
         }
         return result;
       }
+      const first=await this._expr();
       const items=[first];
       while(this._peek().v===','){this._adv();if(this._peek().t===']')break;items.push(await this._expr());}
       this._eat(']');return items;

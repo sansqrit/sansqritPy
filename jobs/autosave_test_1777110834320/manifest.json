@@ -1,0 +1,24 @@
+{
+  "sessionId": "autosave_test_1777110834320",
+  "savedAt": "2026-04-25T09:53:54.650Z",
+  "activeTab": "t1",
+  "tabCount": 2,
+  "tabs": [
+    {
+      "id": "t1",
+      "label": "Canvas 1",
+      "active": true,
+      "file": "01_t1_Canvas_1.json",
+      "blocks": 1,
+      "wires": 0
+    },
+    {
+      "id": "t2",
+      "label": "Finance",
+      "active": false,
+      "file": "02_t2_Finance.json",
+      "blocks": 1,
+      "wires": 0
+    }
+  ]
+}

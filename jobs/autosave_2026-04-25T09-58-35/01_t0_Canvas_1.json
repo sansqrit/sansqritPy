@@ -1,0 +1,142 @@
+{
+  "version": "3.2",
+  "title": "Sanskrit Canvas",
+  "created": "2026-04-25T09:58:40.717Z",
+  "blocks": [
+    {
+      "id": "dock",
+      "uid": "dock",
+      "type": "applied_molecular_docking",
+      "x": 80,
+      "y": 160,
+      "params": {
+        "domain_id": "domain_molecular",
+        "problem_name": "Molecular Docking",
+        "method": "GNINA CNN scoring",
+        "objective": "minimize binding free energy",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 12,
+        "confidence_target": 0.86,
+        "output_var": "result_1"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "aff",
+      "uid": "aff",
+      "type": "applied_small_molecule_binding_affinity",
+      "x": 360,
+      "y": 160,
+      "params": {
+        "domain_id": "domain_molecular",
+        "problem_name": "Small Molecule Binding Affinity",
+        "method": "Docking plus MM-GBSA",
+        "objective": "minimize DeltaG",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 12,
+        "confidence_target": 0.88,
+        "output_var": "result_3"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "tox",
+      "uid": "tox",
+      "type": "applied_drug_toxicity_prediction",
+      "x": 640,
+      "y": 160,
+      "params": {
+        "domain_id": "domain_biomed",
+        "problem_name": "Drug Toxicity Prediction",
+        "method": "Graph neural tox model",
+        "objective": "minimize toxicity risk",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 12,
+        "confidence_target": 0.9,
+        "output_var": "result_31"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "bbb",
+      "uid": "bbb",
+      "type": "applied_blood_brain_barrier_permeability",
+      "x": 920,
+      "y": 160,
+      "params": {
+        "domain_id": "domain_biomed",
+        "problem_name": "Blood-Brain Barrier Permeability",
+        "method": "QSAR BBB model",
+        "objective": "maximize CNS probability",
+        "input_schema": "dataset, constraints, target metrics",
+        "sample_size": 12,
+        "confidence_target": 0.9,
+        "output_var": "result_37"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "tbl",
+      "uid": "tbl",
+      "type": "table_display",
+      "x": 1200,
+      "y": 160,
+      "params": {
+        "title": "Ranked CNS Lead Candidates",
+        "page_size": 25,
+        "show_bars": "true"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fid": "dock",
+      "fp": "dataset",
+      "tid": "aff",
+      "tp": "dataset"
+    },
+    {
+      "fid": "aff",
+      "fp": "dataset",
+      "tid": "tox",
+      "tp": "dataset"
+    },
+    {
+      "fid": "tox",
+      "fp": "dataset",
+      "tid": "bbb",
+      "tp": "dataset"
+    },
+    {
+      "fid": "bbb",
+      "fp": "dataset",
+      "tid": "tbl",
+      "tp": "dataset"
+    }
+  ],
+  "name": "Canvas 1",
+  "tabId": "t0",
+  "active": true,
+  "savedAt": "2026-04-25T09:58:40.723Z"
+}

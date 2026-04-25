@@ -1,0 +1,657 @@
+{
+  "id": "api_05",
+  "uid": "uid_api_05",
+  "title": "API & Platform Integration Example 5",
+  "cat": "API",
+  "diff": "Research",
+  "desc": "Data ingestion, messaging, notifications, and platform interoperability.",
+  "domain": "API & Platform Integration",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "api_05_b01",
+      "type": "pubmed_fetch",
+      "x": 80,
+      "y": 180,
+      "params": {
+        "query": "CRISPR cancer therapy",
+        "max_results": 10,
+        "email": "user@example.com",
+        "output_var": "pubmed_results",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "api_05_b02",
+      "type": "filter_block",
+      "x": 240,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "condition": "row.score > 0.5",
+        "output_var": "filtered",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b03",
+      "uid": "api_05_b03",
+      "type": "map_transform",
+      "x": 400,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "transform_expr": "x * 1.05",
+        "output_var": "mapped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b04",
+      "uid": "api_05_b04",
+      "type": "sort_block",
+      "x": 560,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "key_expr": "x",
+        "descending": false,
+        "output_var": "sorted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b05",
+      "uid": "api_05_b05",
+      "type": "groupby_block",
+      "x": 720,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "key_fn": "x[\"category\"]",
+        "agg": "list",
+        "output_var": "grouped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b06",
+      "uid": "api_05_b06",
+      "type": "pivot_block",
+      "x": 880,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "index": "region",
+        "columns": "product",
+        "values": "revenue",
+        "aggfunc": "sum",
+        "output_var": "pivoted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b07",
+      "uid": "api_05_b07",
+      "type": "window_transform",
+      "x": 1040,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "window_size": 7,
+        "agg": "mean",
+        "center": false,
+        "output_var": "windowed",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b08",
+      "uid": "api_05_b08",
+      "type": "resample_block",
+      "x": 1200,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "freq": "1h",
+        "method": "mean",
+        "output_var": "resampled",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b09",
+      "uid": "api_05_b09",
+      "type": "encode_features",
+      "x": 1360,
+      "y": 180,
+      "params": {
+        "X_var": "X",
+        "col": "category",
+        "method": "onehot",
+        "output_var": "encoded",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b10",
+      "uid": "api_05_b10",
+      "type": "webhook_block",
+      "x": 1520,
+      "y": 208,
+      "params": {
+        "webhook_url": "",
+        "payload_var": "message",
+        "platform": "Slack",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b11",
+      "uid": "api_05_b11",
+      "type": "kafka_block",
+      "x": 1680,
+      "y": 180,
+      "params": {
+        "broker": "localhost:9092",
+        "topic": "events",
+        "operation": "produce",
+        "message_var": "msg",
+        "output_var": "kafka",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b12",
+      "uid": "api_05_b12",
+      "type": "email_block",
+      "x": 1840,
+      "y": 208,
+      "params": {
+        "to": "ops@example.com",
+        "subject": "Alert",
+        "body_var": "email_body",
+        "html": true,
+        "smtp_host_var": "SMTP_HOST",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b13",
+      "uid": "api_05_b13",
+      "type": "grpc_block",
+      "x": 2000,
+      "y": 180,
+      "params": {
+        "endpoint": "localhost:50051",
+        "service": "MyService",
+        "method": "GetData",
+        "request_var": "request",
+        "output_var": "grpc",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b14",
+      "uid": "api_05_b14",
+      "type": "mqtt_block",
+      "x": 2160,
+      "y": 208,
+      "params": {
+        "broker": "localhost",
+        "topic": "telemetry",
+        "operation": "publish",
+        "payload_var": "message",
+        "output_var": "mqtt",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b15",
+      "uid": "api_05_b15",
+      "type": "websocket_client",
+      "x": 2320,
+      "y": 180,
+      "params": {
+        "url": "wss://example.com",
+        "message_var": "msg",
+        "timeout_ms": 30000,
+        "output_var": "ws",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b16",
+      "uid": "api_05_b16",
+      "type": "s3_stream",
+      "x": 2480,
+      "y": 208,
+      "params": {
+        "data_var": "large_data",
+        "bucket": "data-bucket",
+        "key": "output/result.parquet",
+        "part_size_mb": 10,
+        "output_var": "s3",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b17",
+      "uid": "api_05_b17",
+      "type": "slack_message",
+      "x": 2640,
+      "y": 180,
+      "params": {
+        "channel": "#alerts",
+        "message_var": "msg",
+        "use_blocks": false,
+        "webhook_var": "SLACK_WEBHOOK",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b18",
+      "uid": "api_05_b18",
+      "type": "discord_block",
+      "x": 2800,
+      "y": 208,
+      "params": {
+        "webhook_var": "DISCORD_WEBHOOK",
+        "content_var": "msg",
+        "username": "Sanskrit Bot",
+        "tts": false,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b19",
+      "uid": "api_05_b19",
+      "type": "type_cast",
+      "x": 2960,
+      "y": 180,
+      "params": {
+        "input_var": "x",
+        "to_type": "float",
+        "output_var": "casted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b20",
+      "uid": "api_05_b20",
+      "type": "progress_bar",
+      "x": 3120,
+      "y": 208,
+      "params": {
+        "iterable_var": "items",
+        "description": "Processing",
+        "leave": true,
+        "output_var": "item",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b21",
+      "uid": "api_05_b21",
+      "type": "data_version",
+      "x": 3280,
+      "y": 180,
+      "params": {
+        "data_var": "data",
+        "system": "DVC",
+        "version_tag": "v1.0.0",
+        "message": "Add training data",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b22",
+      "uid": "api_05_b22",
+      "type": "conditional_skip",
+      "x": 3440,
+      "y": 208,
+      "params": {
+        "condition": "env == \"prod\"",
+        "log_skip": true,
+        "skip_message": "Skipping: converged",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b23",
+      "uid": "api_05_b23",
+      "type": "format_number",
+      "x": 3600,
+      "y": 180,
+      "params": {
+        "value_var": "value",
+        "format": "auto",
+        "precision": 4,
+        "output_var": "formatted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b24",
+      "uid": "api_05_b24",
+      "type": "timer_block",
+      "x": 3760,
+      "y": 208,
+      "params": {
+        "operation": "start",
+        "timer_id": "t1",
+        "output_var": "timer",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b25",
+      "uid": "api_05_b25",
+      "type": "heatmap_plot",
+      "x": 3920,
+      "y": 180,
+      "params": {
+        "matrix_var": "results",
+        "title": "API Heatmap 5",
+        "colormap": "viridis",
+        "annotate": false,
+        "cluster": false,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "articles",
+      "toId": "b02",
+      "toPort": "ai",
+      "fid": "b01",
+      "fp": "articles",
+      "tid": "b02",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "filtered",
+      "toId": "b03",
+      "toPort": "ai",
+      "fid": "b02",
+      "fp": "filtered",
+      "tid": "b03",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "result",
+      "toId": "b04",
+      "toPort": "ai",
+      "fid": "b03",
+      "fp": "result",
+      "tid": "b04",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "sorted",
+      "toId": "b05",
+      "toPort": "ai",
+      "fid": "b04",
+      "fp": "sorted",
+      "tid": "b05",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "grouped",
+      "toId": "b06",
+      "toPort": "ai",
+      "fid": "b05",
+      "fp": "grouped",
+      "tid": "b06",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "pivot",
+      "toId": "b07",
+      "toPort": "data",
+      "fid": "b06",
+      "fp": "pivot",
+      "tid": "b07",
+      "tp": "data"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "result",
+      "toId": "b08",
+      "toPort": "data",
+      "fid": "b07",
+      "fp": "result",
+      "tid": "b08",
+      "tp": "data"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "result",
+      "toId": "b09",
+      "toPort": "X",
+      "fid": "b08",
+      "fp": "result",
+      "tid": "b09",
+      "tp": "X"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "X_encoded",
+      "toId": "b10",
+      "toPort": "payload",
+      "fid": "b09",
+      "fp": "X_encoded",
+      "tid": "b10",
+      "tp": "payload"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "status",
+      "toId": "b11",
+      "toPort": "message",
+      "fid": "b10",
+      "fp": "status",
+      "tid": "b11",
+      "tp": "message"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "result",
+      "toId": "b12",
+      "toPort": "body",
+      "fid": "b11",
+      "fp": "result",
+      "tid": "b12",
+      "tp": "body"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "sent",
+      "toId": "b13",
+      "toPort": "request",
+      "fid": "b12",
+      "fp": "sent",
+      "tid": "b13",
+      "tp": "request"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "response",
+      "toId": "b14",
+      "toPort": "payload",
+      "fid": "b13",
+      "fp": "response",
+      "tid": "b14",
+      "tp": "payload"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "message",
+      "toId": "b15",
+      "toPort": "message",
+      "fid": "b14",
+      "fp": "message",
+      "tid": "b15",
+      "tp": "message"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "response",
+      "toId": "b16",
+      "toPort": "data",
+      "fid": "b15",
+      "fp": "response",
+      "tid": "b16",
+      "tp": "data"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "s3_uri",
+      "toId": "b17",
+      "toPort": "message",
+      "fid": "b16",
+      "fp": "s3_uri",
+      "tid": "b17",
+      "tp": "message"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "ts",
+      "toId": "b18",
+      "toPort": "message",
+      "fid": "b17",
+      "fp": "ts",
+      "tid": "b18",
+      "tp": "message"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "status",
+      "toId": "b19",
+      "toPort": "ci",
+      "fid": "b18",
+      "fp": "status",
+      "tid": "b19",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "result",
+      "toId": "b20",
+      "toPort": "iterable",
+      "fid": "b19",
+      "fp": "result",
+      "tid": "b20",
+      "tp": "iterable"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "item",
+      "toId": "b21",
+      "toPort": "data",
+      "fid": "b20",
+      "fp": "item",
+      "tid": "b21",
+      "tp": "data"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "version_id",
+      "toId": "b22",
+      "toPort": "condition",
+      "fid": "b21",
+      "fp": "version_id",
+      "tid": "b22",
+      "tp": "condition"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "pass",
+      "toId": "b23",
+      "toPort": "value",
+      "fid": "b22",
+      "fp": "pass",
+      "tid": "b23",
+      "tp": "value"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "string",
+      "toId": "b24",
+      "toPort": "in",
+      "fid": "b23",
+      "fp": "string",
+      "tid": "b24",
+      "tp": "in"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "elapsed_ms",
+      "toId": "b25",
+      "toPort": "matrix",
+      "fid": "b24",
+      "fp": "elapsed_ms",
+      "tid": "b25",
+      "tp": "matrix"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

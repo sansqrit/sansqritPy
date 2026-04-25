@@ -1,0 +1,456 @@
+{
+  "id": "finance_04",
+  "uid": "finance_04_b4365b03",
+  "title": "FX volatility watch",
+  "cat": "Finance",
+  "diff": "I",
+  "desc": "Transactions, risk features, and stress signals are joined into a decision pipeline for portfolio monitoring.",
+  "domain": "finance",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "finance_04_b01",
+      "type": "order_book",
+      "x": 60,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b02",
+      "uid": "finance_04_b02",
+      "type": "genetic_algo",
+      "x": 330,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b03",
+      "uid": "finance_04_b03",
+      "type": "simulated_annealing",
+      "x": 600,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b04",
+      "uid": "finance_04_b04",
+      "type": "pso_opt",
+      "x": 870,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b05",
+      "uid": "finance_04_b05",
+      "type": "lbfgs_opt",
+      "x": 1140,
+      "y": 60,
+      "params": {}
+    },
+    {
+      "id": "b06",
+      "uid": "finance_04_b06",
+      "type": "bayesian_opt",
+      "x": 1140,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b07",
+      "uid": "finance_04_b07",
+      "type": "portfolio_opt",
+      "x": 870,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b08",
+      "uid": "finance_04_b08",
+      "type": "linear_prog",
+      "x": 600,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b09",
+      "uid": "finance_04_b09",
+      "type": "integer_prog",
+      "x": 330,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b10",
+      "uid": "finance_04_b10",
+      "type": "qubo_block",
+      "x": 60,
+      "y": 235,
+      "params": {}
+    },
+    {
+      "id": "b11",
+      "uid": "finance_04_b11",
+      "type": "grid_search",
+      "x": 60,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b12",
+      "uid": "finance_04_b12",
+      "type": "nelder_mead",
+      "x": 330,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b13",
+      "uid": "finance_04_b13",
+      "type": "diff_evolution",
+      "x": 600,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b14",
+      "uid": "finance_04_b14",
+      "type": "type_cast",
+      "x": 870,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b15",
+      "uid": "finance_04_b15",
+      "type": "debug_break",
+      "x": 1140,
+      "y": 410,
+      "params": {}
+    },
+    {
+      "id": "b16",
+      "uid": "finance_04_b16",
+      "type": "parallel_map",
+      "x": 1140,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b17",
+      "uid": "finance_04_b17",
+      "type": "cache_block",
+      "x": 870,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b18",
+      "uid": "finance_04_b18",
+      "type": "progress_bar",
+      "x": 600,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b19",
+      "uid": "finance_04_b19",
+      "type": "experiment_tracker",
+      "x": 330,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b20",
+      "uid": "finance_04_b20",
+      "type": "data_version",
+      "x": 60,
+      "y": 585,
+      "params": {}
+    },
+    {
+      "id": "b21",
+      "uid": "finance_04_b21",
+      "type": "conditional_skip",
+      "x": 60,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b22",
+      "uid": "finance_04_b22",
+      "type": "format_number",
+      "x": 330,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b23",
+      "uid": "finance_04_b23",
+      "type": "math_ops",
+      "x": 600,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b24",
+      "uid": "finance_04_b24",
+      "type": "matrix_ops",
+      "x": 870,
+      "y": 760,
+      "params": {}
+    },
+    {
+      "id": "b25",
+      "uid": "finance_04_b25",
+      "type": "console_log_block",
+      "x": 1140,
+      "y": 760,
+      "params": {
+        "label": "FX volatility watch"
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "lob",
+      "toId": "b02",
+      "toPort": "fn",
+      "fid": "b01",
+      "fp": "lob",
+      "tid": "b02",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "solution",
+      "toId": "b03",
+      "toPort": "fn",
+      "fid": "b02",
+      "fp": "solution",
+      "tid": "b03",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "solution",
+      "toId": "b04",
+      "toPort": "fn",
+      "fid": "b03",
+      "fp": "solution",
+      "tid": "b04",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "solution",
+      "toId": "b05",
+      "toPort": "fn",
+      "fid": "b04",
+      "fp": "solution",
+      "tid": "b05",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "params",
+      "toId": "b06",
+      "toPort": "fn",
+      "fid": "b05",
+      "fp": "params",
+      "tid": "b06",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "params",
+      "toId": "b07",
+      "toPort": "returns",
+      "fid": "b06",
+      "fp": "params",
+      "tid": "b07",
+      "tp": "returns"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "weights",
+      "toId": "b08",
+      "toPort": "c",
+      "fid": "b07",
+      "fp": "weights",
+      "tid": "b08",
+      "tp": "c"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "x",
+      "toId": "b09",
+      "toPort": "problem",
+      "fid": "b08",
+      "fp": "x",
+      "tid": "b09",
+      "tp": "problem"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "solution",
+      "toId": "b10",
+      "toPort": "Q",
+      "fid": "b09",
+      "fp": "solution",
+      "tid": "b10",
+      "tp": "Q"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "x",
+      "toId": "b11",
+      "toPort": "model",
+      "fid": "b10",
+      "fp": "x",
+      "tid": "b11",
+      "tp": "model"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "best_params",
+      "toId": "b12",
+      "toPort": "fn",
+      "fid": "b11",
+      "fp": "best_params",
+      "tid": "b12",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "params",
+      "toId": "b13",
+      "toPort": "fn",
+      "fid": "b12",
+      "fp": "params",
+      "tid": "b13",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "solution",
+      "toId": "b14",
+      "toPort": "ci",
+      "fid": "b13",
+      "fp": "solution",
+      "tid": "b14",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "result",
+      "toId": "b15",
+      "toPort": "ai",
+      "fid": "b14",
+      "fp": "result",
+      "tid": "b15",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "ao",
+      "toId": "b16",
+      "toPort": "fn",
+      "fid": "b15",
+      "fp": "ao",
+      "tid": "b16",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "results",
+      "toId": "b17",
+      "toPort": "fn",
+      "fid": "b16",
+      "fp": "results",
+      "tid": "b17",
+      "tp": "fn"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "result",
+      "toId": "b18",
+      "toPort": "iterable",
+      "fid": "b17",
+      "fp": "result",
+      "tid": "b18",
+      "tp": "iterable"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "item",
+      "toId": "b19",
+      "toPort": "data",
+      "fid": "b18",
+      "fp": "item",
+      "tid": "b19",
+      "tp": "data"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "run_id",
+      "toId": "b20",
+      "toPort": "data",
+      "fid": "b19",
+      "fp": "run_id",
+      "tid": "b20",
+      "tp": "data"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "version_id",
+      "toId": "b21",
+      "toPort": "condition",
+      "fid": "b20",
+      "fp": "version_id",
+      "tid": "b21",
+      "tp": "condition"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "pass",
+      "toId": "b22",
+      "toPort": "value",
+      "fid": "b21",
+      "fp": "pass",
+      "tid": "b22",
+      "tp": "value"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "string",
+      "toId": "b23",
+      "toPort": "a",
+      "fid": "b22",
+      "fp": "string",
+      "tid": "b23",
+      "tp": "a"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "result",
+      "toId": "b24",
+      "toPort": "A",
+      "fid": "b23",
+      "fp": "result",
+      "tid": "b24",
+      "tp": "A"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "result",
+      "toId": "b25",
+      "toPort": "value",
+      "fid": "b24",
+      "fp": "result",
+      "tid": "b25",
+      "tp": "value"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

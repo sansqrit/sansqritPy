@@ -1,0 +1,675 @@
+{
+  "id": "ml_01",
+  "uid": "uid_ml_01",
+  "title": "Machine Learning Ops Example 1",
+  "cat": "ML",
+  "diff": "Beginner",
+  "desc": "Model training support, feature engineering, evaluation, drift monitoring, and operational reporting.",
+  "domain": "Machine Learning Ops",
+  "blocks": [
+    {
+      "id": "b01",
+      "uid": "ml_01_b01",
+      "type": "csv_reader",
+      "x": 80,
+      "y": 180,
+      "params": {
+        "file_path": "local/ml_1.csv",
+        "separator": ",",
+        "header": true,
+        "auto_types": true,
+        "encoding": "utf-8",
+        "output_var": "df",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b02",
+      "uid": "ml_01_b02",
+      "type": "time_series_forecast",
+      "x": 240,
+      "y": 208,
+      "params": {
+        "ts_var": "ts",
+        "model": "Prophet",
+        "forecast_horizon": 30,
+        "lookback": 90,
+        "output_var": "forecast",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b03",
+      "uid": "ml_01_b03",
+      "type": "anomaly_ml",
+      "x": 400,
+      "y": 180,
+      "params": {
+        "X_var": "X",
+        "method": "IsolationForest",
+        "contamination": 0.05,
+        "output_var": "anomalies",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b04",
+      "uid": "ml_01_b04",
+      "type": "clustering_block",
+      "x": 560,
+      "y": 208,
+      "params": {
+        "X_var": "X",
+        "method": "k-means",
+        "n_clusters": 5,
+        "output_var": "labels",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b05",
+      "uid": "ml_01_b05",
+      "type": "normalizing_flow",
+      "x": 720,
+      "y": 180,
+      "params": {
+        "data_var": "data",
+        "architecture": "RealNVP",
+        "n_flows": 8,
+        "epochs": 200,
+        "output_model": "flow_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b06",
+      "uid": "ml_01_b06",
+      "type": "shap_explain",
+      "x": 880,
+      "y": 208,
+      "params": {
+        "model_var": "model",
+        "X_var": "X",
+        "explainer": "TreeExplainer",
+        "max_display": 20,
+        "output_var": "shap_values",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b07",
+      "uid": "ml_01_b07",
+      "type": "gp_regression",
+      "x": 1040,
+      "y": 180,
+      "params": {
+        "X_train": "X_train",
+        "y_train": "y_train",
+        "kernel": "RBF",
+        "noise_level": 0.01,
+        "output_var": "gp_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b08",
+      "uid": "ml_01_b08",
+      "type": "causal_inference",
+      "x": 1200,
+      "y": 208,
+      "params": {
+        "data_var": "data",
+        "treatment_var": "T",
+        "outcome_var": "Y",
+        "confounders": "[\"age\",\"sex\",\"income\"]",
+        "method": "DoWhy",
+        "output_var": "causal_effect",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b09",
+      "uid": "ml_01_b09",
+      "type": "survival_analysis",
+      "x": 1360,
+      "y": 180,
+      "params": {
+        "data_var": "survival_data",
+        "time_col": "time",
+        "event_col": "event",
+        "model": "Cox_PH",
+        "output_var": "surv_result",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b10",
+      "uid": "ml_01_b10",
+      "type": "active_learning_block",
+      "x": 1520,
+      "y": 208,
+      "params": {
+        "unlabelled_var": "X_pool",
+        "model_var": "model",
+        "strategy": "uncertainty",
+        "n_query": 10,
+        "output_var": "queried_X",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b11",
+      "uid": "ml_01_b11",
+      "type": "train_model",
+      "x": 1680,
+      "y": 180,
+      "params": {
+        "X_train": "X_train",
+        "y_train": "y_train",
+        "model_type": "RandomForest",
+        "hyperparams": "{\"n_estimators\":100}",
+        "cross_validate": true,
+        "output_model": "model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b12",
+      "uid": "ml_01_b12",
+      "type": "predict_block",
+      "x": 1840,
+      "y": 208,
+      "params": {
+        "model_var": "model",
+        "X_var": "X_test",
+        "return_proba": false,
+        "output_var": "y_pred",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b13",
+      "uid": "ml_01_b13",
+      "type": "xgboost_block",
+      "x": 2000,
+      "y": 180,
+      "params": {
+        "X_train": "X_train",
+        "y_train": "y_train",
+        "library": "LightGBM",
+        "n_estimators": 500,
+        "max_depth": 6,
+        "lr": 0.05,
+        "early_stopping": true,
+        "output_model": "gbm_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b14",
+      "uid": "ml_01_b14",
+      "type": "automl_block",
+      "x": 2160,
+      "y": 208,
+      "params": {
+        "X_train": "X_train",
+        "y_train": "y_train",
+        "tool": "AutoGluon",
+        "time_limit_s": 3600,
+        "task": "classification",
+        "output_model": "automl_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b15",
+      "uid": "ml_01_b15",
+      "type": "neural_net",
+      "x": 2320,
+      "y": 180,
+      "params": {
+        "layers": "[{\"type\":\"Linear\",\"in\":128,\"out\":64},{\"type\":\"ReLU\"},{\"type\":\"Linear\",\"in\":64,\"out\":1}]",
+        "loss": "CrossEntropy",
+        "optimizer": "Adam",
+        "epochs": 100,
+        "lr": 0.001,
+        "batch_size": 32,
+        "output_model": "nn_model",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b16",
+      "uid": "ml_01_b16",
+      "type": "filter_block",
+      "x": 2480,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "condition": "row.score > 0.5",
+        "output_var": "filtered",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b17",
+      "uid": "ml_01_b17",
+      "type": "map_transform",
+      "x": 2640,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "transform_expr": "x * 1.05",
+        "output_var": "mapped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b18",
+      "uid": "ml_01_b18",
+      "type": "sort_block",
+      "x": 2800,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "key_expr": "x",
+        "descending": false,
+        "output_var": "sorted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b19",
+      "uid": "ml_01_b19",
+      "type": "groupby_block",
+      "x": 2960,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "key_fn": "x[\"category\"]",
+        "agg": "list",
+        "output_var": "grouped",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b20",
+      "uid": "ml_01_b20",
+      "type": "pivot_block",
+      "x": 3120,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "index": "region",
+        "columns": "product",
+        "values": "revenue",
+        "aggfunc": "sum",
+        "output_var": "pivoted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b21",
+      "uid": "ml_01_b21",
+      "type": "window_transform",
+      "x": 3280,
+      "y": 180,
+      "params": {
+        "data_var": "df",
+        "window_size": 7,
+        "agg": "mean",
+        "center": false,
+        "output_var": "windowed",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b22",
+      "uid": "ml_01_b22",
+      "type": "resample_block",
+      "x": 3440,
+      "y": 208,
+      "params": {
+        "data_var": "df",
+        "freq": "1h",
+        "method": "mean",
+        "output_var": "resampled",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b23",
+      "uid": "ml_01_b23",
+      "type": "encode_features",
+      "x": 3600,
+      "y": 180,
+      "params": {
+        "X_var": "X",
+        "col": "category",
+        "method": "onehot",
+        "output_var": "encoded",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b24",
+      "uid": "ml_01_b24",
+      "type": "type_cast",
+      "x": 3760,
+      "y": 208,
+      "params": {
+        "input_var": "x",
+        "to_type": "float",
+        "output_var": "casted",
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    },
+    {
+      "id": "b25",
+      "uid": "ml_01_b25",
+      "type": "table_block",
+      "x": 3920,
+      "y": 180,
+      "params": {
+        "data_var": "results",
+        "max_rows": 100,
+        "sortable": true,
+        "filterable": true,
+        "bypass": false,
+        "code_override": false,
+        "override_code": ""
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fromId": "b01",
+      "fromPort": "dataframe",
+      "toId": "b02",
+      "toPort": "series",
+      "fid": "b01",
+      "fp": "dataframe",
+      "tid": "b02",
+      "tp": "series"
+    },
+    {
+      "fromId": "b02",
+      "fromPort": "forecast",
+      "toId": "b03",
+      "toPort": "X",
+      "fid": "b02",
+      "fp": "forecast",
+      "tid": "b03",
+      "tp": "X"
+    },
+    {
+      "fromId": "b03",
+      "fromPort": "labels",
+      "toId": "b04",
+      "toPort": "X",
+      "fid": "b03",
+      "fp": "labels",
+      "tid": "b04",
+      "tp": "X"
+    },
+    {
+      "fromId": "b04",
+      "fromPort": "labels",
+      "toId": "b05",
+      "toPort": "data",
+      "fid": "b04",
+      "fp": "labels",
+      "tid": "b05",
+      "tp": "data"
+    },
+    {
+      "fromId": "b05",
+      "fromPort": "model",
+      "toId": "b06",
+      "toPort": "model",
+      "fid": "b05",
+      "fp": "model",
+      "tid": "b06",
+      "tp": "model"
+    },
+    {
+      "fromId": "b06",
+      "fromPort": "shap_values",
+      "toId": "b07",
+      "toPort": "X",
+      "fid": "b06",
+      "fp": "shap_values",
+      "tid": "b07",
+      "tp": "X"
+    },
+    {
+      "fromId": "b07",
+      "fromPort": "model",
+      "toId": "b08",
+      "toPort": "data",
+      "fid": "b07",
+      "fp": "model",
+      "tid": "b08",
+      "tp": "data"
+    },
+    {
+      "fromId": "b08",
+      "fromPort": "ate",
+      "toId": "b09",
+      "toPort": "data",
+      "fid": "b08",
+      "fp": "ate",
+      "tid": "b09",
+      "tp": "data"
+    },
+    {
+      "fromId": "b09",
+      "fromPort": "survival_curve",
+      "toId": "b10",
+      "toPort": "pool",
+      "fid": "b09",
+      "fp": "survival_curve",
+      "tid": "b10",
+      "tp": "pool"
+    },
+    {
+      "fromId": "b10",
+      "fromPort": "labelled_X",
+      "toId": "b11",
+      "toPort": "X",
+      "fid": "b10",
+      "fp": "labelled_X",
+      "tid": "b11",
+      "tp": "X"
+    },
+    {
+      "fromId": "b11",
+      "fromPort": "model",
+      "toId": "b12",
+      "toPort": "model",
+      "fid": "b11",
+      "fp": "model",
+      "tid": "b12",
+      "tp": "model"
+    },
+    {
+      "fromId": "b12",
+      "fromPort": "predictions",
+      "toId": "b13",
+      "toPort": "X",
+      "fid": "b12",
+      "fp": "predictions",
+      "tid": "b13",
+      "tp": "X"
+    },
+    {
+      "fromId": "b13",
+      "fromPort": "model",
+      "toId": "b14",
+      "toPort": "X",
+      "fid": "b13",
+      "fp": "model",
+      "tid": "b14",
+      "tp": "X"
+    },
+    {
+      "fromId": "b14",
+      "fromPort": "model",
+      "toId": "b15",
+      "toPort": "X",
+      "fid": "b14",
+      "fp": "model",
+      "tid": "b15",
+      "tp": "X"
+    },
+    {
+      "fromId": "b15",
+      "fromPort": "model",
+      "toId": "b16",
+      "toPort": "ai",
+      "fid": "b15",
+      "fp": "model",
+      "tid": "b16",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b16",
+      "fromPort": "filtered",
+      "toId": "b17",
+      "toPort": "ai",
+      "fid": "b16",
+      "fp": "filtered",
+      "tid": "b17",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b17",
+      "fromPort": "result",
+      "toId": "b18",
+      "toPort": "ai",
+      "fid": "b17",
+      "fp": "result",
+      "tid": "b18",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b18",
+      "fromPort": "sorted",
+      "toId": "b19",
+      "toPort": "ai",
+      "fid": "b18",
+      "fp": "sorted",
+      "tid": "b19",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b19",
+      "fromPort": "grouped",
+      "toId": "b20",
+      "toPort": "ai",
+      "fid": "b19",
+      "fp": "grouped",
+      "tid": "b20",
+      "tp": "ai"
+    },
+    {
+      "fromId": "b20",
+      "fromPort": "pivot",
+      "toId": "b21",
+      "toPort": "data",
+      "fid": "b20",
+      "fp": "pivot",
+      "tid": "b21",
+      "tp": "data"
+    },
+    {
+      "fromId": "b21",
+      "fromPort": "result",
+      "toId": "b22",
+      "toPort": "data",
+      "fid": "b21",
+      "fp": "result",
+      "tid": "b22",
+      "tp": "data"
+    },
+    {
+      "fromId": "b22",
+      "fromPort": "result",
+      "toId": "b23",
+      "toPort": "X",
+      "fid": "b22",
+      "fp": "result",
+      "tid": "b23",
+      "tp": "X"
+    },
+    {
+      "fromId": "b23",
+      "fromPort": "X_encoded",
+      "toId": "b24",
+      "toPort": "ci",
+      "fid": "b23",
+      "fp": "X_encoded",
+      "tid": "b24",
+      "tp": "ci"
+    },
+    {
+      "fromId": "b24",
+      "fromPort": "result",
+      "toId": "b25",
+      "toPort": "data",
+      "fid": "b24",
+      "fp": "result",
+      "tid": "b25",
+      "tp": "data"
+    }
+  ],
+  "schema": "sanskrit-canvas-1"
+}

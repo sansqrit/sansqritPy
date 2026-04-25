@@ -1,0 +1,48 @@
+{
+  "version": "3.2",
+  "title": "Sanskrit Canvas",
+  "created": "2026-04-19T12:52:13.842Z",
+  "blocks": [
+    {
+      "id": "r",
+      "type": "csv_reader",
+      "x": 120,
+      "y": 96,
+      "params": {
+        "filename": "sales.csv",
+        "preview_rows": 100
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    },
+    {
+      "id": "b6",
+      "type": "console_log_block",
+      "x": 504,
+      "y": 120,
+      "params": {
+        "value_var": "result",
+        "format": "pprint",
+        "prefix": "[result]"
+      },
+      "flags": {
+        "bypass": false,
+        "trycatch": false,
+        "printio": false
+      }
+    }
+  ],
+  "wires": [
+    {
+      "fid": "r",
+      "fp": "dataset",
+      "tid": "b6",
+      "tp": "value"
+    }
+  ],
+  "savedAt": "2026-04-19T12:52:13.890Z",
+  "name": "Untitled"
+}
